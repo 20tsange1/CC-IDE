@@ -1,0 +1,761 @@
+[
+  {
+    "type": "OBLIGATION",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "PERMISSION",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "PROHIBITION",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "boolean_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comparison",
+          "named": true
+        },
+        {
+          "type": "subject",
+          "named": true
+        },
+        {
+          "type": "verb_status",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "comparison",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "component",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "conditional_definition",
+          "named": true
+        },
+        {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
+          "type": "definition",
+          "named": true
+        },
+        {
+          "type": "statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "condition",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "condition",
+          "named": true
+        },
+        {
+          "type": "simple_condition",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "conditional_definition",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "condition",
+          "named": true
+        },
+        {
+          "type": "definition",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "conditional_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "condition",
+          "named": true
+        },
+        {
+          "type": "statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "contract",
+    "named": true,
+    "root": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "component",
+          "named": true
+        },
+        {
+          "type": "contract",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "date",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "month",
+          "named": true
+        },
+        {
+          "type": "num",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "definition",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "definition",
+          "named": true
+        },
+        {
+          "type": "simple_definition",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "holds",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "identity",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "num",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "modal_verb",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "OBLIGATION",
+          "named": true
+        },
+        {
+          "type": "PERMISSION",
+          "named": true
+        },
+        {
+          "type": "PROHIBITION",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "month",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "nonnumerical_object",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "string",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "numerical_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "num",
+          "named": true
+        },
+        {
+          "type": "numerical_expression",
+          "named": true
+        },
+        {
+          "type": "numerical_object",
+          "named": true
+        },
+        {
+          "type": "operator",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "numerical_object",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "num",
+          "named": true
+        },
+        {
+          "type": "subject",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "object",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "nonnumerical_object",
+          "named": true
+        },
+        {
+          "type": "numerical_object",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "operator",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "simple_condition",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "boolean_expression",
+          "named": true
+        },
+        {
+          "type": "date",
+          "named": true
+        },
+        {
+          "type": "holds",
+          "named": true
+        },
+        {
+          "type": "identity",
+          "named": true
+        },
+        {
+          "type": "modal_verb",
+          "named": true
+        },
+        {
+          "type": "object",
+          "named": true
+        },
+        {
+          "type": "subject",
+          "named": true
+        },
+        {
+          "type": "verb",
+          "named": true
+        },
+        {
+          "type": "verb_status",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "simple_definition",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identity",
+          "named": true
+        },
+        {
+          "type": "numerical_expression",
+          "named": true
+        },
+        {
+          "type": "subject",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "simple_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "date",
+          "named": true
+        },
+        {
+          "type": "holds",
+          "named": true
+        },
+        {
+          "type": "identity",
+          "named": true
+        },
+        {
+          "type": "modal_verb",
+          "named": true
+        },
+        {
+          "type": "object",
+          "named": true
+        },
+        {
+          "type": "subject",
+          "named": true
+        },
+        {
+          "type": "verb",
+          "named": true
+        },
+        {
+          "type": "verb_status",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "simple_statement",
+          "named": true
+        },
+        {
+          "type": "statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "subject",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "string",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "verb",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "verb_status",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": " Cannot",
+    "named": false
+  },
+  {
+    "type": " Could",
+    "named": false
+  },
+  {
+    "type": " Have To",
+    "named": false
+  },
+  {
+    "type": " May",
+    "named": false
+  },
+  {
+    "type": " May Not",
+    "named": false
+  },
+  {
+    "type": " Might",
+    "named": false
+  },
+  {
+    "type": " Need To",
+    "named": false
+  },
+  {
+    "type": " Ought To",
+    "named": false
+  },
+  {
+    "type": " Should",
+    "named": false
+  },
+  {
+    "type": " Should Not",
+    "named": false
+  },
+  {
+    "type": "(",
+    "named": false
+  },
+  {
+    "type": ")",
+    "named": false
+  },
+  {
+    "type": "ADATE",
+    "named": false
+  },
+  {
+    "type": "AMOUNT",
+    "named": false
+  },
+  {
+    "type": "AND",
+    "named": false
+  },
+  {
+    "type": "ANYDATE",
+    "named": false
+  },
+  {
+    "type": "April",
+    "named": false
+  },
+  {
+    "type": "August",
+    "named": false
+  },
+  {
+    "type": "C-AND",
+    "named": false
+  },
+  {
+    "type": "CHARGE",
+    "named": false
+  },
+  {
+    "type": "CHARGED",
+    "named": false
+  },
+  {
+    "type": "Can",
+    "named": false
+  },
+  {
+    "type": "DELIVER",
+    "named": false
+  },
+  {
+    "type": "DELIVERED",
+    "named": false
+  },
+  {
+    "type": "DIVIDE",
+    "named": false
+  },
+  {
+    "type": "DOLLARS",
+    "named": false
+  },
+  {
+    "type": "December",
+    "named": false
+  },
+  {
+    "type": "EQUAL",
+    "named": false
+  },
+  {
+    "type": "EQUALS",
+    "named": false
+  },
+  {
+    "type": "EUROS",
+    "named": false
+  },
+  {
+    "type": "February",
+    "named": false
+  },
+  {
+    "type": "IF",
+    "named": false
+  },
+  {
+    "type": "IS",
+    "named": false
+  },
+  {
+    "type": "January",
+    "named": false
+  },
+  {
+    "type": "July",
+    "named": false
+  },
+  {
+    "type": "June",
+    "named": false
+  },
+  {
+    "type": "LESS",
+    "named": false
+  },
+  {
+    "type": "MINUS",
+    "named": false
+  },
+  {
+    "type": "MORE",
+    "named": false
+  },
+  {
+    "type": "March",
+    "named": false
+  },
+  {
+    "type": "May",
+    "named": false
+  },
+  {
+    "type": "Must",
+    "named": false
+  },
+  {
+    "type": "Must Not",
+    "named": false
+  },
+  {
+    "type": "NAMEDOBJECT",
+    "named": false
+  },
+  {
+    "type": "November",
+    "named": false
+  },
+  {
+    "type": "OR",
+    "named": false
+  },
+  {
+    "type": "OTHEROBJECT",
+    "named": false
+  },
+  {
+    "type": "October",
+    "named": false
+  },
+  {
+    "type": "PAID",
+    "named": false
+  },
+  {
+    "type": "PAY",
+    "named": false
+  },
+  {
+    "type": "PLUS",
+    "named": false
+  },
+  {
+    "type": "POUNDS",
+    "named": false
+  },
+  {
+    "type": "REPORT",
+    "named": false
+  },
+  {
+    "type": "SOMECURRENCY",
+    "named": false
+  },
+  {
+    "type": "September",
+    "named": false
+  },
+  {
+    "type": "THAN",
+    "named": false
+  },
+  {
+    "type": "THEDATE",
+    "named": false
+  },
+  {
+    "type": "THEN",
+    "named": false
+  },
+  {
+    "type": "TIMES",
+    "named": false
+  },
+  {
+    "type": "TO",
+    "named": false
+  },
+  {
+    "type": "[",
+    "named": false
+  },
+  {
+    "type": "]",
+    "named": false
+  },
+  {
+    "type": "case",
+    "named": false
+  },
+  {
+    "type": "is",
+    "named": false
+  },
+  {
+    "type": "it",
+    "named": false
+  },
+  {
+    "type": "not",
+    "named": false
+  },
+  {
+    "type": "num",
+    "named": true
+  },
+  {
+    "type": "on",
+    "named": false
+  },
+  {
+    "type": "string",
+    "named": true
+  },
+  {
+    "type": "that",
+    "named": false
+  },
+  {
+    "type": "the",
+    "named": false
+  }
+]

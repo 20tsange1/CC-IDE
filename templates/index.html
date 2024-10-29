@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Parser</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div id="container">
+        <!-- Left: Text editor -->
+        <div id="editor">
+            <h2>Edit Text</h2>
+            <textarea id="inputText" placeholder="Type your text here..."></textarea>
+        </div>
+
+        <!-- Right: Parsed output -->
+        <div id="output">
+            <h2>Parsed Output</h2>
+            <div id="parsedText"></div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to handle text changes and parse them
+        const inputText = document.getElementById('inputText');
+        const parsedText = document.getElementById('parsedText');
+
+        inputText.addEventListener('input', () => {
+            fetch('/parse', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: inputText.value })
+            })
+            .then(response => response.json())
+            .then(data => {
+                parsedText.innerHTML = data.parsed_text;
+            });
+        });
+    </script>
+</body>
+</html>

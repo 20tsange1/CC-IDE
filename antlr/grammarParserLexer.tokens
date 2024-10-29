@@ -1,0 +1,16 @@
+OTTER=1
+SPLITTER=2
+CHEVRON=3
+ICHEVRON=4
+QUOTE=5
+QUESTION=6
+INT=7
+WORD=8
+ID=9
+WS=10
+'::='=1
+'|'=2
+'<'=3
+'>'=4
+'"'=5
+'?'=6
