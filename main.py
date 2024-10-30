@@ -2,6 +2,7 @@ from parser import BNFParser
 import os
 from tree_sitter import Language, Parser
 from ontology import Ontology
+from draw import Draw
 
 
 class Handler:
@@ -13,6 +14,7 @@ class Handler:
         self.currentString = bytes("""hello""", "utf8")
         self.parse_tree = None
         self.prevString = ""
+        self.draw = Draw()
 
 
     def reparseBNF(self, ontology):
@@ -54,6 +56,7 @@ class Handler:
         else:
             column = idx - text.rfind("\n", 0, idx) - 1
         return (line, column)
+
 
     def calculate_edit_offsets(self, new_text):
         # Find the start of the change
@@ -110,25 +113,37 @@ class Handler:
         node = self.parse_tree.root_node
 
         arr = []
+        finalarr = []
 
         def explore(node, depth):
             if depth >= len(arr):
                 arr.append([])
             
+            print(node.text, node.child_count)
             if node.child_count > 0:
                 arr[depth].append(f"<b>{node.type}</b>")
             else:
                 text = node.text.decode("utf8")
                 arr[depth].append(f"<b>{text}</b>")
+                if node.parent.type == "holds":
+
+                    # Do something like this to highlight relevant type text
+                    finalarr.append(f'<b style="background-color:Tomato;">{text}</b>')
+                else:
+                    finalarr.append(f'<b>{text}</b>')
 
             for c in (node.children):
                 explore(c, depth + 1)
 
         explore(node, 0)
+        print(finalarr)
 
         self.prevString = string
 
-        return str(arr).replace("],", "]\n")
+        return str(arr).replace("],", "]\n") + "\n\n" + ' '.join(finalarr)
+
+    def drawTree(self):
+        return self.draw.buildTree(self.parse_tree, 5000, 10000)
 
 
     
@@ -136,53 +151,26 @@ class Handler:
 
 if __name__ == "__main__":
 
-    ont = Ontology()
-    ont.breakdown("text-files/ontologies.txt")
+    # ont = Ontology()
+    # ont.breakdown("text-files/ontologies.txt")
 
     handle = Handler()
 
-    handle.reparseBNF(ont.ontologies)
+    # handle.reparseBNF(ont.ontologies)
 
     # TESTS
 
     strCheck =     bytes(
     """
-    [1] it is not the case that on the 7 January 26 Alice OBLIGATION PAY OTHEROBJECT objectthing
+    [1] it is not the case that on the 7 January 26 Alice Must PAY OTHEROBJECT objectthing
     """,
             "utf8"
         )
 
+
+    tree = handle.parser.parse(strCheck)
     
-    # remember ot add understanding of grammars, recursiveness -> in dissertation
-
-    # First the ide, make sure you are writing within bounds of grammar.
-    # Then analyser? How do we analyse grammar. Should we save, what is interface.
-
-    # API
-
-    # Work on syntax tree, or work on the text? -> Manipulate copy.
-    # Translate to data structure
-
-    # Treating system as feedback loop, with analysis
-    # Not Contract but Template for Contract
-
-    #  Add ontology back in,
-    # FIBO, Financial Industry Business Ontology
-    # Choosing the right word.
-
-    # Autocorrect, suggestions for certain parts of the grammar.
-    # Maybe yours is wrong, but we can give them more.
-
-    # Make new grammar, save it, maybe to new name.
-    # Pickup old contract + grammar, then save it.
-
-
-    
-    
-
-    # tree = handle.parser.parse(strCheck)
-
-    # print(tree.root_node.type)
+    # print(buildTree(tree, 1000, 10000))
 
     # node = tree.root_node
 
