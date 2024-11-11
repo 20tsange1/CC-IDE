@@ -1,17 +1,29 @@
-/* Style the container */
+/* Style the container layout */
 #container {
     display: flex;
-    width: 100vw;
-    height: 100vh;
-}
-
-/* Style the editor and output sections */
-#editor, #output {
-    flex: 1;
+    width: 100%;
+    min-height: 100vh;
     padding: 20px;
     box-sizing: border-box;
 }
 
+/* Vertical container layout */
+#containerVert {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+}
+
+/* Editor and output sections */
+#editor, #output {
+    flex: 1;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Text area styling */
 textarea {
     width: 100%;
     height: 80%;
@@ -20,10 +32,89 @@ textarea {
     font-size: 16px;
 }
 
+/* Parsed text display styling */
 #parsedText {
     white-space: pre-wrap;
     font-size: 16px;
     padding: 10px;
     background-color: #f0f0f0;
     border: 1px solid #ddd;
+    resize: vertical;
+}
+
+/* Highlighter styling */
+#highlighter {
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 80%;
+}
+
+/* Entry input fields */
+.entry {
+    display: flex;
+    margin-bottom: 0.5rem;
+}
+
+.entry input[type="text"] {
+    flex: 1;
+    margin-right: 0.5rem;
+    padding: 0.3rem;
+}
+
+/* Button styling */
+button {
+    padding: 0.5rem;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+    color: #fff;
+}
+
+.remove-btn {
+    background-color: #f44336;
+}
+
+#addEntryBtn {
+    background-color: #4CAF50;
+    margin-top: 1rem;
+}
+
+#toggleColorsBtn {
+    background-color: #4CAF50;
+    margin-bottom: 1rem;
+}
+
+#saveColorsBtn {
+    background-color: #2196F3;
+    margin-top: 1rem;
+}
+
+/* Color options container */
+#colorOptionsContainer {
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-top: 1rem;
+    gap: 10px;
+}
+
+/* Each color entry */
+.color-entry {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.key-label {
+    font-weight: bold;
+}
+
+/* Color picker styling */
+.color-picker {
+    width: 40px;
+    height: 40px;
+    border: none;
+    cursor: pointer;
 }

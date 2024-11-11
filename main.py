@@ -15,6 +15,13 @@ class Handler:
         self.parse_tree = None
         self.prevString = ""
         self.draw = Draw()
+        self.highlights = {}
+
+        # For the different node types
+        self.node_types = []
+        with open("text-files/nodenames.txt", "r") as file:
+            for lines in file.readlines():
+                self.node_types.append(lines.strip())
 
 
     def reparseBNF(self, ontology):
@@ -32,6 +39,10 @@ class Handler:
 
         self.buildLanguage()
 
+        # self.node_types = 
+
+
+
 
     def buildLanguage(self):
         # # Build Language to use within Python
@@ -42,10 +53,6 @@ class Handler:
             ["cola"],
         )
 
-    # def parseString(self, string):
-    #     # Need to add in logic to see which parts of string has changed, so you know what to reparse
-    #     # Then you also want to keep a local copy of the tree
-    #     return string.upper()
 
     # Calculate start and end points (line, column) for Tree-sitter
     def get_point(self, text, idx):
@@ -119,28 +126,33 @@ class Handler:
             if depth >= len(arr):
                 arr.append([])
             
-            print(node.text, node.child_count)
             if node.child_count > 0:
                 arr[depth].append(f"<b>{node.type}</b>")
             else:
                 text = node.text.decode("utf8")
                 arr[depth].append(f"<b>{text}</b>")
-                if node.parent.type == "holds":
-
+                flag = False
+                if node.parent and node.parent.type == "ERROR":
+                    colour = "#f76f6f"
+                    finalarr.append(f'<b style="background-color:{colour};">ERROR</b>')
+                if node.parent and node.parent.type in self.highlights:
                     # Do something like this to highlight relevant type text
-                    finalarr.append(f'<b style="background-color:Tomato;">{text}</b>')
+                    colour = self.highlights[node.parent.type]
+                    if colour != "#000000":
+                        finalarr.append(f'<b style="background-color:{colour};">{text.strip()}</b>')
+                    else:
+                        finalarr.append(f'{text.strip()}')
                 else:
-                    finalarr.append(f'<b>{text}</b>')
+                    finalarr.append(f'{text.strip()}')
 
             for c in (node.children):
                 explore(c, depth + 1)
 
         explore(node, 0)
-        print(finalarr)
 
         self.prevString = string
 
-        return str(arr).replace("],", "]\n") + "\n\n" + ' '.join(finalarr)
+        return ' '.join(finalarr)
 
     def drawTree(self):
         return self.draw.buildTree(self.parse_tree, 5000, 10000)
@@ -160,17 +172,16 @@ if __name__ == "__main__":
 
     # TESTS
 
-    strCheck =     bytes(
+    strCheck =  (
     """
     [1] it is not the case that on the 7 January 26 Alice Must PAY OTHEROBJECT objectthing
-    """,
-            "utf8"
+    """
         )
 
 
-    tree = handle.parser.parse(strCheck)
+    tree = handle.bnfStructure(strCheck)
     
-    # print(buildTree(tree, 1000, 10000))
+    handle.drawTree()
 
     # node = tree.root_node
 

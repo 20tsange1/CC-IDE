@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BNF Editor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylebnf.css') }}">
+</head>
+<body>
+    <h1>BNF Editor</h1>
+
+    <div id="container">
+        <!-- File selection area -->
+        <div id="fileList">
+            <h2>Available Files</h2>
+            <ul id="files"></ul>
+            <select id="filenameSelect">
+                <option value="">Select a file...</option>
+            </select>
+        </div>
+
+        <!-- Text editor area -->
+        <div id="editor">
+            <h2>Edit File</h2>
+            <textarea id="fileContent" placeholder="File content will appear here..." rows="20" cols="50"></textarea>
+            <button id="saveBtn">Save</button>
+        </div>
+    </div>
+
+    <script>
+        const filesList = document.getElementById('files');
+        const filenameSelect = document.getElementById('filenameSelect');
+        const fileContent = document.getElementById('fileContent');
+        const saveBtn = document.getElementById('saveBtn');
+
+        // Load file list from server
+        function loadFileList() {
+            fetch('/files')
+                .then(response => response.json())
+                .then(files => {
+                    filenameSelect.innerHTML = '<option value="">Select a file...</option>';
+                    files.forEach(file => {
+                        const option = document.createElement('option');
+                        option.value = file;
+                        option.textContent = file;
+                        filenameSelect.appendChild(option);
+
+                        var li = document.createElement("li");
+                        li.appendChild(document.createTextNode(file));
+                        filesList.appendChild(li)
+                    });
+                })
+                .catch(error => console.error('Error loading files:', error));
+        }
+
+        // Load file content when a file is selected
+        filenameSelect.addEventListener('change', () => {
+            const filename = filenameSelect.value;
+            if (filename) {
+                fetch(`/load-file/${filename}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.content) {
+                            fileContent.value = data.content;
+                        } else {
+                            alert('Error loading file content');
+                        }
+                    })
+                    .catch(error => console.error('Error loading file content:', error));
+            } else {
+                fileContent.value = '';  // Clear the editor if no file is selected
+            }
+        });
+
+        // Save file content to server
+        saveBtn.addEventListener('click', () => {
+            const filename = filenameSelect.value;
+            const content = fileContent.value;
+
+            if (!filename) {
+                alert('Please select a file to save');
+                return;
+            }
+
+            fetch('/save-file', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ filename, content })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert(data.message);
+                } else {
+                    alert('Error saving file');
+                }
+            })
+            .catch(error => console.error('Error saving file:', error));
+        });
+
+        // Load the file list on page load
+        document.addEventListener('DOMContentLoaded', loadFileList);
+    </script>
+</body>
+</html>

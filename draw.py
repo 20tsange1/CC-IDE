@@ -1,71 +1,90 @@
 from tree_sitter import Language, Parser
+from collections import deque
 
 class Draw:
     def __init__(self):
         pass
-
-    def textNode(self, node, x, y, level):
-        # Create a single node with text inside
-        text = node.text.decode("utf8")
-        width = len(text) * 10
-        content = f'<rect x="{x - width // 2 - 5}" y="{y - 30}" rx="20" ry="20" width="{width + 10}" height="50" style="fill:blue;stroke:black;stroke-width:5;opacity:0.5" />\n'
-        content += f'<text x="{x}" y="{y}" font-size="15" text-anchor="middle">{text}</text>\n'
-        return content
     
-    def calculateMaxWidthPerLevel(self, node, level_counts, level=0):
+    # def calculateWidths(self, node, levelwidth, level=0):
+    #     # Increment node count at the current level
+    #     if level >= len(levelwidth):
+    #         levelwidth.append(deque([0]))
+    #     if node.child_count > 0:
+    #         levelwidth[level].append(levelwidth[level][-1] + len(node.type) * 15 + 10)
+    #     else:
+    #         levelwidth[level].append(levelwidth[level][-1] + len(node.text.decode("utf8")) * 15 +  10) 
+
+    #     # Recursively calculate for each child node
+    #     for child in node.children:
+    #         self.calculateWidths(child, levelwidth, level + 1)
+
+    def calculateWidths(self, node, levelwidth, level=0):
         # Increment node count at the current level
-        if level >= len(level_counts):
-            level_counts.append(0)
-        level_counts[level] += 1
+        if level >= len(levelwidth):
+            levelwidth.append(deque([0]))
 
         # Recursively calculate for each child node
+        widthChild = 0
         for child in node.children:
-            self.calculateMaxWidthPerLevel(child, level_counts, level + 1)
+            widthChild += self.calculateWidths(child, levelwidth, level + 1)
+
+        if node.child_count > 0:
+            if len(node.type) * 15 + 10 > widthChild:
+                levelwidth[level].append(levelwidth[level][-1] + len(node.type) * 15 + 10)
+                return len(node.type) * 15 + 10
+            else:
+                levelwidth[level].append(levelwidth[level][-1] + widthChild)
+                return widthChild 
+        else:
+            levelwidth[level].append(levelwidth[level][-1] + len(node.text.decode("utf8")) * 15 +  10) 
+            return len(node.text.decode("utf8")) * 15 +  10
 
 
-    def exploreNodes(self, node, x, y, level, level_counts):
+    def textNode(self, node, level, levelwidth):
+        # Create a single node with text inside
+        text = node.text.decode("utf8")
+        width = len(text) * 15 + 10
+        x = (levelwidth[level].popleft() + levelwidth[level][0]) // 2 - (width // 2)
+        content = f'<rect x="{x}" y="{level * 100}" rx="10" ry="10" width="{width}" height="50" style="fill:blue;stroke:black;stroke-width:2;opacity:0.5" />\n'
+        content += f'<text x="{x + width // 2}" y="{level * 100 + 25}" font-size="15" text-anchor="middle">{text}</text>\n'
+        return content
+
+
+    def exploreNodes(self, node, level, levelwidth):
         numchild = node.child_count
         content = ""
 
         if numchild > 0:
-            # Add the parent node with a rectangle and label
-            width = len(node.type) * 20
-            content += f'<rect x="{x- width // 2}" y="{y-30}" rx="20" ry="20" width="{width}" height="50" style="fill:red;stroke:black;stroke-width:5;opacity:0.5" />\n'
-            content += f'<text x="{x}" y="{y}" font-size="15" text-anchor="middle">{node.type}</text>\n'
-
-            # Get spacing based on the maximum width at this level
-            max_width = level_counts[level]
-            child_spacing = 600 / max_width  # Total width can be adjusted as needed
-            start_x = x - (child_spacing * (numchild - 1) / 2)
+            width = len(node.type) * 15 + 10
+            x = (levelwidth[level].popleft() + levelwidth[level][0]) // 2 - (width // 2)
+            content += f'<rect x="{x}" y="{level * 100}" rx="10" ry="10" width="{width}" height="50" style="fill:red;stroke:black;stroke-width:2;opacity:0.5" />\n'
+            content += f'<text x="{x + width // 2}" y="{level * 100 + 25}" font-size="15" text-anchor="middle">{node.type}</text>\n'
 
             for i, child in enumerate(node.children):
-                # Position for each child node
-                child_x = start_x + i * child_spacing
-                child_y = y + 150  # Increase y to place children below the parent
+                content += f'<line x1="{x+width//2}" y1="{level * 100+50}" x2="{levelwidth[level+1][0] + (levelwidth[level+1][1] - levelwidth[level+1][0]) // 2}" y2="{level*100 + 100}" stroke="black"/>'
+                content += self.exploreNodes(child, level + 1, levelwidth)
 
-                # Draw line to child node
-                content += f'<line x1="{x}" y1="{y+20}" x2="{child_x}" y2="{child_y - 30}" stroke="black"/>'
+            return content
 
-                # Recurse to draw each child node
-                content += self.exploreNodes(child, child_x, child_y, level + 1, level_counts)
         else:
             # Leaf node, use textNode function to render it
-            return self.textNode(node, x, y, level)
-
+            return self.textNode(node, level, levelwidth)
 
         # Currently doing it all wrong, you should be calculating the width of the text, then adding that to total 
         # width of the level, then moving back upwards
         # and using that to split the widths
 
-        return content
 
+        # Good enough for now, but next, want to recursively calculate all widths and subwidths, then propagate back upwards.
 
 
     def buildTree(self, tree, width, height):
         if tree:
-            level_counts = []
-            self.calculateMaxWidthPerLevel(tree.root_node, level_counts)
-            content = self.exploreNodes(tree.root_node, width // 2, height // 2, 0, level_counts)
+            levelwidth = []
+            self.calculateWidths(tree.root_node, levelwidth)
+            # print(levelwidth)
+            content = self.exploreNodes(tree.root_node, 0, levelwidth)
+            # print(content)
             return f'<svg width="{width}" height="{height}">{content}</svg>'
         else:
             return ""

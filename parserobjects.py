@@ -7,44 +7,46 @@ from grammarParserLexer import grammarParserLexer
 from grammarParserParser import grammarParserParser
 from grammarParserVisitor import grammarParserVisitor
 
+class Component:
+    def __init__(self, name, children=[]):
+        self.name = name
+        self.children = children
+        self.next = set()
+        self.prev = set()
+
+    def __repr__(self):
+        return f"<{self.name}> : {self.children}, Prev - {self.prev}, Next - {self.next}"
+
 class BNFParser:
-    def __init__(self, fileName, output, head="text-files/head.txt", tail="text-files/tail.txt", ontologies={}, nodenames="text-files/nodenames.txt"):
+    def __init__(self, fileName):
         self.fileName = fileName
-        self.output = output
-        self.head = head
-        self.tail = tail
-        self.nodenames = nodenames
-        self.ontologies = ontologies
-        self.mapped = {}
         self.node_types = []
+        self.node_children = []
+        self.nodes = []
 
     def evaluate(self, word):
         if word[0] == "<" and word[-1] == ">":
+            self.node_children[-1][-1].append(word[1:-1].replace("-", "_"))
             return "$." + word[1:-1].replace("-", "_")
         elif word[-1] == "?":
             if word[0] == "<" and word[-2]:
+                self.node_children[-1][-1].append(word[1:-2].replace("-", "_"))
                 return "optional($." + word[1:-2].replace("-", "_") + ")"
             else:
+                self.node_children[-1][-1].append(word)
                 return "optional(" + word + ")"
         elif word[0] == "/" and word[-1] == "/":
+            self.node_children[-1][-1].append(word)
             return word
         else:
-            if word in self.ontologies:
-                if word not in self.mapped:
-                    self.buildOntologyRule(word)
-                return f"$.{word}"
-            else:
-                return "'" + word + "'"
-
-    def buildOntologyRule(self, word):
-        retStr = f"{word}: $ => choice (\n"
-        retStr += ', '.join([f"'{w}'" for w in self.ontologies[word]])
-        retStr += "\n),"
-        self.mapped[word] = retStr
-        self.node_types.append(word)
+            self.node_children[-1][-1].append("'" + word + "'")
+            return "'" + word + "'"
 
     def buildSeqRule(self, rule):
         retStr = ""
+
+        self.node_children[-1].append([])
+
         if len(rule) > 1:
             retStr += "seq("
         retStr += self.evaluate(rule[0])
@@ -75,8 +77,9 @@ class BNFParser:
         retStr = ""
         if symbol[0] == "<" and symbol[-1] == ">":
             word = symbol[1:-1].replace("-", "_")
+            self.node_children.append([])
             retStr += word + ": $ => " + self.buildInnerRule(rules) + "\n),"
-            self.node_types.append(word)
+            self.nodes.append(Component(word, self.node_children.pop()))
         return retStr
 
     def buildGrammar(self, rulesArr):
@@ -97,26 +100,10 @@ class BNFParser:
             vinterp = grammarParserVisitor()
             arr = vinterp.visit(tree)
 
-            with open(self.head, 'r') as head:
-                text = head.read()
-            with open(self.output, 'w') as file:
-                file.write(text)
-
-            with open(self.output, 'a') as file:
-                file.write(self.buildGrammar(arr))
-
-                for ont in self.mapped.values():
-                    file.write(ont + "\n\n")
-            
-            with open(self.tail, 'r') as tail:
-                text = tail.read()
-            with open(self.output, 'a') as file:
-                file.write(text)
-            
-            with open(self.nodenames, 'a') as file:
-                for types in self.node_types:
-                    file.write(types + "\n")
+            self.buildGrammar(arr)
 
 
 if __name__ == '__main__':
-    main(sys.argv)
+    bnfp = BNFParser("text-files/colabnf.txt")
+    bnfp.main()
+    # main(sys.argv)
