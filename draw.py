@@ -5,18 +5,6 @@ class Draw:
     def __init__(self):
         pass
     
-    # def calculateWidths(self, node, levelwidth, level=0):
-    #     # Increment node count at the current level
-    #     if level >= len(levelwidth):
-    #         levelwidth.append(deque([0]))
-    #     if node.child_count > 0:
-    #         levelwidth[level].append(levelwidth[level][-1] + len(node.type) * 15 + 10)
-    #     else:
-    #         levelwidth[level].append(levelwidth[level][-1] + len(node.text.decode("utf8")) * 15 +  10) 
-
-    #     # Recursively calculate for each child node
-    #     for child in node.children:
-    #         self.calculateWidths(child, levelwidth, level + 1)
 
     def calculateWidths(self, node, levelwidth, level=0):
         # Increment node count at the current level

@@ -46,4 +46,3 @@ class grammarParserVisitor(ParseTreeVisitor):
         if retArr[0] == retArr[-1] == '"':
             return '"' + ' '.join(retArr[1:-1]) + '"'
         return ''.join(retArr)
-

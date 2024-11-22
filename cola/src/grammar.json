@@ -845,6 +845,10 @@
         {
           "type": "STRING",
           "value": "CHARGE"
+        },
+        {
+          "type": "STRING",
+          "value": "SEND"
         }
       ]
     },
@@ -862,6 +866,10 @@
         {
           "type": "STRING",
           "value": "CHARGED"
+        },
+        {
+          "type": "STRING",
+          "value": "SENT"
         }
       ]
     },
@@ -1096,6 +1104,19 @@
             {
               "type": "STRING",
               "value": "EUROS"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "num"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "FRANCS"
             },
             {
               "type": "SYMBOL",

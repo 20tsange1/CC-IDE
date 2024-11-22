@@ -12,6 +12,8 @@ arg: symbol+
     ;
 
 symbol: symbol QUESTION
+    | symbol PLUS
+    | symbol STAR
     | CHEVRON WORD ICHEVRON
     | QUOTE WORD* QUOTE
     | WORD
@@ -23,6 +25,8 @@ CHEVRON: '<'  ;
 ICHEVRON: '>' ; // inverted chevron
 QUOTE: '"';
 QUESTION: '?';
+PLUS: '+';
+STAR: '*';
 
 INT : [0-9]+ ;
 WORD: ~[ \t\n?"<>:|;]+;

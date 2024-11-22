@@ -43,8 +43,6 @@
 <simple-condition> ::= <identity> <holds>? <subject> <verb-status> <object> <date>
                      | <identity> <holds>? <subject> <date> <verb-status> <object>
                      | <identity> <holds>? <date> <subject> <verb-status> <object>
-                     | <identity> <holds>? <subject> <modal-verb> <verb> <object> <date>
-                     | <identity> <holds>? <boolean-expression>
 
 <boolean-expression> ::= <subject> <verb-status> <comparison> <subject>
 

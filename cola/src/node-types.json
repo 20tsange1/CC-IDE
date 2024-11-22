@@ -595,6 +595,10 @@
     "named": false
   },
   {
+    "type": "FRANCS",
+    "named": false
+  },
+  {
     "type": "February",
     "named": false
   },
@@ -684,6 +688,14 @@
   },
   {
     "type": "REPORT",
+    "named": false
+  },
+  {
+    "type": "SEND",
+    "named": false
+  },
+  {
+    "type": "SENT",
     "named": false
   },
   {

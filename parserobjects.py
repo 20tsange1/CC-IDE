@@ -11,11 +11,14 @@ class Component:
     def __init__(self, name, children=[]):
         self.name = name
         self.children = children
-        self.next = set()
-        self.prev = set()
+        self.next = {}
+        self.prev = {}
 
     def __repr__(self):
-        return f"<{self.name}> : {self.children}, Prev - {self.prev}, Next - {self.next}"
+        return self.name
+
+    # def __repr__(self):
+    #     return f"<{self.name}> : {self.children}, Prev - {self.prev}, Next - {self.next}"
 
 class BNFParser:
     def __init__(self, fileName):

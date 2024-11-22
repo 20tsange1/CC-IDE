@@ -102,13 +102,15 @@ subject: $ => ($.string
 verb: $ => choice (
 	'DELIVER', 
 	'PAY', 
-	'CHARGE'
+	'CHARGE', 
+	'SEND'
 ),
 
 verb_status: $ => choice (
 	'DELIVERED', 
 	'PAID', 
-	'CHARGED'
+	'CHARGED', 
+	'SENT'
 ),
 
 comparison: $ => choice (
@@ -154,6 +156,7 @@ numerical_object: $ => choice (
 	seq('POUNDS', $.num), 
 	seq('DOLLARS', $.num), 
 	seq('EUROS', $.num), 
+	seq('FRANCS', $.num), 
 	seq('AMOUNT', $.subject)
 ),
 

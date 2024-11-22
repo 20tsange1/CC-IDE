@@ -7,6 +7,16 @@ from grammarParserLexer import grammarParserLexer
 from grammarParserParser import grammarParserParser
 from grammarParserVisitor import grammarParserVisitor
 
+class Component:
+    def __init__(self, name, children=[]):
+        self.name = name
+        self.children = children
+        self.next = {}
+        self.prev = {}
+
+    def __repr__(self):
+        return self.name
+
 class BNFParser:
     def __init__(self, fileName, output, head="text-files/head.txt", tail="text-files/tail.txt", ontologies={}, nodenames="text-files/nodenames.txt"):
         self.fileName = fileName
@@ -18,15 +28,35 @@ class BNFParser:
         self.mapped = {}
         self.node_types = []
 
+        self.node_children = []
+        self.nodes = []
+
     def evaluate(self, word):
         if word[0] == "<" and word[-1] == ">":
+            self.node_children[-1][-1].append(word[1:-1].replace("-", "_"))
             return "$." + word[1:-1].replace("-", "_")
         elif word[-1] == "?":
-            if word[0] == "<" and word[-2]:
+            if word[0] == "<" and word[-2] == ">":
+                self.node_children[-1][-1].append(word[1:-2].replace("-", "_"))
                 return "optional($." + word[1:-2].replace("-", "_") + ")"
             else:
+                self.node_children[-1][-1].append(word)
                 return "optional(" + word + ")"
+        # I've added functionality, but I do believe it may be better to actually just use recursion instead.
+        # Reason is due to excess strings being captured and matched. There may be a way around it but I am not sure yet.
+        # Need to start thinking about left associativity and right associativity. 
+        elif word[-1] == "*":
+            if word[0] == "<" and word[-2] == ">":
+                return "repeat($." + word[1:-2].replace("-", "_") + ")"
+            else:
+                return "repeat(" + word + ")"
+        elif word[-1] == "+":
+            if word[0] == "<" and word[-2] == ">":
+                return "repeat1($." + word[1:-2].replace("-", "_") + ")"
+            else:
+                return "repeat1(" + word + ")"
         elif word[0] == "/" and word[-1] == "/":
+            self.node_children[-1][-1].append(word)
             return word
         else:
             if word in self.ontologies:
@@ -34,7 +64,9 @@ class BNFParser:
                     self.buildOntologyRule(word)
                 return f"$.{word}"
             else:
+                self.node_children[-1][-1].append("'" + word + "'")
                 return "'" + word + "'"
+    
 
     def buildOntologyRule(self, word):
         retStr = f"{word}: $ => choice (\n"
@@ -45,6 +77,9 @@ class BNFParser:
 
     def buildSeqRule(self, rule):
         retStr = ""
+
+        self.node_children[-1].append([])
+
         if len(rule) > 1:
             retStr += "seq("
         retStr += self.evaluate(rule[0])
@@ -75,8 +110,15 @@ class BNFParser:
         retStr = ""
         if symbol[0] == "<" and symbol[-1] == ">":
             word = symbol[1:-1].replace("-", "_")
+
+            self.node_children.append([])
+            
             retStr += word + ": $ => " + self.buildInnerRule(rules) + "\n),"
+            
+            self.nodes.append(Component(word, self.node_children.pop()))
+
             self.node_types.append(word)
+
         return retStr
 
     def buildGrammar(self, rulesArr):
@@ -113,7 +155,7 @@ class BNFParser:
             with open(self.output, 'a') as file:
                 file.write(text)
             
-            with open(self.nodenames, 'a') as file:
+            with open(self.nodenames, 'w') as file:
                 for types in self.node_types:
                     file.write(types + "\n")
 

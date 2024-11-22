@@ -12,25 +12,18 @@
         <div id="editor">
             <h2>Edit Text</h2>
             <textarea id="inputText" placeholder="Type your text here..."></textarea>
+            <h2>Available Files</h2>
+            <ul id="files"></ul>
+            <select id="filenameSelect">
+                <option value="">Select a file...</option>
+            </select>
+            <button id="saveBtn">Save</button>
         </div>
 
-        <!-- Right: Parsed output and highlight options -->
-        <div id="containerVert">
-            <!-- Parsed output section -->
-            <div id="output">
-                <h2>Parsed Output</h2>
-                <div id="parsedText"></div>
-            </div>
-
-            <!-- Highlighter options -->
-            <div id="highlighter">
-                <h2>Highlight Options</h2>
-                <button type="button" id="toggleColorsBtn">Show Colors</button>
-                <div id="colorOptionsContainer" style="display: none">
-                    <!-- Dynamic color entries will be added here -->
-                </div>
-                <button type="button" id="saveColorsBtn" style="display: none">Save Colors</button>
-            </div>
+        <!-- Parsed output section -->
+        <div id="output">
+            <h2>Parsed Output</h2>
+            <div id="parsedText"></div>
         </div>
     </div>
 
@@ -56,78 +49,80 @@
     </script>
 
     <script>
-        const keysArray = {{ node_types | tojson }};
-        const colorOptionsContainer = document.getElementById('colorOptionsContainer');
-        const toggleColorsBtn = document.getElementById('toggleColorsBtn');
-        const saveColorsBtn = document.getElementById('saveColorsBtn');
+        const filesList = document.getElementById('files');
+        const filenameSelect = document.getElementById('filenameSelect');
+        const fileContent = document.getElementById('inputText');
 
-        // Toggle color options visibility
-        toggleColorsBtn.addEventListener('click', () => {
-            if (colorOptionsContainer.style.display == 'none') {
-                colorOptionsContainer.style.display = 'block';
-                saveColorsBtn.style.display = 'block';
-                toggleColorsBtn.textContent = "Hide Colours"
-            }
-            else {
-                colorOptionsContainer.style.display = 'none';
-                saveColorsBtn.style.display = 'none';
-                toggleColorsBtn.textContent = "Show Colours"
+        // Load file list from server
+        function loadFileList() {
+            fetch('/contract_files')
+                .then(response => response.json())
+                .then(files => {
+                    filenameSelect.innerHTML = '<option value="">Select a file...</option>';
+                    files.forEach(file => {
+                        const option = document.createElement('option');
+                        option.value = file;
+                        option.textContent = file;
+                        filenameSelect.appendChild(option);
+
+                        var li = document.createElement("li");
+                        li.appendChild(document.createTextNode(file));
+                        filesList.appendChild(li)
+                    });
+                })
+                .catch(error => console.error('Error loading files:', error));
+        }
+
+        // Load file content when a file is selected
+        filenameSelect.addEventListener('change', () => {
+            const filename = filenameSelect.value;
+            if (filename) {
+                fetch(`/contract_load-file/${filename}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.content) {
+                            fileContent.value = data.content;
+                        } else {
+                            alert('Error loading file content');
+                        }
+                    })
+                    .catch(error => console.error('Error loading file content:', error));
+            } else {
+                fileContent.value = '';  // Clear the editor if no file is selected
             }
         });
 
-        // Create color options
-        function createColorOptions() {
-            colorOptionsContainer.innerHTML = ''; // Clear existing options
+        // Save file content to server
+        saveBtn.addEventListener('click', () => {
+            const filename = filenameSelect.value;
+            const content = fileContent.value;
 
-            keysArray.forEach(key => {
-                const entryDiv = document.createElement('div');
-                entryDiv.classList.add('color-entry');
+            if (!filename) {
+                alert('Please select a file to save');
+                return;
+            }
 
-                // Key label
-                const keyLabel = document.createElement('span');
-                keyLabel.textContent = key;
-                keyLabel.classList.add('key-label');
-
-                // Color input
-                const colorInput = document.createElement('input');
-                colorInput.type = 'color';
-                colorInput.classList.add('color-picker');
-                colorInput.name = `${key}Color`;
-
-                entryDiv.appendChild(keyLabel);
-                entryDiv.appendChild(colorInput);
-                colorOptionsContainer.appendChild(entryDiv);
-            });
-        }
-
-        // Initialize color options
-        createColorOptions();
-
-        // Save colors button functionality
-        saveColorsBtn.addEventListener('click', () => {
-            const colorData = {};
-
-            // Collect color values for each key
-            keysArray.forEach(key => {
-                const colorInput = document.querySelector(`input[name="${key}Color"]`);
-                colorData[key] = colorInput.value;
-            });
-
-            // Send color data to the Flask endpoint
-            fetch('/submit-options', {
+            fetch('/contract_save-file', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ colors: colorData })
+                body: JSON.stringify({ filename, content })
             })
-            .then(response => response.text())
+            .then(response => response.json())
             .then(data => {
-                console.log("Server response:", data); // Handle the response if needed
-                alert("Colors saved successfully!");
+                if (data.message) {
+                    alert(data.message);
+                } else {
+                    alert('Error saving file');
+                }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => console.error('Error saving file:', error));
         });
+
+        // Load the file list on page load
+        document.addEventListener('DOMContentLoaded', loadFileList);
     </script>
+
 </body>
 </html>

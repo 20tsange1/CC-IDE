@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='stylebnf.css') }}">
 </head>
 <body>
-    <h1>BNF Editor</h1>
+    <h1 id="center">BNF Editor</h1>
 
     <div id="container">
         <!-- File selection area -->
@@ -22,8 +22,21 @@
         <!-- Text editor area -->
         <div id="editor">
             <h2>Edit File</h2>
-            <textarea id="fileContent" placeholder="File content will appear here..." rows="20" cols="50"></textarea>
+            <textarea id="fileContent" placeholder="File content will appear here..." rows="20" cols="100"></textarea>
             <button id="saveBtn">Save</button>
+        </div>
+    </div>
+
+    <h1 id="center">Highlight Options</h1>
+    <div id="container">
+        <!-- Highlighter options -->
+        <div id="highlighter">
+            <h2>Highlight Options</h2>
+            <button type="button" id="toggleColorsBtn">Show Colors</button>
+            <div id="colorOptionsContainer" style="display: none">
+                <!-- Dynamic color entries will be added here -->
+            </div>
+            <button type="button" id="saveColorsBtn" style="display: none">Save Colors</button>
         </div>
     </div>
 
@@ -35,7 +48,7 @@
 
         // Load file list from server
         function loadFileList() {
-            fetch('/files')
+            fetch('/bnf_files')
                 .then(response => response.json())
                 .then(files => {
                     filenameSelect.innerHTML = '<option value="">Select a file...</option>';
@@ -57,7 +70,7 @@
         filenameSelect.addEventListener('change', () => {
             const filename = filenameSelect.value;
             if (filename) {
-                fetch(`/load-file/${filename}`)
+                fetch(`/bnf_load-file/${filename}`)
                     .then(response => response.json())
                     .then(data => {
                         if (data.content) {
@@ -82,7 +95,7 @@
                 return;
             }
 
-            fetch('/save-file', {
+            fetch('/bnf_save-file', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -102,6 +115,81 @@
 
         // Load the file list on page load
         document.addEventListener('DOMContentLoaded', loadFileList);
+    </script>
+
+    <script>
+        const keysArray = {{ node_types | tojson }};
+        const colorOptionsContainer = document.getElementById('colorOptionsContainer');
+        const toggleColorsBtn = document.getElementById('toggleColorsBtn');
+        const saveColorsBtn = document.getElementById('saveColorsBtn');
+
+        // Toggle color options visibility
+        toggleColorsBtn.addEventListener('click', () => {
+            if (colorOptionsContainer.style.display == 'none') {
+                colorOptionsContainer.style.display = 'block';
+                saveColorsBtn.style.display = 'block';
+                toggleColorsBtn.textContent = "Hide Colours"
+            }
+            else {
+                colorOptionsContainer.style.display = 'none';
+                saveColorsBtn.style.display = 'none';
+                toggleColorsBtn.textContent = "Show Colours"
+            }
+        });
+
+        // Create color options
+        function createColorOptions() {
+            colorOptionsContainer.innerHTML = ''; // Clear existing options
+
+            keysArray.forEach(key => {
+                const entryDiv = document.createElement('div');
+                entryDiv.classList.add('color-entry');
+
+                // Key label
+                const keyLabel = document.createElement('span');
+                keyLabel.textContent = key;
+                keyLabel.classList.add('key-label');
+
+                // Color input
+                const colorInput = document.createElement('input');
+                colorInput.type = 'color';
+                colorInput.classList.add('color-picker');
+                colorInput.name = `${key}Color`;
+
+                entryDiv.appendChild(keyLabel);
+                entryDiv.appendChild(colorInput);
+                colorOptionsContainer.appendChild(entryDiv);
+            });
+        }
+
+        // Initialize color options
+        createColorOptions();
+
+        // Save colors button functionality
+        saveColorsBtn.addEventListener('click', () => {
+            const colorData = {};
+
+            // Collect color values for each key
+            keysArray.forEach(key => {
+                const colorInput = document.querySelector(`input[name="${key}Color"]`);
+                colorData[key] = colorInput.value;
+            });
+
+            // Send color data to the Flask endpoint
+            fetch('/submit-options', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ colors: colorData })
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log("Server response:", data); // Handle the response if needed
+                alert("Colors saved successfully!");
+            })
+            .catch(error => console.error('Error:', error));
+        });
     </script>
 </body>
 </html>
