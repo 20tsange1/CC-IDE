@@ -5,8 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Text Parser</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styleheader.css') }}">
 </head>
 <body>
+    <div class="header">
+        <a href="" class="logo">Computable Contracts - IDE</a>
+        <div class="header-right">
+          <a class="active" href="/">Home</a>
+          <a href="/tree">Tree</a>
+          <a href="/dev">Developer</a>
+        </div>
+      </div>
+
     <div id="container">
         <!-- Left: Text editor -->
         <div id="editor">

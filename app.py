@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify, render_template_string
+from markupsafe import Markup
 from main import Handler
 from ontology import Ontology
 import os
@@ -31,17 +32,8 @@ def display_tree():
     # Generate SVG for the tree
     # handler.bnfStructure("[1] it is the case that on the 20 January 15 Alice Cannot PAY POUNDS 100 IF [2] it is not the case that Alice PAID EQUAL TO Bob")
     svg_content = handler.drawTree()
-    
-    # Render as HTML
-    html_content = f"""
-    <html>
-        <body>
-            <h1>N-Ary Tree Visualization</h1>
-            {svg_content}
-        </body>
-    </html>
-    """
-    return render_template_string(html_content)
+    svg_content = Markup(svg_content)
+    return render_template('treeview.html', content=svg_content)
 
 @app.route('/contract_files', methods=['GET'])
 def contract_list_files():
