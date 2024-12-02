@@ -202,6 +202,18 @@ class Handler:
         We can then construct our final sentence back together, utilising
         information from our parse tree to process the text in a useful manner.
         """
+
+        """
+        One of the problems with exploring it in a DFS fashion is that we are not utilising the tools provided
+        by tree-sitter as well as we can. Tree-sitter has a TreeCursor object that traverses a tree efficiently.
+        
+        class tree_sitter.TreeCursor
+        
+        https://tree-sitter.github.io/py-tree-sitter/classes/tree_sitter.TreeCursor.html
+        
+        """
+
+
         if depth >= len(arr):
             arr.append([])
 

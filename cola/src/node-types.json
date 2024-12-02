@@ -161,6 +161,22 @@
         {
           "type": "num",
           "named": true
+        },
+        {
+          "type": "specific_date",
+          "named": true
+        },
+        {
+          "type": "subject",
+          "named": true
+        },
+        {
+          "type": "temporal_offset",
+          "named": true
+        },
+        {
+          "type": "temporal_quantifier",
+          "named": true
         }
       ]
     }
@@ -431,6 +447,25 @@
     }
   },
   {
+    "type": "specific_date",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "month",
+          "named": true
+        },
+        {
+          "type": "num",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "statement",
     "named": true,
     "fields": {},
@@ -463,6 +498,26 @@
         }
       ]
     }
+  },
+  {
+    "type": "temporal_offset",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "num",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "temporal_quantifier",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "verb",
@@ -520,10 +575,6 @@
   },
   {
     "type": ")",
-    "named": false
-  },
-  {
-    "type": "ADATE",
     "named": false
   },
   {
@@ -703,6 +754,10 @@
     "named": false
   },
   {
+    "type": "SOMEDATE",
+    "named": false
+  },
+  {
     "type": "September",
     "named": false
   },
@@ -735,7 +790,23 @@
     "named": false
   },
   {
+    "type": "after",
+    "named": false
+  },
+  {
+    "type": "before",
+    "named": false
+  },
+  {
     "type": "case",
+    "named": false
+  },
+  {
+    "type": "day",
+    "named": false
+  },
+  {
+    "type": "days",
     "named": false
   },
   {
@@ -768,6 +839,22 @@
   },
   {
     "type": "the",
+    "named": false
+  },
+  {
+    "type": "week",
+    "named": false
+  },
+  {
+    "type": "weeks",
+    "named": false
+  },
+  {
+    "type": "year",
+    "named": false
+  },
+  {
+    "type": "years",
     "named": false
   }
 ]
