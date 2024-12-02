@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,15 +8,16 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='stylebnf.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styleheader.css') }}">
 </head>
+
 <body>
     <div class="header">
         <a href="" class="logo">Computable Contracts - IDE</a>
         <div class="header-right">
-          <a href="/">Home</a>
-          <a href="/tree">Tree</a>
-          <a class="active" href="/dev">Developer</a>
+            <a href="/">Home</a>
+            <a href="/tree">Tree</a>
+            <a class="active" href="/dev">Developer</a>
         </div>
-      </div>
+    </div>
 
     <h1 id="center">BNF Editor</h1>
 
@@ -33,7 +35,14 @@
         <div id="editor">
             <h2>Edit File</h2>
             <textarea id="fileContent" placeholder="File content will appear here..." rows="20" cols="100"></textarea>
-            <button id="saveBtn">Save</button>
+            <div>
+                <button id="saveBtn">Save</button>
+                <button id="deleteBtn">Delete</button>
+            </div>
+            <div>
+                <input type="text" id="createName"></input>
+                <button id="createBtn">Create</button>
+            </div>
         </div>
     </div>
 
@@ -55,13 +64,21 @@
         const filenameSelect = document.getElementById('filenameSelect');
         const fileContent = document.getElementById('fileContent');
         const saveBtn = document.getElementById('saveBtn');
+        const pathname = 'bnfs'
 
         // Load file list from server
         function loadFileList() {
-            fetch('/bnf_files')
+            fetch('/files', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ path: pathname, ends: '.txt', contains: '' })
+            })
                 .then(response => response.json())
                 .then(files => {
                     filenameSelect.innerHTML = '<option value="">Select a file...</option>';
+                    filesList.replaceChildren();
                     files.forEach(file => {
                         const option = document.createElement('option');
                         option.value = file;
@@ -80,7 +97,13 @@
         filenameSelect.addEventListener('change', () => {
             const filename = filenameSelect.value;
             if (filename) {
-                fetch(`/bnf_load-file/${filename}`)
+                fetch(`/load-file/${filename}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ path: pathname })
+                })
                     .then(response => response.json())
                     .then(data => {
                         if (data.content) {
@@ -105,22 +128,95 @@
                 return;
             }
 
-            fetch('/bnf_save-file', {
+            fetch('/save-file', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ filename, content })
+                body: JSON.stringify({ filename, content, path: pathname })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message) {
-                    alert(data.message);
-                } else {
-                    alert('Error saving file');
-                }
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        fetch('/parse-bnf', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ filename, path: pathname, ont: 'text-files' })
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.message) {
+                                    alert(data.message);
+                                } else {
+                                    alert('Error creating file');
+                                }
+                            })
+                            .catch(error => console.error('Error creating file:', error));
+                    } else {
+                        alert('Error saving file');
+                    }
+                })
+                .catch(error => console.error('Error saving file:', error));
+
+
+        });
+
+        // Delete file in server
+        deleteBtn.addEventListener('click', () => {
+            const filename = filenameSelect.value;
+
+            if (!filename) {
+                alert('Please select a file to delete');
+                return;
+            }
+
+            fetch('/delete-file', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ filename, path: pathname })
             })
-            .catch(error => console.error('Error saving file:', error));
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                    } else {
+                        alert('Error deleting file');
+                    }
+                })
+                .catch(error => console.error('Error deleting file:', error));
+            loadFileList();
+        });
+
+        // Create a new file within server
+        createBtn.addEventListener('click', () => {
+            const filename = document.getElementById('createName').value;
+
+            if (!filename) {
+                alert('Please input a filename');
+                return;
+            }
+
+            fetch('/create-file', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ filename, path: pathname })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                    } else {
+                        alert('Error creating file');
+                    }
+                })
+                .catch(error => console.error('Error creating file:', error));
+            loadFileList();
         });
 
         // Load the file list on page load
@@ -193,13 +289,14 @@
                 },
                 body: JSON.stringify({ colors: colorData })
             })
-            .then(response => response.text())
-            .then(data => {
-                console.log("Server response:", data); // Handle the response if needed
-                alert("Colors saved successfully!");
-            })
-            .catch(error => console.error('Error:', error));
+                .then(response => response.text())
+                .then(data => {
+                    console.log("Server response:", data); // Handle the response if needed
+                    alert("Colors saved successfully!");
+                })
+                .catch(error => console.error('Error:', error));
         });
     </script>
 </body>
+
 </html>

@@ -22,10 +22,6 @@ PERMISSION
 PROHIBITION
 modal_verb
 date
-date
-temporal_quantifier
-specific_date
-temporal_offset
 month
 object
 numerical_object

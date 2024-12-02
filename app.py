@@ -35,34 +35,73 @@ def display_tree():
     svg_content = Markup(svg_content)
     return render_template('treeview.html', content=svg_content)
 
-@app.route('/contract_files', methods=['GET'])
-def contract_list_files():
+@app.route('/files', methods=['POST'])
+def list_files():
     # List all text files in the directory
-    files = [f for f in os.listdir(CONTRACT_FILES_DIR)]
+    data = request.get_json()
+    directory = data.get('path')
+    ending = data.get('ends')
+    contains = data.get('contains')
+    files = [f for f in os.listdir(directory) if f.endswith(ending) and contains in f]
     return jsonify(files)
 
-@app.route('/contract_load-file/<filename>', methods=['GET'])
-def contract_load_file(filename):
-    filepath = os.path.join(CONTRACT_FILES_DIR, filename)
+@app.route('/load-file/<filename>', methods=['POST'])
+def load_file(filename):
+    data = request.get_json()
+    directory = data.get('path')
+    filepath = os.path.join(directory, filename)
     if os.path.isfile(filepath):
         with open(filepath, 'r') as file:
             content = file.read()
         return jsonify({'content': content})
     return jsonify({'error': 'File not found'}), 404
 
-@app.route('/contract_save-file', methods=['POST'])
-def contract_save_file():
+@app.route('/save-file', methods=['POST'])
+def save_file():
     data = request.get_json()
     filename = data.get('filename')
+    directory = data.get('path')
     content = data.get('content')
     if not filename or not content:
         return jsonify({'error': 'Invalid input'}), 400
 
-    filepath = os.path.join(CONTRACT_FILES_DIR, filename)
+    filepath = os.path.join(directory, filename)
     with open(filepath, 'w') as file:
         file.write(content)
+
+    print(filepath)
     
     return jsonify({'message': 'File saved successfully'}), 200
+
+@app.route('/delete-file', methods=['POST'])
+def delete_file():
+    data = request.get_json()
+    filename = data.get('filename')
+    directory = data.get('path')
+    if not filename:
+        return jsonify({'error': 'Invalid input'}), 400
+
+    filepath = os.path.join(directory, filename)
+    if os.path.isfile(filepath):
+        os.remove(filepath)
+    else:
+        return jsonify({'error': 'Invalid input'}), 400
+    
+    return jsonify({'message': 'File deleted successfully'}), 200
+
+@app.route('/create-file', methods=['POST'])
+def create_file():
+    data = request.get_json()
+    filename = data.get('filename')
+    directory = data.get('path')
+    if not filename:
+        return jsonify({'error': 'Invalid input'}), 400
+
+    filepath = os.path.join(directory, filename) + ".txt"
+    with open(filepath, 'w') as file:
+        file.write(" ")
+    
+    return jsonify({'message': 'File created successfully'}), 200
 
 
 # Developer page
@@ -73,37 +112,21 @@ def contract_save_file():
 def bnf_editor():
     return render_template('bnfeditor.html', node_types=handler.node_types)
 
-@app.route('/bnf_files', methods=['GET'])
-def bnf_list_files():
-    # List all text files in the directory
-    files = [f for f in os.listdir(TEXT_FILES_DIR) if f.endswith('.txt') and 'bnf' in f]
-    return jsonify(files)
-
-@app.route('/bnf_load-file/<filename>', methods=['GET'])
-def bnf_load_file(filename):
-    filepath = os.path.join(TEXT_FILES_DIR, filename)
-    if os.path.isfile(filepath):
-        with open(filepath, 'r') as file:
-            content = file.read()
-        return jsonify({'content': content})
-    return jsonify({'error': 'File not found'}), 404
-
-@app.route('/bnf_save-file', methods=['POST'])
-def bnf_save_file():
+# keep as function just for ont breakdown and reparseBNF
+@app.route('/parse-bnf', methods=['POST'])
+def parse_bnf():
     data = request.get_json()
     filename = data.get('filename')
-    content = data.get('content')
-    if not filename or not content:
+    directory = data.get('path')
+    ontdirectory = data.get('ont')
+    if not filename or not directory:
         return jsonify({'error': 'Invalid input'}), 400
 
-    filepath = os.path.join(TEXT_FILES_DIR, filename)
-    with open(filepath, 'w') as file:
-        file.write(content)
-
-    ont.breakdown("text-files/ontologies.txt")
-    handler.reparseBNF(f"{TEXT_FILES_DIR}/{filename}", ont.ontologies)
+    ont.breakdown(ontdirectory + "/ontologies.txt")
+    handler.reparseBNF(f"{directory}/{filename}", ont.ontologies)
     
-    return jsonify({'message': 'File saved successfully'}), 200
+    return jsonify({'message': 'BNF Parsed successfully'}), 200
+
 
 @app.route('/submit-options', methods=['POST'])
 def submit_options():

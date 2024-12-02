@@ -627,72 +627,6 @@
               "name": "object"
             }
           ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "identity"
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "holds"
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "modal_verb"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "verb"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "object"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "date"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "identity"
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "holds"
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            },
-            {
-              "type": "SYMBOL",
-              "name": "boolean_expression"
-            }
-          ]
         }
       ]
     },
@@ -938,222 +872,6 @@
       "type": "CHOICE",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "specific_date"
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "on"
-            },
-            {
-              "type": "STRING",
-              "value": "ANYDATE"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "on"
-            },
-            {
-              "type": "STRING",
-              "value": "SOMEDATE"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "on"
-            },
-            {
-              "type": "STRING",
-              "value": "THEDATE"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "temporal_quantifier"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "num"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "month"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "num"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "temporal_quantifier"
-            },
-            {
-              "type": "STRING",
-              "value": "SOMEDATE"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "temporal_quantifier"
-            },
-            {
-              "type": "STRING",
-              "value": "THEDATE"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "temporal_offset"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "temporal_quantifier"
-            },
-            {
-              "type": "STRING",
-              "value": "SOMEDATE"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "temporal_offset"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "temporal_quantifier"
-            },
-            {
-              "type": "STRING",
-              "value": "THEDATE"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "temporal_quantifier"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "temporal_offset"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "temporal_quantifier"
-            },
-            {
-              "type": "STRING",
-              "value": "SOMEDATE"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "temporal_quantifier"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "temporal_offset"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "temporal_quantifier"
-            },
-            {
-              "type": "STRING",
-              "value": "THEDATE"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            }
-          ]
-        }
-      ]
-    },
-    "temporal_quantifier": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "before"
-        },
-        {
-          "type": "STRING",
-          "value": "after"
-        }
-      ]
-    },
-    "specific_date": {
-      "type": "CHOICE",
-      "members": [
-        {
           "type": "SEQ",
           "members": [
             {
@@ -1186,34 +904,8 @@
               "value": "on"
             },
             {
-              "type": "SYMBOL",
-              "name": "num"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "month"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "num"
-            }
-          ]
-        }
-      ]
-    },
-    "temporal_offset": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "num"
-            },
-            {
               "type": "STRING",
-              "value": "day"
+              "value": "ANYDATE"
             }
           ]
         },
@@ -1221,12 +913,12 @@
           "type": "SEQ",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "num"
+              "type": "STRING",
+              "value": "on"
             },
             {
               "type": "STRING",
-              "value": "week"
+              "value": "ADATE"
             }
           ]
         },
@@ -1234,51 +926,12 @@
           "type": "SEQ",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "num"
+              "type": "STRING",
+              "value": "on"
             },
             {
               "type": "STRING",
-              "value": "year"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "num"
-            },
-            {
-              "type": "STRING",
-              "value": "days"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "num"
-            },
-            {
-              "type": "STRING",
-              "value": "weeks"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "num"
-            },
-            {
-              "type": "STRING",
-              "value": "years"
+              "value": "THEDATE"
             }
           ]
         }

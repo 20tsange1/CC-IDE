@@ -26,6 +26,14 @@ body {
     background-color:#2196F3;
 }
 
+#deleteBtn {
+    background-color:#f32121;
+}
+
+#createBtn {
+    background-color:#2196F3;
+}
+
 
 /* Highlighter styling */
 #highlighter {

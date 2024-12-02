@@ -40,3 +40,25 @@ textarea {
     border: 1px solid #ddd;
     resize: vertical;
 }
+
+#saveBtn {
+    background-color:#2196F3;
+}
+
+#deleteBtn {
+    background-color:#f32121;
+}
+
+#createBtn {
+    background-color:#2196F3;
+}
+
+
+/* Button styling */
+button {
+    padding: 0.5rem;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+    color: #fff;
+}

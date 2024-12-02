@@ -78,9 +78,7 @@ condition: $ => choice (
 simple_condition: $ => choice (
 	seq($.identity, optional($.holds), $.subject, $.verb_status, $.object, $.date), 
 	seq($.identity, optional($.holds), $.subject, $.date, $.verb_status, $.object), 
-	seq($.identity, optional($.holds), $.date, $.subject, $.verb_status, $.object), 
-	seq($.identity, optional($.holds), $.subject, $.modal_verb, $.verb, $.object, $.date), 
-	seq($.identity, optional($.holds), $.boolean_expression)
+	seq($.identity, optional($.holds), $.date, $.subject, $.verb_status, $.object)
 ),
 
 boolean_expression: $ => (seq($.subject, $.verb_status, $.comparison, $.subject)
@@ -130,39 +128,6 @@ date: $ => choice (
 	seq('on', 'ANYDATE'), 
 	seq('on', 'ADATE'), 
 	seq('on', 'THEDATE')
-),
-
-date: $ => choice (
-	$.specific_date, 
-	seq('on', 'ANYDATE'), 
-	seq('on', 'SOMEDATE', $.subject), 
-	seq('on', 'THEDATE', $.subject), 
-	seq($.temporal_quantifier, $.num, $.month, $.num), 
-	seq($.temporal_quantifier, 'SOMEDATE', $.subject), 
-	seq($.temporal_quantifier, 'THEDATE', $.subject), 
-	seq($.temporal_offset, $.temporal_quantifier, 'SOMEDATE', $.subject), 
-	seq($.temporal_offset, $.temporal_quantifier, 'THEDATE', $.subject), 
-	seq($.temporal_quantifier, $.temporal_offset, $.temporal_quantifier, 'SOMEDATE', $.subject), 
-	seq($.temporal_quantifier, $.temporal_offset, $.temporal_quantifier, 'THEDATE', $.subject)
-),
-
-temporal_quantifier: $ => choice (
-	'before', 
-	'after'
-),
-
-specific_date: $ => choice (
-	seq('on', 'the', $.num, $.month, $.num), 
-	seq('on', $.num, $.month, $.num)
-),
-
-temporal_offset: $ => choice (
-	seq($.num, 'day'), 
-	seq($.num, 'week'), 
-	seq($.num, 'year'), 
-	seq($.num, 'days'), 
-	seq($.num, 'weeks'), 
-	seq($.num, 'years')
 ),
 
 month: $ => choice (

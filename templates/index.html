@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,15 +8,16 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styleheader.css') }}">
 </head>
+
 <body>
     <div class="header">
         <a href="" class="logo">Computable Contracts - IDE</a>
         <div class="header-right">
-          <a class="active" href="/">Home</a>
-          <a href="/tree">Tree</a>
-          <a href="/dev">Developer</a>
+            <a class="active" href="/">Home</a>
+            <a href="/tree">Tree</a>
+            <a href="/dev">Developer</a>
         </div>
-      </div>
+    </div>
 
     <div id="container">
         <!-- Left: Text editor -->
@@ -24,10 +26,17 @@
             <textarea id="inputText" placeholder="Type your text here..."></textarea>
             <h2>Available Files</h2>
             <ul id="files"></ul>
-            <select id="filenameSelect">
-                <option value="">Select a file...</option>
-            </select>
-            <button id="saveBtn">Save</button>
+            <div>
+                <select id="filenameSelect">
+                    <option value="">Select a file...</option>
+                </select>
+                <button id="saveBtn">Save</button>
+                <button id="deleteBtn">Delete</button>
+            </div>
+            <div>
+                <input type="text" id="createName"></input>
+                <button id="createBtn">Create</button>
+            </div>
         </div>
 
         <!-- Parsed output section -->
@@ -51,10 +60,10 @@
                 },
                 body: JSON.stringify({ text: inputText.value })
             })
-            .then(response => response.json())
-            .then(data => {
-                parsedText.innerHTML = data.parsed_text;
-            });
+                .then(response => response.json())
+                .then(data => {
+                    parsedText.innerHTML = data.parsed_text;
+                });
         });
     </script>
 
@@ -62,13 +71,21 @@
         const filesList = document.getElementById('files');
         const filenameSelect = document.getElementById('filenameSelect');
         const fileContent = document.getElementById('inputText');
+        const pathname = 'contracts';
 
         // Load file list from server
         function loadFileList() {
-            fetch('/contract_files')
+            fetch('/files', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ path: pathname, ends: '', contains: ''})
+            })
                 .then(response => response.json())
                 .then(files => {
                     filenameSelect.innerHTML = '<option value="">Select a file...</option>';
+                    filesList.replaceChildren();
                     files.forEach(file => {
                         const option = document.createElement('option');
                         option.value = file;
@@ -87,7 +104,13 @@
         filenameSelect.addEventListener('change', () => {
             const filename = filenameSelect.value;
             if (filename) {
-                fetch(`/contract_load-file/${filename}`)
+                fetch(`/load-file/${filename}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ path: pathname })
+                })
                     .then(response => response.json())
                     .then(data => {
                         if (data.content) {
@@ -112,22 +135,78 @@
                 return;
             }
 
-            fetch('/contract_save-file', {
+            fetch('/save-file', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ filename, content })
+                body: JSON.stringify({ filename, content, path: pathname })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message) {
-                    alert(data.message);
-                } else {
-                    alert('Error saving file');
-                }
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                    } else {
+                        alert('Error saving file');
+                    }
+                })
+                .catch(error => console.error('Error saving file:', error));
+        });
+
+        // Delete file in server
+        deleteBtn.addEventListener('click', () => {
+            const filename = filenameSelect.value;
+
+            if (!filename) {
+                alert('Please select a file to delete');
+                return;
+            }
+
+            fetch('/delete-file', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ filename, path: pathname })
             })
-            .catch(error => console.error('Error saving file:', error));
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                    } else {
+                        alert('Error deleting file');
+                    }
+                })
+                .catch(error => console.error('Error deleting file:', error));
+            loadFileList();
+        });
+
+        // Create a new file within server
+        createBtn.addEventListener('click', () => {
+            const filename = document.getElementById('createName').value;
+
+            if (!filename) {
+                alert('Please input a filename');
+                return;
+            }
+
+            fetch('/create-file', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ filename, path: pathname })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                    } else {
+                        alert('Error creating file');
+                    }
+                })
+                .catch(error => console.error('Error creating file:', error));
+            loadFileList();
         });
 
         // Load the file list on page load
@@ -135,4 +214,5 @@
     </script>
 
 </body>
+
 </html>
