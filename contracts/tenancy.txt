@@ -1,0 +1,31 @@
+ [1] it is the case that Landlord must deliver OTHEROBJECT property to Tenant on the 23 September 2023
+
+C-AND
+
+IF [2] it is the case that Tenant paid POUNDS 15000 to Landlord before 1 September 2023
+
+AND
+
+[3] it is the case that Landlord may charge AMOUNT securityDeposit to Tenant on 23 August 2023
+
+AND
+
+[4] it is the case that Tenant may deliver OTHEROBJECT requestForRepair to Landlord on ANYDATE
+
+AND
+
+[5] it is the case that Tenant is forbidden to deliver OTHEROBJECT subletOfProperty to Others on ANYDATE
+
+AND
+
+[6] it is the case that Tenant delivered OTHEROBJECT notDamagedProperty to Landlord on the 22 September 2024
+
+AND [7] it is the case that Landlord charged AMOUNT securityDeposit to Tenant on 23 August 2023
+
+THEN [8] it is the case that Landlord must refund AMOUNT securityDeposit to Tenant before 1 October 2024
+
+C-AND
+
+IF [9] it is the case that Landlord charged AMOUNT incrementInRental to Tenant on SOMEDATE unknown
+
+THEN [10] it is the case that Landlord must deliver REPORT noticeOfRentalIncrement to Tenant 4 weeks before THEDATE unknown

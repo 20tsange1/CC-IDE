@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BNF Editor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styleheader.css') }}">
+</head>
+<body>
+    <div class="header">
+        <a href="" class="logo">Computable Contracts - IDE</a>
+        <div class="header-right">
+          <a href="/">Home</a>
+          <a class="active" href="/tree">Tree</a>
+          <a href="/dev">Developer</a>
+        </div>
+      </div>
+
+    {{ content }}
+</body>
+</html>

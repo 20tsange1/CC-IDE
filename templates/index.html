@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Parser</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styleheader.css') }}">
+</head>
+
+<body>
+    <div class="header">
+        <a href="" class="logo">Computable Contracts - IDE</a>
+        <div class="header-right">
+            <a class="active" href="/">Home</a>
+            <a href="/tree">Tree</a>
+            <a href="/dev">Developer</a>
+        </div>
+    </div>
+
+    <div id="container">
+        <!-- Left: Text editor -->
+        <div id="editor">
+            <h2>Edit Text</h2>
+            <textarea id="inputText" placeholder="Type your text here..."></textarea>
+            <h2>Available Files</h2>
+            <ul id="files"></ul>
+            <div>
+                <select id="filenameSelect">
+                    <option value="">Select a file...</option>
+                </select>
+                <button id="saveBtn">Save</button>
+                <button id="deleteBtn">Delete</button>
+            </div>
+            <div>
+                <input type="text" id="createName"></input>
+                <button id="createBtn">Create</button>
+            </div>
+        </div>
+
+        <!-- Parsed output section -->
+        <div id="output">
+            <h2>Parsed Output</h2>
+            <div id="parsedText"></div>
+        </div>
+
+        <div>
+            <!-- Contract Analytics -->
+            <div id="analytics">
+                <h2>Contract Analytics</h2>
+                <button id="analyseBtn">Analyse</button>
+                <div>
+                    <h3>Error Analysis</h3>
+                    <div class="progress-container">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <div id="progress-val"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- Really need to rewrite the Javascript and stick it in a separate file -->
+    
+
+    <!-- JavaScript for dynamic content -->
+    <script>
+
+        // ------------
+        // FOR PARSING
+        // ------------
+
+        const inputText = document.getElementById('inputText');
+        const parsedText = document.getElementById('parsedText');
+
+        function parseText() {
+            fetch('/parse', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: inputText.value })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    parsedText.innerHTML = data.parsed_text;
+                });
+        }
+
+        // Fetch parsed text from server on input
+        inputText.addEventListener('input', () => {
+            parseText();
+        });
+
+
+        // ------------
+        // FOR THE FILES
+        // ------------
+
+        const filesList = document.getElementById('files');
+        const filenameSelect = document.getElementById('filenameSelect');
+        const fileContent = document.getElementById('inputText');
+        const pathname = 'contracts';
+
+        // Load file list from server
+        function loadFileList() {
+            fetch('/files', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ path: pathname, ends: '', contains: ''})
+            })
+                .then(response => response.json())
+                .then(files => {
+                    filenameSelect.innerHTML = '<option value="">Select a file...</option>';
+                    filesList.replaceChildren();
+                    files.forEach(file => {
+                        const option = document.createElement('option');
+                        option.value = file;
+                        option.textContent = file;
+                        filenameSelect.appendChild(option);
+
+                        var li = document.createElement("li");
+                        li.appendChild(document.createTextNode(file));
+                        filesList.appendChild(li)
+                    });
+                })
+                .catch(error => console.error('Error loading files:', error));
+        }
+
+        // Load file content when a file is selected
+        filenameSelect.addEventListener('change', () => {
+            const filename = filenameSelect.value;
+            if (filename) {
+                fetch(`/load-file/${filename}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ path: pathname })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.content) {
+                            fileContent.value = data.content;
+                            parseText();
+                        } else {
+                            alert('Error loading file content');
+                        }
+                    })
+                    .catch(error => console.error('Error loading file content:', error));
+            } else {
+                fileContent.value = '';  // Clear the editor if no file is selected
+            }
+        });
+
+        // Save file content to server
+        saveBtn.addEventListener('click', () => {
+            const filename = filenameSelect.value;
+            const content = fileContent.value;
+
+            if (!filename) {
+                alert('Please select a file to save');
+                return;
+            }
+
+            fetch('/save-file', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ filename, content, path: pathname })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                    } else {
+                        alert('Error saving file');
+                    }
+                })
+                .catch(error => console.error('Error saving file:', error));
+        });
+
+        // Delete file in server
+        deleteBtn.addEventListener('click', () => {
+            const filename = filenameSelect.value;
+
+            if (!filename) {
+                alert('Please select a file to delete');
+                return;
+            }
+
+            fetch('/delete-file', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ filename, path: pathname })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                    } else {
+                        alert('Error deleting file');
+                    }
+                })
+                .catch(error => console.error('Error deleting file:', error));
+            loadFileList();
+        });
+
+        // Create a new file within server
+        createBtn.addEventListener('click', () => {
+            const filename = document.getElementById('createName').value;
+
+            if (!filename) {
+                alert('Please input a filename');
+                return;
+            }
+
+            fetch('/create-file', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ filename, path: pathname })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                    } else {
+                        alert('Error creating file');
+                    }
+                })
+                .catch(error => console.error('Error creating file:', error));
+            loadFileList();
+        });
+
+        // Load the file list on page load
+        document.addEventListener('DOMContentLoaded', loadFileList);
+    </script>
+
+    <script>
+        analyseBtn.addEventListener('click', () => {
+            const progressBar = document.querySelector(".progress-bar");
+            let result = 0;
+
+            fetch('/analysis', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({  })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        result = data.percentage;
+                        progressBar.style.width = `${result}%`;
+                        // alert(progressBar.style.width);
+                        document.getElementById('progress-val').textContent = `${result}%`;
+                        alert(data.message);
+                    } else {
+                        alert('Error running analysis');
+                    }
+                })
+                .catch(error => console.error('Error running analysis:', error));
+        })
+
+    </script>
+
+</body>
+
+</html>
