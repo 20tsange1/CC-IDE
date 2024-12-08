@@ -1,0 +1,170 @@
+==================
+simple_definition Test
+==================
+
+[1] Alice IS Bob
+
+---
+
+(contract 
+    (component 
+        (definition
+            (simple_definition
+                (identity
+                    (num))
+                (subject
+                    (string))
+                (subject
+                    (string))
+            )
+        )
+    )
+)
+
+==================
+simple_definition Test with nested identity
+==================
+
+[1(2)] Charlie IS Dave
+
+---
+
+(contract 
+    (component 
+        (definition
+            (simple_definition
+                (identity
+                    (num)
+                    (num))
+                (subject
+                    (string))
+                (subject
+                    (string))
+            )
+        )
+    )
+)
+
+==================
+simple_statement Test
+==================
+
+[1] it is not the case that on the 7 January 26 Alice OBLIGATION PAY OTHEROBJECT objectthing
+
+---
+
+(contract 
+    (component 
+        (statement
+            (simple_statement
+                (identity
+                    (num))
+                (holds)
+                (date
+                    (num)
+                    (month)
+                    (num))
+                (subject
+                    (string))
+                (modal_verb)
+                (verb)
+                (object
+                    (nonnumerical_object
+                        (string)))
+            )
+        )
+    )
+)
+
+
+==================
+conditional_statement Test
+==================
+
+IF [1] Alice OBLIGATION PAY DOLLARS 100 on the 12 March 2024 THEN [2] Bob OBLIGATION DELIVER REPORT myreport on THEDATE
+
+---
+
+(contract 
+    (component 
+        (conditional_statement
+            (condition
+                (simple_condition
+                    (identity
+                        (num))
+                    (subject
+                        (string))
+                    (modal_verb)
+                    (verb)
+                    (object
+                        (numerical_object
+                            (num)))
+                    (date
+                        (num)
+                        (month)
+                        (num))
+                )
+            )
+            (statement
+                (simple_statement
+                    (identity
+                        (num))
+                    (subject
+                        (string))
+                    (modal_verb)
+                    (verb)
+                    (object
+                        (nonnumerical_object
+                            (string)))
+                    (date)
+                )
+            )
+        )
+    )
+)
+
+==================
+boolean_expression Test
+==================
+
+[1] it is the case that on the 20 January 15 Alice PROHIBITION PAY POUNDS 100 IF [2] it is not the case that Alice PAID EQUAL TO Bob
+
+---
+
+(contract 
+    (component 
+        (conditional_statement
+            (statement
+            (simple_statement
+              (identity
+                (num))
+              (holds)
+              (date
+                (num)
+                (month)
+                (num))
+            (subject
+                (string))
+              (modal_verb)
+              (verb)
+              (object
+                (numerical_object
+                  (num)))))
+          (condition
+            (simple_condition
+              (identity
+                (num))
+              (holds)
+              (boolean_expression
+                (subject
+                  (string))
+                (verb_status)
+                (comparison)
+                (subject
+                  (string)
+                  ))
+                )
+            )
+        )
+    )
+)

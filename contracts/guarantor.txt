@@ -1,0 +1,41 @@
+ [1] it is the case that Landlord must deliver OTHEROBJECT property to Tenant on the 2 April 2023
+
+C-AND
+
+IF [2] it is the case that Landlord delivered OTHEROBJECT demandOfTenantPayment to Tenant on the 2 April 2023
+
+AND
+
+[3] it is not the case that Tenant paid AMOUNT AmountA to Landlord before 5 April 2023
+
+THEN [4] it is the case that Landlord may deliver OTHEROBJECT demandOfGuarantorPayment to Tenant on the 6 April 2023
+
+C-AND
+
+IF [5] it is the case that Landlord delivered OTHEROBJECT demandOfTenantPayment to Tenant on the 2 April 2023
+
+AND
+
+[6] it is not the case that Tenant paid AMOUNT AmountA to Landlord before 10 April 2023
+
+AND
+
+[7] it is the case that Landlord delivered OTHEROBJECT demandOfGuarantorPayment to Tenant on the 6 April 2023
+
+THEN [8] it is the case that Guarantor must pay AMOUNT AmountA to Landlord on the 11 April 2023
+
+C-AND
+
+IF [9] it is not the case that Tenant paid AMOUNT AmountB to Landlord before 11 September 2023
+
+THEN [10] it is the case that Guarantor must pay AMOUNT AmountB to Landlord on the 12 September 2023
+
+C-AND
+
+IF [11] it is the case that HousingBenefitScheme paid AMOUNT AmountC to Tenant on the 1 January 2024
+
+AND
+
+[12] it is the case that LocalAuthority delivered OTHEROBJECT overpaymentClaim to Tenant on the 7 January 2024
+
+THEN [13] it is the case that Guarantor must pay AMOUNT AmountC to Landlord before 10 January 2024

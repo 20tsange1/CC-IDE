@@ -1,0 +1,85 @@
+body {
+    font-family: "Roboto", serif;
+    font-weight: 300;
+    font-style: normal;
+}
+
+/* Style the container layout */
+#container {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Editor and output sections */
+#editor, #output {
+    flex: 1;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Text area styling */
+textarea {
+    width: 100%;
+    height: 80%;
+    resize: none;
+    padding: 10px;
+    font-size: 16px;
+}
+
+/* Parsed text display styling */
+#parsedText {
+    white-space: pre-wrap;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 16px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    resize: vertical;
+}
+
+#saveBtn {
+    background-color:#2196F3;
+}
+
+#deleteBtn {
+    background-color:#f32121;
+}
+
+#createBtn {
+    background-color:#2196F3;
+}
+
+#analyseBtn {
+    background-color:#2196F3;
+}
+
+
+/* Button styling */
+button {
+    padding: 0.5rem;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+    color: #fff;
+    margin: 0.5rem;
+}
+
+
+  
+.progress-container {
+    width: 100%;
+    background-color: #e0e0e0;  
+    border-radius: 5px;
+    height: 30px;
+}
+
+.progress-bar {
+    width: 100%; /* Set your static progress here (0% to 100%) */
+    height: 100%;
+    background-color: #4caf50;
+    border-radius: 5px;
+}
