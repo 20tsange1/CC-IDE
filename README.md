@@ -6,7 +6,7 @@ In order to begin using the IDE and install tree-sitter, follow the steps below:
 
 1. Open Terminal
 2. Navigate to folder
-3. Run `pip install -r requirements. txt`
+3. Run `pip install -r requirements.txt`
 4. Run `python3 app.py`
 5. Open up `http://localhost:8080/` in a web browser.
 
