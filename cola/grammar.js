@@ -29,15 +29,15 @@ definition: $ => choice (
 ),
 
 simple_definition: $ => choice (
-	seq($.identity, $.subject, 'IS', $.subject), 
-	seq($.identity, $.subject, 'EQUALS', $.numerical_expression)
+	seq($.ID, $.subject, 'IS', $.subject), 
+	seq($.ID, $.subject, 'EQUALS', $.numerical_expression)
 ),
 
-numerical_expression: $ => choice (
+numerical_expression: $ => prec.left(choice (
 	$.num, 
 	$.numerical_object, 
-	seq($.numerical_object, $.operator, $.numerical_expression)
-),
+	seq($.numerical_expression, $.operator, $.numerical_expression)
+)),
 
 operator: $ => choice (
 	'PLUS', 
@@ -48,7 +48,9 @@ operator: $ => choice (
 
 conditional_definition: $ => choice (
 	seq($.definition, 'IF', $.condition), 
-	seq('IF', $.condition, 'THEN', $.definition)
+	seq('IF', $.condition, 'THEN', $.definition), 
+	seq($.definition, 'IF', $.condition, 'ELSE', $.definition), 
+	seq('IF', $.condition, 'THEN', $.definition, 'ELSE', $.definition)
 ),
 
 statement: $ => choice (
@@ -59,14 +61,16 @@ statement: $ => choice (
 
 conditional_statement: $ => choice (
 	seq($.statement, 'IF', $.condition), 
-	seq('IF', $.condition, 'THEN', $.statement)
+	seq('IF', $.condition, 'THEN', $.statement), 
+	seq($.statement, 'IF', $.condition, 'ELSE', $.statement), 
+	seq('IF', $.condition, 'THEN', $.statement, 'ELSE', $.statement)
 ),
 
 simple_statement: $ => choice (
-	seq($.identity, optional($.holds), $.subject, $.modal_verb, $.verb, $.object, $.date), 
-	seq($.identity, optional($.holds), $.subject, $.date, $.modal_verb, $.verb, $.object), 
-	seq($.identity, optional($.holds), $.date, $.subject, $.modal_verb, $.verb, $.object), 
-	seq($.identity, optional($.holds), $.date, $.subject, $.verb_status, $.object, $.date)
+	seq($.ID, optional($.holds), $.subject, $.modal_verb, $.verb, $.object, $.receiver, $.date), 
+	seq($.ID, optional($.holds), $.subject, $.date, $.modal_verb, $.verb, $.object, $.receiver), 
+	seq($.ID, optional($.holds), $.date, $.subject, $.modal_verb, $.verb, $.object, $.receiver), 
+	seq($.ID, optional($.holds), $.subject, $.verb_status, $.object, $.receiver, $.date)
 ),
 
 condition: $ => choice (
@@ -76,17 +80,17 @@ condition: $ => choice (
 ),
 
 simple_condition: $ => choice (
-	seq($.identity, optional($.holds), $.subject, $.verb_status, $.object, $.date), 
-	seq($.identity, optional($.holds), $.subject, $.date, $.verb_status, $.object), 
-	seq($.identity, optional($.holds), $.date, $.subject, $.verb_status, $.object), 
-	seq($.identity, optional($.holds), $.subject, $.modal_verb, $.verb, $.object, $.date), 
-	seq($.identity, optional($.holds), $.boolean_expression)
+	seq($.ID, optional($.holds), $.subject, $.verb_status, $.object, $.receiver, $.date), 
+	seq($.ID, optional($.holds), $.subject, $.date, $.verb_status, $.object, $.receiver), 
+	seq($.ID, optional($.holds), $.date, $.subject, $.verb_status, $.object, $.receiver), 
+	seq($.ID, optional($.holds), $.subject, $.modal_verb, $.verb, $.object, $.receiver, $.date), 
+	seq($.ID, optional($.holds), $.boolean_expression)
 ),
 
 boolean_expression: $ => (seq($.subject, $.verb_status, $.comparison, $.subject)
 ),
 
-identity: $ => choice (
+ID: $ => choice (
 	seq('[', $.num, ']'), 
 	seq('[', $.num, '(', $.num, ')', ']')
 ),
@@ -100,36 +104,77 @@ subject: $ => ($.string
 ),
 
 verb: $ => choice (
-	'DELIVER', 
-	'PAY', 
-	'CHARGE', 
-	'SEND'
+	'deliver', 
+	'pay', 
+	'charge', 
+	'refund'
 ),
 
 verb_status: $ => choice (
-	'DELIVERED', 
-	'PAID', 
-	'CHARGED', 
-	'SENT'
+	'delivered', 
+	'paid', 
+	'charged', 
+	'refunded'
 ),
 
 comparison: $ => choice (
-	seq('LESS', 'THAN'), 
-	seq('EQUAL', 'TO'), 
-	seq('MORE', 'THAN')
+	seq('less', 'than'), 
+	$.equal, 
+	$.more_than
+),
+
+equal: $ => choice (
+	'equals', 
+	seq('equal', 'to')
+),
+
+more_than: $ => choice (
+	seq('more', 'than'), 
+	seq('greater', 'than')
 ),
 
 modal_verb: $ => choice (
-	$.OBLIGATION, 
-	$.PERMISSION, 
-	$.PROHIBITION
+	$.obligation, 
+	'may', 
+	seq('is', 'forbidden', 'to')
+),
+
+obligation: $ => choice (
+	'shall', 
+	'must'
 ),
 
 date: $ => choice (
-	seq('on', 'the', $.num, $.month, $.num), 
+	$.specific_date, 
 	seq('on', 'ANYDATE'), 
-	seq('on', 'ADATE'), 
-	seq('on', 'THEDATE')
+	seq('on', 'SOMEDATE', $.subject), 
+	seq('on', 'THEDATE', $.subject), 
+	seq($.temporal_quantifier, $.num, $.month, $.num), 
+	seq($.temporal_quantifier, 'SOMEDATE', $.subject), 
+	seq($.temporal_quantifier, 'THEDATE', $.subject), 
+	seq($.temporal_offset, $.temporal_quantifier, 'SOMEDATE', $.subject), 
+	seq($.temporal_offset, $.temporal_quantifier, 'THEDATE', $.subject), 
+	seq($.temporal_quantifier, $.temporal_offset, $.temporal_quantifier, 'SOMEDATE', $.subject), 
+	seq($.temporal_quantifier, $.temporal_offset, $.temporal_quantifier, 'THEDATE', $.subject)
+),
+
+temporal_quantifier: $ => choice (
+	'before', 
+	'after'
+),
+
+specific_date: $ => choice (
+	seq('on', 'the', $.num, $.month, $.num), 
+	seq('on', $.num, $.month, $.num)
+),
+
+temporal_offset: $ => choice (
+	seq($.num, 'day'), 
+	seq($.num, 'week'), 
+	seq($.num, 'year'), 
+	seq($.num, 'days'), 
+	seq($.num, 'weeks'), 
+	seq($.num, 'years')
 ),
 
 month: $ => choice (
@@ -153,10 +198,9 @@ object: $ => choice (
 ),
 
 numerical_object: $ => choice (
-	seq('POUNDS', $.num), 
-	seq('DOLLARS', $.num), 
-	seq('EUROS', $.num), 
-	seq('FRANCS', $.num), 
+	seq($.pounds, $.num), 
+	seq($.dollars, $.num), 
+	seq($.euros, $.num), 
 	seq('AMOUNT', $.subject)
 ),
 
@@ -167,22 +211,30 @@ nonnumerical_object: $ => choice (
 	seq('OTHEROBJECT', $.string)
 ),
 
+pounds: $ => choice (
+	'GBP', 
+	'POUNDS', 
+	'quid'
+),
+
+dollars: $ => choice (
+	'USD', 
+	'DOLLARS', 
+	'buck'
+),
+
+euros: $ => choice (
+	'EUR', 
+	'EUROS'
+),
+
+receiver: $ => (seq('to', $.subject)
+),
+
 string: $ => (/[a-zA-Z]+/
 ),
 
 num: $ => (/[0-9]+/
-),
-
-OBLIGATION: $ => choice (
-'Must', ' Have To', ' Need To', ' Should', ' Ought To'
-),
-
-PERMISSION: $ => choice (
-'Can', ' May', ' Could', ' Might'
-),
-
-PROHIBITION: $ => choice (
-'Must Not', ' Cannot', ' May Not', ' Should Not'
 ),
 
   }
