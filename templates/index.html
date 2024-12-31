@@ -10,33 +10,29 @@
 </head>
 
 <body>
-    <div class="header">
-        <a href="" class="logo">Computable Contracts - IDE</a>
-        <div class="header-right">
-            <a class="active" href="/">Home</a>
-            <a href="/tree">Tree</a>
-            <a href="/dev">Developer</a>
-        </div>
-    </div>
+    {% include 'header.html' %}
 
     <div id="container">
         <!-- Left: Text editor -->
         <div id="editor">
-            <h2>Edit Text</h2>
-            <textarea id="inputText" placeholder="Type your text here..."></textarea>
             <h2>Available Files</h2>
             <ul id="files"></ul>
-            <div>
-                <select id="filenameSelect">
-                    <option value="">Select a file...</option>
-                </select>
-                <button id="saveBtn">Save</button>
-                <button id="deleteBtn">Delete</button>
+            <div id="containerSmall">
+                <div>
+                    <select id="filenameSelect">
+                        <option value="">Select a file...</option>
+                    </select>
+                    <button class="button-style" id="saveBtn">Save</button>
+                    <button class="button-style" id="deleteBtn">Delete</button>
+                </div>
+                <div>
+                    <input type="text" id="createName"></input>
+                    <button class="button-style" id="createBtn">Create</button>
+                </div>
             </div>
-            <div>
-                <input type="text" id="createName"></input>
-                <button id="createBtn">Create</button>
-            </div>
+            <h2 id="titleHolder">Edit Text</h2>
+            <textarea id="inputText"
+                placeholder="Type your text here...">{% if prev_string %}{{prev_string}}{% endif %}</textarea>
         </div>
 
         <!-- Parsed output section -->
@@ -49,7 +45,7 @@
             <!-- Contract Analytics -->
             <div id="analytics">
                 <h2>Contract Analytics</h2>
-                <button id="analyseBtn">Analyse</button>
+                <button class="button-style" id="analyseBtn">Analyse</button>
                 <div>
                     <h3>Error Analysis</h3>
                     <div class="progress-container">
@@ -61,12 +57,17 @@
         </div>
     </div>
 
-    
+
     <!-- Really need to rewrite the Javascript and stick it in a separate file -->
-    
+
 
     <!-- JavaScript for dynamic content -->
     <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+            parseText(); // Call parseText after DOM is fully loaded
+        });
+
 
         // ------------
         // FOR PARSING
@@ -103,6 +104,7 @@
         const filenameSelect = document.getElementById('filenameSelect');
         const fileContent = document.getElementById('inputText');
         const pathname = 'contracts';
+        const title = document.getElementById('titleHolder');
 
         // Load file list from server
         function loadFileList() {
@@ -111,7 +113,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ path: pathname, ends: '', contains: ''})
+                body: JSON.stringify({ path: pathname, ends: '', contains: '' })
             })
                 .then(response => response.json())
                 .then(files => {
@@ -123,9 +125,9 @@
                         option.textContent = file;
                         filenameSelect.appendChild(option);
 
-                        var li = document.createElement("li");
-                        li.appendChild(document.createTextNode(file));
-                        filesList.appendChild(li)
+                        // var li = document.createElement("li");
+                        // li.appendChild(document.createTextNode(file));
+                        // filesList.appendChild(li)
                     });
                 })
                 .catch(error => console.error('Error loading files:', error));
@@ -146,6 +148,7 @@
                     .then(data => {
                         if (data.content) {
                             fileContent.value = data.content;
+                            title.textContent = 'Edit Text' + " - " + filename;
                             parseText();
                         } else {
                             alert('Error loading file content');
@@ -154,6 +157,8 @@
                     .catch(error => console.error('Error loading file content:', error));
             } else {
                 fileContent.value = '';  // Clear the editor if no file is selected
+                title.textContent = 'Edit Text';
+                parseText();
             }
         });
 
@@ -255,7 +260,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({  })
+                body: JSON.stringify({})
             })
                 .then(response => response.json())
                 .then(data => {
@@ -272,6 +277,24 @@
                 .catch(error => console.error('Error running analysis:', error));
         })
 
+    </script>
+
+    <script>
+        // When the user clicks on <div>, open the popup
+        function myFunction(elementID) {
+            var popup = document.getElementById(elementID);
+            popup.classList.toggle("show");
+            event.stopPropagation();
+        }
+
+        document.addEventListener('click', function () {
+            document.querySelectorAll('.popuptext').forEach(box =>  {
+                if (box.classList.contains("show")) {
+                    box.classList.toggle("show");
+                }
+                
+            });
+        });
     </script>
 
 </body>
