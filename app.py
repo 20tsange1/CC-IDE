@@ -1,21 +1,35 @@
+import sys
+sys.path
+sys.path.append('./tool-visualisations/')
+sys.path.append('./tool-analysis/')
+
+# For building webapp and making sure content is safe.
 from flask import Flask, render_template, request, jsonify, render_template_string
 from markupsafe import Markup
+
+# For Auxiliary parsing and visualisation functions
 from main import Handler
+from analysis import Analysis
+from visualiser import Visualiser
 from ontology import Ontology
+
+# Necessary
 import os
 
 app = Flask(__name__)
 handler = Handler()
 ont = Ontology()
+analsyer = Analysis()
+visualiser = Visualiser()
 
 CONTRACT_FILES_DIR = "contracts"  # Directory to store contracts
 TEXT_FILES_DIR = "text-files"  # Directory to store text files
 
-
 # Define a route for the main page
 @app.route("/")
 def index():
-    return render_template("index.html")
+    print(handler.highlights)
+    return render_template("index.html", current_page="home", prev_string=handler.prevString)
 
 
 # Define a route for parsing text
@@ -26,15 +40,6 @@ def parse_text():
     # Basic parsing - you can replace this with custom parsing logic
     parsed_text = handler.bnfStructure(text)  # Example: Convert text to uppercase
     return jsonify({"parsed_text": parsed_text})
-
-
-@app.route("/tree")
-def display_tree():
-
-    # Generate SVG for the tree
-    svg_content = handler.drawTree()
-    svg_content = Markup(svg_content)
-    return render_template("treeview.html", content=svg_content)
 
 
 @app.route("/files", methods=["POST"])
@@ -112,7 +117,7 @@ def create_file():
 
 @app.route("/analysis", methods=["POST"])
 def analysis():
-    percentage = handler.error_analyser()
+    percentage = analsyer.error_analyser(handler.parse_tree)
 
     return (
         jsonify(
@@ -129,7 +134,8 @@ def analysis():
 
 @app.route("/dev")
 def bnf_editor():
-    return render_template("bnfeditor.html", node_types=handler.node_types)
+    node_types_colour = [(t, handler.highlights[t] if t in handler.highlights else "") for t in handler.node_types]
+    return render_template("bnfeditor.html", node_types=node_types_colour, current_page="dev")
 
 
 # keep as function just for ont breakdown and reparseBNF
@@ -159,9 +165,37 @@ def submit_options():
     highlight_colours = data.get("colors", {})
     handler.highlights = highlight_colours
 
+    # print(handler.highlights)
     # print(highlight_colours)
 
+    with open('text-files/nodecolours.txt', 'w') as file:
+        coloursFormat = ""
+        for node, colour in highlight_colours.items():
+            coloursFormat += f"{node}:{colour}\n"
+        file.write(coloursFormat)
+
     return "Highlights Applied"
+
+
+
+# Visualisation Page
+@app.route("/tree")
+def display_tree():
+    return render_template("treeview.html", current_page="tree")
+
+@app.route("/tree_draw")
+def tree_draw():
+    # Generate SVG for the tree
+    svg_content = visualiser.drawTree(handler.parse_tree, 5000, 10000)   
+    svg_content = Markup(svg_content)
+    return jsonify(content=svg_content)
+
+@app.route("/file_draw")
+def file_draw():
+    # Generate SVG for the file structure
+    svg_content = visualiser.drawFile(handler.parse_tree)
+    svg_content = Markup(svg_content)
+    return jsonify(content=svg_content)
 
 
 if __name__ == "__main__":

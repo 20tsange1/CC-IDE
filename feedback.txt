@@ -1,0 +1,54 @@
+Right now, I'm thinking about the folding editor idea. Should we make our own data structure for the node, take out all the
+unecessary information, streamline it.
+
+
+
+Here's some feedback:
+
+
+
+Developer - "Save" attempts to generate tree-sitter grammar from bnf, so it's more than just "Save" - should it be something like "Save and Apply"?  or "Save and Select"?  (or have a separate Select button?
+
+Alert re L::=  this should highlight the place where Lrec grammar has been found
+Alert re R::= ... I wonder is it really necessary?  Does tree-sitter have problems with Rrec grammars?  All but the simplest grammars will have recursion.
+
+Home page: Parsed Output - it's not clear to the lawyer why some text has been added and why it is coloured - there needs to be a better visual cue for what's going on
+Tree page:  given how difficult it is to draw a tree from top to bottom, why not draw it from left to right, similar to (but not exactly like) a folder tree?  e.g.
+  
+
+contract
+  -> component
+         -> statement
+             -> simple_statement
+                  -> identity
+                        -> [
+                            1
+                            ]
+                      holds
+                        -> it
+                            is
+                            not
+                            the
+                            case
+                            that
+                      date
+                        -> on
+                            the
+                            7
+                            month
+                              -> January
+                            26
+                      subject
+                        -> Alice
+                      modal_verb
+                        -> OBLIGATION
+                              ->Must
+                      verb
+                        -> PAY
+                      object
+                        -> nonnumerical_object
+                               -> OTHEROBJECT
+                                    objectthing
+      
+
+You could then put it inside a display object with its own scroll bars perhaps?  So you don't lose the information at the top of the screen

@@ -10,14 +10,7 @@
 </head>
 
 <body>
-    <div class="header">
-        <a href="" class="logo">Computable Contracts - IDE</a>
-        <div class="header-right">
-            <a href="/">Home</a>
-            <a href="/tree">Tree</a>
-            <a class="active" href="/dev">Developer</a>
-        </div>
-    </div>
+    {% include 'header.html' %}
 
     <h1 id="center">BNF Editor</h1>
 
@@ -37,6 +30,7 @@
             <textarea id="fileContent" placeholder="File content will appear here..." rows="20" cols="100"></textarea>
             <div>
                 <button id="saveBtn">Save</button>
+                <button id="applyBtn">Save & Apply</button>
                 <button id="deleteBtn">Delete</button>
             </div>
             <div>
@@ -64,6 +58,7 @@
         const filenameSelect = document.getElementById('filenameSelect');
         const fileContent = document.getElementById('fileContent');
         const saveBtn = document.getElementById('saveBtn');
+        const applyBtn = document.getElementById('applyBtn');
         const pathname = 'bnfs'
 
         // Load file list from server
@@ -120,6 +115,35 @@
 
         // Save file content to server
         saveBtn.addEventListener('click', () => {
+            const filename = filenameSelect.value;
+            const content = fileContent.value;
+
+            if (!filename) {
+                alert('Please select a file to save');
+                return;
+            }
+
+            fetch('/save-file', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ filename, content, path: pathname })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                    } else {
+                        alert('Error saving file');
+                    }
+                })
+                .catch(error => console.error('Error saving file:', error));
+
+
+        });
+
+        applyBtn.addEventListener('click', () => {
             const filename = filenameSelect.value;
             const content = fileContent.value;
 
@@ -247,7 +271,9 @@
         function createColorOptions() {
             colorOptionsContainer.innerHTML = ''; // Clear existing options
 
-            keysArray.forEach(key => {
+            // Needs to be tuple, because our initial input is a list of tuples.
+            keysArray.forEach(([key, color]) => {
+
                 const entryDiv = document.createElement('div');
                 entryDiv.classList.add('color-entry');
 
@@ -261,6 +287,7 @@
                 colorInput.type = 'color';
                 colorInput.classList.add('color-picker');
                 colorInput.name = `${key}Color`;
+                colorInput.value = color;
 
                 entryDiv.appendChild(keyLabel);
                 entryDiv.appendChild(colorInput);
@@ -276,7 +303,8 @@
             const colorData = {};
 
             // Collect color values for each key
-            keysArray.forEach(key => {
+            // Needs to be tuple, because our initial input is a list of tuples.
+            keysArray.forEach(([key, color]) => {
                 const colorInput = document.querySelector(`input[name="${key}Color"]`);
                 colorData[key] = colorInput.value;
             });

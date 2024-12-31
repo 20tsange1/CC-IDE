@@ -26,6 +26,10 @@ body {
     background-color:#2196F3;
 }
 
+#applyBtn {
+    background-color:#0bbd02;
+}
+
 #deleteBtn {
     background-color:#f32121;
 }

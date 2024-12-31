@@ -2,7 +2,6 @@ from parser import BNFParser
 import os
 from tree_sitter import Language, Parser
 from ontology import Ontology
-from draw import Draw
 import time
 import glob
 import subprocess
@@ -42,12 +41,6 @@ class Handler:
         # Comparison of string
         self.prevString = ""
         
-        # Drawing the Syntax Tree
-        self.draw = Draw()
-        
-        # Storing whether a node type should be highlighted
-        self.highlights = {}
-
         # For mapping auto suggestions, based on previous node, parent node and current node/text
         self.mapper = {}
         with open("text-files/nodemappings.txt", "r") as file:
@@ -60,7 +53,16 @@ class Handler:
         with open("text-files/nodenames.txt", "r") as file:
             for lines in file.readlines():
                 self.node_types.append(lines.strip())
-
+                
+        # Storing whether a node type should be highlighted - Previous colours stored in nodecolours.txt
+        self.highlights = {}
+        with open("text-files/nodecolours.txt", "r") as file:
+            for lines in file.readlines():
+                # print(lines.split(":"))
+                nodename, colour = lines.split(":")
+                if nodename in self.node_types:
+                    self.highlights[nodename] = colour.strip()
+        
 
     def reparseBNF(self, fileName, ontology):
         """
@@ -225,10 +227,16 @@ class Handler:
             arr.append([])
 
         # Need to add a more elegant way of doing this. FORMATTING
+        #
+        ##################
+        #   EDIT
+        ##################
         if node and node.type == "identity":
-            finalarr.append("\n")
+            if finalarr[-1] != "\n\n":
+                finalarr.append("\n\n")
         elif node.parent and (node.parent.type == "conditional_statement" or node.parent.type == "condition"):
-            finalarr.append("\n\n")
+            if finalarr[-1] != "\n\n":
+                finalarr.append("\n\n")
             
         # In the case of children, this means that the node is not a terminal (leaf) node.
         # While the node type may be beneficial, the text does not exist at this level.
@@ -240,8 +248,9 @@ class Handler:
             
             if node.parent and node.parent.type == "ERROR":
                 colour = "#f76f6f"
-                finalarr.append(f'<b style="color:{colour};">ERROR</b>')
-            
+                # finalarr.append(f'<b style="color:{colour};">ERROR</b>')
+                finalarr.append(f'<b style="color:{colour};">')
+
             if node.parent and node.parent.type in self.highlights:
                 colour = self.highlights[node.parent.type]
                 if colour != "#000000":
@@ -255,6 +264,9 @@ class Handler:
         for c in (node.children):
             self.exploreNodes(c, depth + 1, arr, finalarr)
 
+        if node.child_count == 0 and node.parent and node.parent.type == "ERROR":
+            finalarr.append('</b>')
+
         # Doing the AutoSuggestion Mapping
         prev_sibling = ""
         parent = ""
@@ -265,12 +277,15 @@ class Handler:
             parent = node.parent.type
 
         key = (node.type, prev_sibling, parent)
-        if key in self.mapper:
+        
+        if key in self.mapper and parent == "ERROR":
         # if key in self.mapper and node.next_sibling == None: # For the case where you only want it if it is incomplete
         # node.prev_sibling would then be if you want to add some formatting Pre-node, next_sibling Post-node
             # [FUTURE] - Add in a way to view what this suggestion consists of + how to fulfil
             # Currently, we only have a highlevel suggestion, based on node-types, not by words.
-            finalarr.append(f'<b style="background-color:{"green"}; color:{"white"}"> {self.mapper[key]} </b>')
+            # finalarr.append(f'<b style="background-color:{"green"}; color:{"white"}"> {self.mapper[key]} </b>')
+            hashed = hash(key)
+            finalarr.append(f'<span class="popup" style="color:{"grey"}" onclick="myFunction(\'{hashed}\')">...<span class="popuptext" id="{hashed}">{self.mapper[key]}</span></span>')
 
 
 
@@ -307,40 +322,6 @@ class Handler:
         # return '\n'.join([str(i) for i in arr]) + '\n\n' + ' '.join(finalarr)
 
 
-    def drawTree(self):
-        return self.draw.buildTree(self.parse_tree, 5000, 10000)
-
-
-    def error_analyser(self):
-
-        # Example of an analyser, this one just counts the number of errors / total number of nodes
-        # Maybe swap to number of words, bytes
-
-        count = 0
-        total = 1
-        # cursor = self.parse_tree.root_node.walk()
-
-        if self.parse_tree != None:
-            s = [self.parse_tree.root_node]
-
-            while s:
-                node = s.pop()
-
-                if node.child_count > 0:
-                    for child in node.children:
-                        s.append(child)
-
-                if node.type == "ERROR":
-                    count += 1
-                
-                total += 1
-
-        return int((1 - (count / (total))) * 100)
-
-
-    
-
-
 if __name__ == "__main__":
 
     # ont = Ontology()
@@ -356,4 +337,4 @@ if __name__ == "__main__":
 
     tree = handle.bnfStructure(strCheck)
     
-    handle.drawTree()
+    # handle.drawTree()
