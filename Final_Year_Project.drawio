@@ -1,9 +1,94 @@
-<mxfile host="app.diagrams.net" modified="2025-01-02T23:36:49.584Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" version="24.1.0" etag="B9AXSlVFaOWeNVh0hYcw" type="github">
+<mxfile host="app.diagrams.net" modified="2025-01-02T23:49:56.470Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" etag="bQODhj9MCwl1cVfRRbs6" version="24.1.0" type="github">
   <diagram name="Page-1" id="Yk5gqsM_una3mSJjagre">
-    <mxGraphModel>
+    <mxGraphModel dx="1360" dy="732" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-37" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E6E6E6;" vertex="1" parent="1">
+          <mxGeometry x="140" y="420" width="240" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-35" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E6E6E6;" vertex="1" parent="1">
+          <mxGeometry x="140" y="110" width="120" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="Hwh45yyVBSEUl5WAiRsI-1" target="Hwh45yyVBSEUl5WAiRsI-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-1" value="&lt;font face=&quot;Avenir&quot;&gt;BNF&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#C3ABD0;" vertex="1" parent="1">
+          <mxGeometry x="160" y="120" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="Hwh45yyVBSEUl5WAiRsI-3" target="Hwh45yyVBSEUl5WAiRsI-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-3" value="&lt;font face=&quot;Avenir&quot;&gt;DEVELOPER&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="155" y="60" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="Hwh45yyVBSEUl5WAiRsI-5" target="Hwh45yyVBSEUl5WAiRsI-7">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-5" value="&lt;font face=&quot;Avenir&quot;&gt;ANTLR&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A7D1A7;" vertex="1" parent="1">
+          <mxGeometry x="280" y="120" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Hwh45yyVBSEUl5WAiRsI-7" target="Hwh45yyVBSEUl5WAiRsI-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-7" value="&lt;font face=&quot;Avenir&quot;&gt;BNF-Parser&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#91A8C9;" vertex="1" parent="1">
+          <mxGeometry x="160" y="200" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Hwh45yyVBSEUl5WAiRsI-9" target="Hwh45yyVBSEUl5WAiRsI-12">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="200" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-9" value="&lt;font face=&quot;Avenir&quot;&gt;Grammar&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#91A8C9;" vertex="1" parent="1">
+          <mxGeometry x="160" y="280" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-12" value="&lt;font face=&quot;Avenir&quot;&gt;Grammar-Parser&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#91A8C9;" vertex="1" parent="1">
+          <mxGeometry x="160" y="360" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="Hwh45yyVBSEUl5WAiRsI-14" target="Hwh45yyVBSEUl5WAiRsI-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-14" value="&lt;font face=&quot;Avenir&quot;&gt;Tree-Sitter&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A7D1A7;" vertex="1" parent="1">
+          <mxGeometry x="280" y="280" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-18" value="&lt;font face=&quot;Avenir&quot;&gt;Computable Contract IDE&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#91A8C9;" vertex="1" parent="1">
+          <mxGeometry x="160" y="440" width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.102;entryY=-0.06;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Hwh45yyVBSEUl5WAiRsI-12" target="Hwh45yyVBSEUl5WAiRsI-18">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.628;entryY=0.982;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Hwh45yyVBSEUl5WAiRsI-18" target="Hwh45yyVBSEUl5WAiRsI-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-28" value="&lt;font face=&quot;Avenir&quot;&gt;Contract&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#C3ABD0;" vertex="1" parent="1">
+          <mxGeometry x="160" y="520" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.202;entryY=1.041;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Hwh45yyVBSEUl5WAiRsI-28" target="Hwh45yyVBSEUl5WAiRsI-18">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="Hwh45yyVBSEUl5WAiRsI-32" target="Hwh45yyVBSEUl5WAiRsI-28">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-32" value="&lt;font face=&quot;Avenir&quot;&gt;USER&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="175" y="590" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-38" value="&lt;font face=&quot;Avenir&quot;&gt;Developer&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;font face=&quot;Avenir&quot;&gt;Facing&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="60" y="230" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-39" value="&lt;font face=&quot;Avenir&quot;&gt;User Facing&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="260" y="530" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-41" value="&lt;font face=&quot;Avenir&quot;&gt;User/Dev Interactions&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#C3ABD0;" vertex="1" parent="1">
+          <mxGeometry x="400" y="120" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-42" value="&lt;font face=&quot;Avenir&quot;&gt;Tools&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A7D1A7;" vertex="1" parent="1">
+          <mxGeometry x="400" y="160" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Hwh45yyVBSEUl5WAiRsI-43" value="&lt;font face=&quot;Avenir&quot;&gt;Parser Pipeline&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#91A8C9;" vertex="1" parent="1">
+          <mxGeometry x="400" y="200" width="80" height="40" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
