@@ -7,9 +7,9 @@ operator:#000000
 conditional_definition:#000000
 statement:#000000
 conditional_statement:#52c9e0
-simple_statement:#000000
-condition:#000000
-simple_condition:#000000
+simple_statement:#52c9e0
+condition:#52c9e0
+simple_condition:#52c9e0
 boolean_expression:#000000
 ID:#2da216
 holds:#000000

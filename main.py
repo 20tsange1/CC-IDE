@@ -231,11 +231,13 @@ class Handler:
         ##################
         #   EDIT
         ##################
+        if node and node.type == "C-AND":
+            finalarr.append("\n\n")
         if node and node.type == "identity":
-            if finalarr[-1] != "\n\n":
+            if finalarr and finalarr[-1] != "\n\n":
                 finalarr.append("\n\n")
         elif node.parent and (node.parent.type == "conditional_statement" or node.parent.type == "condition"):
-            if finalarr[-1] != "\n\n":
+            if finalarr and finalarr[-1] != "\n\n":
                 finalarr.append("\n\n")
             
         # In the case of children, this means that the node is not a terminal (leaf) node.
