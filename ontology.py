@@ -13,7 +13,7 @@ class Ontology:
 
                 # Finding start index of word
                 start = 0
-                while line[start] != ":":
+                while line and line[start] != ":":
                     start += 1
 
                 # Finding word we are mapping

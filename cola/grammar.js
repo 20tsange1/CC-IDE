@@ -30,7 +30,8 @@ definition: $ => choice (
 
 simple_definition: $ => choice (
 	seq($.ID, $.subject, 'IS', $.subject), 
-	seq($.ID, $.subject, 'EQUALS', $.numerical_expression)
+	seq($.ID, $.subject, 'EQUALS', $.numerical_expression), 
+	seq($.ID, 'D')
 ),
 
 numerical_expression: $ => prec.left(choice (
@@ -66,34 +67,36 @@ conditional_statement: $ => choice (
 	seq('IF', $.condition, 'THEN', $.statement, 'ELSE', $.statement)
 ),
 
-simple_statement: $ => choice (
+simple_statement: $ => prec.right(choice (
 	seq($.ID, optional($.holds), $.subject, $.modal_verb, $.verb, $.object, $.receiver, $.date), 
 	seq($.ID, optional($.holds), $.subject, $.date, $.modal_verb, $.verb, $.object, $.receiver), 
 	seq($.ID, optional($.holds), $.date, $.subject, $.modal_verb, $.verb, $.object, $.receiver), 
-	seq($.ID, optional($.holds), $.subject, $.verb_status, $.object, $.receiver, $.date)
-),
+	seq($.ID, optional($.holds), $.subject, $.verb_status, $.object, $.receiver, $.date), 
+	seq($.ID, 'S')
+)),
 
-condition: $ => choice (
+condition: $ => prec.right(choice (
 	$.simple_condition, 
 	seq($.simple_condition, 'OR', $.condition), 
 	seq($.simple_condition, 'AND', $.condition)
-),
+)),
 
-simple_condition: $ => choice (
+simple_condition: $ => prec.right(choice (
 	seq($.ID, optional($.holds), $.subject, $.verb_status, $.object, $.receiver, $.date), 
 	seq($.ID, optional($.holds), $.subject, $.date, $.verb_status, $.object, $.receiver), 
 	seq($.ID, optional($.holds), $.date, $.subject, $.verb_status, $.object, $.receiver), 
 	seq($.ID, optional($.holds), $.subject, $.modal_verb, $.verb, $.object, $.receiver, $.date), 
-	seq($.ID, optional($.holds), $.boolean_expression)
-),
+	seq($.ID, optional($.holds), $.boolean_expression), 
+	seq($.ID, 'C')
+)),
 
 boolean_expression: $ => (seq($.subject, $.verb_status, $.comparison, $.subject)
 ),
 
-ID: $ => choice (
+ID: $ => prec.right(choice (
 	seq('[', $.num, ']'), 
 	seq('[', $.num, '(', $.num, ')', ']')
-),
+)),
 
 holds: $ => choice (
 	seq('it', 'is', 'the', 'case', 'that'), 

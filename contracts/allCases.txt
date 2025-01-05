@@ -40,3 +40,6 @@ C-AND
 
 C-AND
 [13] SecondParty charged SOMECURRENCY Money to PartyD on 15 June 2020
+
+C-AND
+[14] D IF [1] C

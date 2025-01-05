@@ -119,6 +119,19 @@
               "name": "numerical_expression"
             }
           ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "ID"
+            },
+            {
+              "type": "STRING",
+              "value": "D"
+            }
+          ]
         }
       ]
     },
@@ -415,426 +428,464 @@
       ]
     },
     "simple_statement": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "ID"
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "holds"
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "modal_verb"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "verb"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "object"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "receiver"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "date"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "ID"
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "holds"
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "date"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "modal_verb"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "verb"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "object"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "receiver"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "ID"
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "holds"
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            },
-            {
-              "type": "SYMBOL",
-              "name": "date"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "modal_verb"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "verb"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "object"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "receiver"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "ID"
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "holds"
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "verb_status"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "object"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "receiver"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "date"
-            }
-          ]
-        }
-      ]
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "ID"
+              },
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "holds"
+                  },
+                  {
+                    "type": "BLANK"
+                  }
+                ]
+              },
+              {
+                "type": "SYMBOL",
+                "name": "subject"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "modal_verb"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "verb"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "object"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "receiver"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "date"
+              }
+            ]
+          },
+          {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "ID"
+              },
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "holds"
+                  },
+                  {
+                    "type": "BLANK"
+                  }
+                ]
+              },
+              {
+                "type": "SYMBOL",
+                "name": "subject"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "date"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "modal_verb"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "verb"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "object"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "receiver"
+              }
+            ]
+          },
+          {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "ID"
+              },
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "holds"
+                  },
+                  {
+                    "type": "BLANK"
+                  }
+                ]
+              },
+              {
+                "type": "SYMBOL",
+                "name": "date"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "subject"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "modal_verb"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "verb"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "object"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "receiver"
+              }
+            ]
+          },
+          {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "ID"
+              },
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "holds"
+                  },
+                  {
+                    "type": "BLANK"
+                  }
+                ]
+              },
+              {
+                "type": "SYMBOL",
+                "name": "subject"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "verb_status"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "object"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "receiver"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "date"
+              }
+            ]
+          },
+          {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "ID"
+              },
+              {
+                "type": "STRING",
+                "value": "S"
+              }
+            ]
+          }
+        ]
+      }
     },
     "condition": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "simple_condition"
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "simple_condition"
-            },
-            {
-              "type": "STRING",
-              "value": "OR"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "condition"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "simple_condition"
-            },
-            {
-              "type": "STRING",
-              "value": "AND"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "condition"
-            }
-          ]
-        }
-      ]
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "simple_condition"
+          },
+          {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "simple_condition"
+              },
+              {
+                "type": "STRING",
+                "value": "OR"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "condition"
+              }
+            ]
+          },
+          {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "simple_condition"
+              },
+              {
+                "type": "STRING",
+                "value": "AND"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "condition"
+              }
+            ]
+          }
+        ]
+      }
     },
     "simple_condition": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "ID"
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "holds"
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "verb_status"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "object"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "receiver"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "date"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "ID"
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "holds"
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "date"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "verb_status"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "object"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "receiver"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "ID"
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "holds"
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            },
-            {
-              "type": "SYMBOL",
-              "name": "date"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "verb_status"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "object"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "receiver"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "ID"
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "holds"
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "modal_verb"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "verb"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "object"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "receiver"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "date"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "ID"
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "holds"
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            },
-            {
-              "type": "SYMBOL",
-              "name": "boolean_expression"
-            }
-          ]
-        }
-      ]
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "ID"
+              },
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "holds"
+                  },
+                  {
+                    "type": "BLANK"
+                  }
+                ]
+              },
+              {
+                "type": "SYMBOL",
+                "name": "subject"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "verb_status"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "object"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "receiver"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "date"
+              }
+            ]
+          },
+          {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "ID"
+              },
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "holds"
+                  },
+                  {
+                    "type": "BLANK"
+                  }
+                ]
+              },
+              {
+                "type": "SYMBOL",
+                "name": "subject"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "date"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "verb_status"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "object"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "receiver"
+              }
+            ]
+          },
+          {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "ID"
+              },
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "holds"
+                  },
+                  {
+                    "type": "BLANK"
+                  }
+                ]
+              },
+              {
+                "type": "SYMBOL",
+                "name": "date"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "subject"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "verb_status"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "object"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "receiver"
+              }
+            ]
+          },
+          {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "ID"
+              },
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "holds"
+                  },
+                  {
+                    "type": "BLANK"
+                  }
+                ]
+              },
+              {
+                "type": "SYMBOL",
+                "name": "subject"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "modal_verb"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "verb"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "object"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "receiver"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "date"
+              }
+            ]
+          },
+          {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "ID"
+              },
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "holds"
+                  },
+                  {
+                    "type": "BLANK"
+                  }
+                ]
+              },
+              {
+                "type": "SYMBOL",
+                "name": "boolean_expression"
+              }
+            ]
+          },
+          {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "ID"
+              },
+              {
+                "type": "STRING",
+                "value": "C"
+              }
+            ]
+          }
+        ]
+      }
     },
     "boolean_expression": {
       "type": "SEQ",
@@ -858,55 +909,59 @@
       ]
     },
     "ID": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "["
-            },
-            {
-              "type": "SYMBOL",
-              "name": "num"
-            },
-            {
-              "type": "STRING",
-              "value": "]"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "["
-            },
-            {
-              "type": "SYMBOL",
-              "name": "num"
-            },
-            {
-              "type": "STRING",
-              "value": "("
-            },
-            {
-              "type": "SYMBOL",
-              "name": "num"
-            },
-            {
-              "type": "STRING",
-              "value": ")"
-            },
-            {
-              "type": "STRING",
-              "value": "]"
-            }
-          ]
-        }
-      ]
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "["
+              },
+              {
+                "type": "SYMBOL",
+                "name": "num"
+              },
+              {
+                "type": "STRING",
+                "value": "]"
+              }
+            ]
+          },
+          {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "["
+              },
+              {
+                "type": "SYMBOL",
+                "name": "num"
+              },
+              {
+                "type": "STRING",
+                "value": "("
+              },
+              {
+                "type": "SYMBOL",
+                "name": "num"
+              },
+              {
+                "type": "STRING",
+                "value": ")"
+              },
+              {
+                "type": "STRING",
+                "value": "]"
+              }
+            ]
+          }
+        ]
+      }
     },
     "holds": {
       "type": "CHOICE",

@@ -614,7 +614,15 @@
     "named": false
   },
   {
+    "type": "C",
+    "named": false
+  },
+  {
     "type": "C-AND",
+    "named": false
+  },
+  {
+    "type": "D",
     "named": false
   },
   {
@@ -715,6 +723,10 @@
   },
   {
     "type": "REPORT",
+    "named": false
+  },
+  {
+    "type": "S",
     "named": false
   },
   {

@@ -9,7 +9,8 @@ from markupsafe import Markup
 
 # For Auxiliary parsing and visualisation functions
 from main import Handler
-from analysis import Analysis
+from dynamicanalysis import DynamicAnalysis
+from staticanalysis import StaticAnalysis
 from visualiser import Visualiser
 from ontology import Ontology
 
@@ -19,16 +20,22 @@ import os
 app = Flask(__name__)
 handler = Handler()
 ont = Ontology()
-analsyer = Analysis()
+dynamic_analyser = DynamicAnalysis()
+static_analyser = StaticAnalysis()
 visualiser = Visualiser()
 
 CONTRACT_FILES_DIR = "contracts"  # Directory to store contracts
 TEXT_FILES_DIR = "text-files"  # Directory to store text files
 
-# Define a route for the main page
+# ------------
+# Home Page
+# ------------
+#
+#   Mainly for parsing and dynamic analysis
+
 @app.route("/")
 def index():
-    print(handler.highlights)
+    # print(handler.highlights)
     return render_template("index.html", current_page="home", prev_string=handler.prevString)
 
 
@@ -115,9 +122,9 @@ def create_file():
     return jsonify({"message": "File created successfully"}), 200
 
 
-@app.route("/analysis", methods=["POST"])
-def analysis():
-    percentage = analsyer.error_analyser(handler.parse_tree)
+@app.route("/dynamic-analysis", methods=["POST"])
+def dynamic_analysis():
+    percentage = dynamic_analyser.error_analyser(handler.parse_tree)
 
     return (
         jsonify(
@@ -127,15 +134,17 @@ def analysis():
     )
 
 
-# Developer page
+# ------------
+# Developer Page
+# ------------
+#
 #   For adding highlight Colours
 #   Changing BNFs
 
 
 @app.route("/dev")
 def bnf_editor():
-    node_types_colour = [(t, handler.highlights[t] if t in handler.highlights else "") for t in handler.node_types]
-    return render_template("bnfeditor.html", node_types=node_types_colour, current_page="dev")
+    return render_template("bnfeditor.html", current_page="dev")
 
 
 # keep as function just for ont breakdown and reparseBNF
@@ -153,7 +162,7 @@ def parse_bnf():
     try:
         handler.reparseBNF(f"{directory}/{filename}", ont.ontologies)
     except Exception as e:
-        return jsonify({"message": f"{e}"}), 400
+        return jsonify({"error": f"{e}"}), 400
 
     return jsonify({"message": "BNF Parsed successfully"}), 200
 
@@ -177,8 +186,18 @@ def submit_options():
     return "Highlights Applied"
 
 
+@app.route('/get-node-types')
+def get_node_types():
+    # For choosing colours for each of the node types.
+    node_types_colour = [(t, handler.highlights[t] if t in handler.highlights else "") for t in handler.node_types]
+    return jsonify(node_types_colour)
 
+
+
+# ------------
 # Visualisation Page
+# ------------
+
 @app.route("/tree")
 def display_tree():
     return render_template("treeview.html", current_page="tree")
@@ -196,6 +215,24 @@ def file_draw():
     svg_content = visualiser.drawFile(handler.parse_tree)
     svg_content = Markup(svg_content)
     return jsonify(content=svg_content)
+
+# ------------
+# Analysis Page
+# ------------
+#
+#   Event Simulation
+
+@app.route("/analysis")
+def analysis_page():
+    return render_template("analysis.html", current_page="analysis")
+
+@app.route("/event-simulation", methods=["POST"])
+def static_analysis():
+    static_analyser.event_simulation(handler.parse_tree)
+    return jsonify({"message": "Successful Analysis"}), 200
+
+
+
 
 
 if __name__ == "__main__":

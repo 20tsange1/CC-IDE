@@ -1,6 +1,6 @@
 from tree_sitter import Language, Parser
 
-class Analysis:
+class DynamicAnalysis:
     """
     Analysis class is being developed to store and integrate different types of analysis into the IDE.
 

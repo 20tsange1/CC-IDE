@@ -179,6 +179,8 @@ conditions["2"].flag = True
 # Next steps -> Do some identity analysis, make sure it is unique. 
 # Add in ORs
 # Make the event simulation system more interactive. Base design is there, make it better.
+# Furthermore, this is completely based on the idea that conditions are always leading to make some definition or statement true.
+# Now is this true in all legal contracts? Need to explore the intersection.
 
 
 
