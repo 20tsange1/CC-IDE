@@ -106,6 +106,7 @@ button {
 
 .key-label {
     font-weight: bold;
+    width: 20rem;
 }
 
 /* Color picker styling */
@@ -114,4 +115,52 @@ button {
     height: 40px;
     border: none;
     cursor: pointer;
+}
+
+
+
+
+
+/* Format options container */
+#formatter {
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 80%;
+}
+
+
+#formatOptionsContainer {
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-top: 1rem;
+    gap: 10px;
+}
+
+#toggleFormatsBtn {
+    background-color: #4CAF50;
+    margin-bottom: 1rem;
+}
+
+#saveFormatsBtn {
+    background-color: #2196F3;
+    margin-top: 1rem;
+}
+
+/* Each format entry */
+.format-entry {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Input styling */
+.format-input {
+    width: 150px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
 }

@@ -166,8 +166,11 @@ createBtn.addEventListener('click', () => {
 // Load the file list on page load
 document.addEventListener('DOMContentLoaded', () => {
     loadFileList();
-    getNodeTypes();
+    getNodeTypesColour();
+    getNodeTypesFormat();
 });
+
+
 
 // ------------
 // Color Management
@@ -176,21 +179,13 @@ document.addEventListener('DOMContentLoaded', () => {
 const colorOptionsContainer = document.getElementById('colorOptionsContainer');
 const toggleColorsBtn = document.getElementById('toggleColorsBtn');
 const saveColorsBtn = document.getElementById('saveColorsBtn');
-let keysArray = [];
+let keysArrayColour = [];
 
-// Toggle color options visibility
-toggleColorsBtn.addEventListener('click', () => {
-    const isHidden = colorOptionsContainer.style.display === 'none';
-    colorOptionsContainer.style.display = isHidden ? 'block' : 'none';
-    saveColorsBtn.style.display = isHidden ? 'block' : 'none';
-    toggleColorsBtn.textContent = isHidden ? 'Hide Colours' : 'Show Colours';
-});
-
-function getNodeTypes() {
-    fetch('/get-node-types')
+function getNodeTypesColour() {
+    fetch('/get-node-types-colour')
         .then(response => response.json())
         .then(data => {
-            keysArray = data; // Dynamically assign the keysArray
+            keysArrayColour = data; // Dynamically assign the keysArray
             createColorOptions(); // Call the function to populate color options
         })
         .catch(error => console.error('Error fetching node types:', error));
@@ -200,7 +195,7 @@ function getNodeTypes() {
 function createColorOptions() {
 
     colorOptionsContainer.innerHTML = ''; // Clear existing options
-    keysArray.forEach(([key, color]) => {
+    keysArrayColour.forEach(([key, color]) => {
         const entryDiv = document.createElement('div');
         entryDiv.classList.add('color-entry');
 
@@ -220,16 +215,24 @@ function createColorOptions() {
     });
 }
 
+// Toggle color options visibility
+toggleColorsBtn.addEventListener('click', () => {
+    const isHidden = colorOptionsContainer.style.display === 'none';
+    colorOptionsContainer.style.display = isHidden ? 'block' : 'none';
+    saveColorsBtn.style.display = isHidden ? 'block' : 'none';
+    toggleColorsBtn.textContent = isHidden ? 'Hide Colours' : 'Show Colours';
+});
+
 // Save the selected colors
 saveColorsBtn.addEventListener('click', () => {
 
     const colorData = {};
-    keysArray.forEach(([key]) => {
+    keysArrayColour.forEach(([key, color]) => {
         const colorInput = document.querySelector(`input[name="${key}Color"]`);
         colorData[key] = colorInput.value;
     });
 
-    fetch('/submit-options', {
+    fetch('/submit-colour-options', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ colors: colorData })
@@ -240,4 +243,104 @@ saveColorsBtn.addEventListener('click', () => {
             alert('Colors saved successfully!');
         })
         .catch(error => console.error('Error saving colors:', error));
+});
+
+
+// ------------
+// Format Management
+// ------------
+
+const formatOptionsContainer = document.getElementById('formatOptionsContainer');
+const toggleFormatsBtn = document.getElementById('toggleFormatsBtn');
+const saveFormatsBtn = document.getElementById('saveFormatsBtn');
+let keysArrayFormat = [];
+
+function getNodeTypesFormat() {
+    fetch('/get-node-types-format')
+        .then(response => response.json())
+        .then(data => {
+            keysArrayFormat = data; // Dynamically assign the keysArray
+            createFormatOptions(); // Populate formatting options
+        })
+        .catch(error => console.error('Error fetching node types:', error));
+}
+
+// Create format options for each key
+function createFormatOptions() {
+    formatOptionsContainer.innerHTML = ''; // Clear existing options
+    keysArrayFormat.forEach(([key, prefix, suffix, notPrevious]) => {
+        const entryDiv = document.createElement('div');
+        entryDiv.classList.add('format-entry');
+
+        const keyLabel = document.createElement('span'); // Key label
+        keyLabel.textContent = key;
+        keyLabel.classList.add('key-label');
+
+        // Prefix input
+        const prefixInput = document.createElement('input');
+        prefixInput.type = 'text';
+        prefixInput.name = `${key}Prefix`;
+        prefixInput.placeholder = 'Prefix';
+        prefixInput.value = prefix;
+        prefixInput.classList.add('format-input');
+
+        // Suffix input
+        const suffixInput = document.createElement('input');
+        suffixInput.type = 'text';
+        suffixInput.name = `${key}Suffix`;
+        suffixInput.placeholder = 'Suffix';
+        suffixInput.value = suffix;
+        suffixInput.classList.add('format-input');
+
+        // NotPrevious input
+        const notPreviousInput = document.createElement('input');
+        notPreviousInput.type = 'text';
+        notPreviousInput.name = `${key}NotPrevious`;
+        notPreviousInput.placeholder = 'NotPrevious';
+        notPreviousInput.value = notPrevious;
+        notPreviousInput.classList.add('format-input');
+
+        entryDiv.appendChild(keyLabel);
+        entryDiv.appendChild(prefixInput);
+        entryDiv.appendChild(suffixInput);
+        entryDiv.appendChild(notPreviousInput);
+
+        formatOptionsContainer.appendChild(entryDiv);
+    });
+}
+
+// Toggle format options visibility
+toggleFormatsBtn.addEventListener('click', () => {
+    const isHidden = formatOptionsContainer.style.display === 'none';
+    formatOptionsContainer.style.display = isHidden ? 'block' : 'none';
+    saveFormatsBtn.style.display = isHidden ? 'block' : 'none';
+    toggleFormatsBtn.textContent = isHidden ? 'Hide Formats' : 'Show Formats';
+});
+
+// Save the selected formatting options
+saveFormatsBtn.addEventListener('click', () => {
+    const formatData = {};
+    keysArrayFormat.forEach(([key, prefix, suffix, notPrevious]) => {
+        const prefixInput = document.querySelector(`input[name="${key}Prefix"]`);
+        const suffixInput = document.querySelector(`input[name="${key}Suffix"]`);
+        const notPreviousInput = document.querySelector(`input[name="${key}NotPrevious"]`);
+
+        formatData[key] = {
+            prefix: prefixInput.value,
+            suffix: suffixInput.value,
+            notPrevious: notPreviousInput.value,
+        };
+    });
+
+    fetch('/submit-format-options', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ formats: formatData })
+    })
+        .then(response => response.text())
+        .then(data => {
+            console.log('Server response:', data);
+            alert('Formats saved successfully!');
+        })
+        .catch(error => console.error('Error saving formats:', error));
 });

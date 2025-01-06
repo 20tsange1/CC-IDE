@@ -5,3 +5,7 @@ Dynamic analysis to be run alongside parser.
 Complete event simulation, make it a type of static anaylsis.
 
 Add in the ability to remember which grammar is being used. Makes it easier to then also change how colours are saved, make it grammar specific.
+
+Add in PDF view in visualiser. + Template with HTML, then filling in.
+
+Write up first draft / outline for diss.

@@ -58,16 +58,18 @@ class Handler:
         self.highlights = {}
         with open("text-files/nodecolours.txt", "r") as file:
             for lines in file.readlines():
+                # print(lines.split(":"))
                 nodename, colour = lines.split(":")
                 if nodename in self.node_types:
                     self.highlights[nodename] = colour.strip()
 
         # Adding prefix and suffix
-        # {prefix, suffix, notPrevious}
+        # Prefix, Suffix, IfPrevNot
         self.pref_suf_format = {}
         with open("text-files/nodeformats.txt", "r") as file:
             for lines in file.readlines():
-                nodename, prefix, suffix, notprev, _ = lines.split("~~")
+                # print(lines.split(":"))
+                nodename, prefix, suffix, notprev, _ = lines.split(":")
                 if nodename in self.node_types:
                     self.pref_suf_format[nodename] = {"prefix": prefix, "suffix": suffix, "notPrevious": notprev}
         
@@ -87,7 +89,10 @@ class Handler:
             ontologies=ontology)
         bnfparser.main()
 
-        # self.edit used as an iterator for version number
+        # Enters the file and runs tree-sitter on the grammar json.
+        # For some reason, if you delete just the file itself, and use the same name, it breaks.
+        # Possibly due to some sort of caching done by the Tree-Sitter library itself?
+        # So instead we have used an increment.
         if os.path.isfile(f"build/my-language{self.edit}.so"):
             os.remove(f"build/my-language{self.edit}.so")
 
@@ -209,31 +214,6 @@ class Handler:
         return [start_byte, old_end_byte, new_end_byte, start_point, old_end_point, new_end_point,]
 
 
-    def nodeAutoSuggestion(self, node, finalarr):
-        """ 
-        Doing the AutoSuggestion Mapping
-
-        Checking your current node, previous node, and parent node.
-        Then using that to see if it is a valid triplet within the language.
-        If it is, we can then provide a suggestion for the next node.
-        """
-
-        prev_sibling = ""
-        parent = ""
-
-        if node.prev_sibling:
-            prev_sibling = node.prev_sibling.type
-        if node.parent:
-            parent = node.parent.type
-
-        key = (node.type, prev_sibling, parent)
-        
-        if key in self.mapper and parent == "ERROR":
-            hashed = hash(key)
-            # Created a popup class within css.
-            finalarr.append(f'<span class="popup" style="color:{"grey"}" onclick="myFunction(\'{hashed}\')">...<span class="popuptext" id="{hashed}">{self.mapper[key]}</span></span>')
-
-
     def exploreNodes(self, node, depth, arr, finalarr):
         """
         Depth First Traversal, exploring each node and their children.
@@ -251,15 +231,24 @@ class Handler:
         
         """
 
+
+        if depth >= len(arr):
+            arr.append([])
+
         # Adding prefix
         if node and node.type in self.pref_suf_format:
             if finalarr and finalarr[-1] != self.pref_suf_format[node.type]["notPrevious"]:
                 if self.pref_suf_format[node.type]["prefix"] != "":
                     finalarr.append(self.pref_suf_format[node.type]["prefix"])
+                    # print(self.pref_suf_format[node.type]["prefix"])
             
-        # In the case of no children, this means that the node a terminal (leaf) node.
-        if node.child_count == 0:
+        # In the case of children, this means that the node is not a terminal (leaf) node.
+        # While the node type may be beneficial, the text does not exist at this level.
+        if node.child_count > 0:
+            arr[depth].append(f"<b>{node.type}</b>")
+        else:
             text = node.text.decode("utf8")
+            arr[depth].append(f"<b>{text}</b>")
             
             if node.parent and node.parent.type == "ERROR":
                 colour = "#f76f6f"
@@ -274,16 +263,39 @@ class Handler:
             else:
                 finalarr.append(f'{text.strip()}')
 
+
         for c in (node.children):
             self.exploreNodes(c, depth + 1, arr, finalarr)
 
         if node.child_count == 0 and node.parent and node.parent.type == "ERROR":
             finalarr.append('</b>')
 
-        # Autosuggestion
-        self.nodeAutoSuggestion(node, finalarr)
+        # Doing the AutoSuggestion Mapping
+        prev_sibling = ""
+        parent = ""
 
-        # Adding suffix
+        if node.prev_sibling:
+            prev_sibling = node.prev_sibling.type
+        if node.parent:
+            parent = node.parent.type
+
+        key = (node.type, prev_sibling, parent)
+        
+        if key in self.mapper and parent == "ERROR":
+        # if key in self.mapper and node.next_sibling == None: # For the case where you only want it if it is incomplete
+        # node.prev_sibling would then be if you want to add some formatting Pre-node, next_sibling Post-node
+            # [FUTURE] - Add in a way to view what this suggestion consists of + how to fulfil
+            # Currently, we only have a highlevel suggestion, based on node-types, not by words.
+            # finalarr.append(f'<b style="background-color:{"green"}; color:{"white"}"> {self.mapper[key]} </b>')
+            hashed = hash(key)
+            finalarr.append(f'<span class="popup" style="color:{"grey"}" onclick="myFunction(\'{hashed}\')">...<span class="popuptext" id="{hashed}">{self.mapper[key]}</span></span>')
+
+        # Need to add a more elegant way of doing this. FORMATTING
+        #
+        # I'm thinking suffix and prefix, do two checks. So you could have identations maybe.
+        ##################
+        #   EDIT
+        ##################
         if node and node.type in self.pref_suf_format:
             if self.pref_suf_format[node.type]["suffix"] != "":
                 finalarr.append(self.pref_suf_format[node.type]["suffix"])
@@ -319,6 +331,22 @@ class Handler:
 
         return ' '.join(finalarr)
 
+        # return '\n'.join([str(i) for i in arr]) + '\n\n' + ' '.join(finalarr)
+
 
 if __name__ == "__main__":
-    pass
+
+    # ont = Ontology()
+    # ont.breakdown("text-files/ontologies.txt")
+
+    handle = Handler()
+
+    # handle.reparseBNF(ont.ontologies)
+
+    # TESTS
+
+    strCheck =  ("[1] it is not the case that on the 7 January 26 Alice Must PAY OTHEROBJECT objectthing")
+
+    tree = handle.bnfStructure(strCheck)
+    
+    # handle.drawTree()

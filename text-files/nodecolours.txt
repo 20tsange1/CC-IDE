@@ -1,11 +1,11 @@
-contract:#000000
-component:#000000
-definition:#000000
-simple_definition:#000000
+contract:#48a53b
+component:#267510
+definition:#52c9f4
+simple_definition:#50c9f4
 numerical_expression:#000000
 operator:#000000
-conditional_definition:#000000
-statement:#000000
+conditional_definition:#50c9f4
+statement:#52c9f4
 conditional_statement:#52c9e0
 simple_statement:#52c9e0
 condition:#52c9e0

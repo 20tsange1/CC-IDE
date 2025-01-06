@@ -167,8 +167,8 @@ def parse_bnf():
     return jsonify({"message": "BNF Parsed successfully"}), 200
 
 
-@app.route("/submit-options", methods=["POST"])
-def submit_options():
+@app.route("/submit-colour-options", methods=["POST"])
+def submit_colour_options():
     # Collect color data from the JSON request
     data = request.get_json()
     highlight_colours = data.get("colors", {})
@@ -186,12 +186,45 @@ def submit_options():
     return "Highlights Applied"
 
 
-@app.route('/get-node-types')
-def get_node_types():
+@app.route("/submit-format-options", methods=["POST"])
+def submit_format_options():
+    # Collect color data from the JSON request
+    data = request.get_json()
+    formatting_options = data.get("formats", {})
+    handler.pref_suf_format = formatting_options
+
+    with open('text-files/nodeformats.txt', 'w') as file:
+        formats = ""
+        for node, formatting in formatting_options.items():
+            prefix = formatting["prefix"]
+            suffix = formatting["suffix"]
+            notprev = formatting["notPrevious"]
+            formats += f"{node}~~{prefix}~~{suffix}~~{notprev}~~\n"
+        file.write(formats)
+
+    return "Formatting Applied"
+
+
+@app.route('/get-node-types-colour')
+def get_node_types_colour():
     # For choosing colours for each of the node types.
     node_types_colour = [(t, handler.highlights[t] if t in handler.highlights else "") for t in handler.node_types]
     return jsonify(node_types_colour)
 
+@app.route('/get-node-types-format')
+def get_node_types_format():
+    # For choosing colours for each of the node types.
+    node_types = []
+    # print(handler.pref_suf_format)
+    formatref = handler.pref_suf_format
+    for t in handler.node_types:
+        if t in handler.pref_suf_format:
+            add = (t, formatref[t]["prefix"], formatref[t]["suffix"], formatref[t]["notPrevious"])
+        else:
+            add = (t, "", "", "")
+        node_types.append(add)
+    # print(node_types)
+    return jsonify(node_types)
 
 
 # ------------
