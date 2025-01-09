@@ -21,7 +21,7 @@ equal:#000000
 more_than:#000000
 modal_verb:#000000
 obligation:#000000
-date:#c8da3e
+date:#3c8e90
 temporal_quantifier:#000000
 specific_date:#000000
 temporal_offset:#000000

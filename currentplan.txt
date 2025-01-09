@@ -2,6 +2,10 @@ Change analysis -> Static Analysis + Dynamic Analysis
 New page for static analysis.
 Dynamic analysis to be run alongside parser.
 
+-> We also don't want our analysis to be directly built into the parsing. We don't want conflicts, keep it separate, keep it isolated.
+-> Analysis may tamper with the root tree, we don't want that.
+
+
 Complete event simulation, make it a type of static anaylsis.
 
 Add in the ability to remember which grammar is being used. Makes it easier to then also change how colours are saved, make it grammar specific.
@@ -9,3 +13,20 @@ Add in the ability to remember which grammar is being used. Makes it easier to t
 Add in PDF view in visualiser. + Template with HTML, then filling in.
 
 Write up first draft / outline for diss.
+
+Comments on Comments:
+
+- Folding editor may be way too granular, i.e. way too many nodes to be able to split it at node level. Maybe up to a certain depth?
+-> idea would be to assign each node a unique ID. Then from that, you will have to relay that back to the parser and BUI.
+-> Then from the BUI, you would be able to press the node and then only things from that node onwards will be shown. Backend means that you use that ID as a flag, if parent not ID or self not ID, then don't show. This gets kinda hard to manage but definitely doable?
+
+-> How about. Adding node ID, which triggers a flag in the explore method.
+-> Which can then be reset.
+
+- Shift to here would be fine, definitely not important if it takes too long
+
+
+- Need print view, currently implementing.
+-> Add into visualisation tab, some type of PDF form?
+-> I'm thinking of HTML template with some sort of rendering such that the contract goes directly in. 
+-> But then you need to think about sub-titles and such.

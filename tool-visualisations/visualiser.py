@@ -29,8 +29,8 @@ class Visualiser:
     
     """
 
-    def drawTree(self, tree, width, height):
-        return self.tree_drawer.buildTree(tree, width, height)
+    def drawTree(self, tree):
+        return self.tree_drawer.buildTree(tree)
 
     def drawFile(self, tree):
         return self.file_drawer.buildFileStructure(tree)

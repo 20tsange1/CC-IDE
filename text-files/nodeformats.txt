@@ -1,17 +1,17 @@
 contract~~<br><br>~~~~~~
 component~~~~~~~~
 definition~~~~~~~~
-simple_definition~~<br><br><div style="margin-left: 2em;">~~</div><br><br>~~<br><br>~~
+simple_definition~~<br><br>~~</div><br><br>~~<br><br>~~
 numerical_expression~~~~~~~~
 operator~~~~~~~~
 conditional_definition~~~~~~~~
 statement~~~~~~~~
 conditional_statement~~~~~~~~
-simple_statement~~<br><br><div style="margin-left: 2em;">~~</div><br><br>~~<br><br>~~
+simple_statement~~<br><br>~~</div><br><br>~~<br><br>~~
 condition~~~~~~~~
-simple_condition~~<br><br><div style="margin-left: 2em;">~~</div><br><br>~~<br><br>~~
+simple_condition~~<br><br>~~</div><br><br>~~<br><br>~~
 boolean_expression~~~~~~~~
-ID~~~~~~~~
+ID~~<div style="margin-left: 2em;">~~~~~~
 holds~~~~~~~~
 subject~~~~~~~~
 verb~~~~~~~~

@@ -7,48 +7,20 @@ Here's some feedback:
 
 
 
-Developer - "Save" attempts to generate tree-sitter grammar from bnf, so it's more than just "Save" - should it be something like "Save and Apply"?  or "Save and Select"?  (or have a separate Select button?
-
 Alert re L::=  this should highlight the place where Lrec grammar has been found
 Alert re R::= ... I wonder is it really necessary?  Does tree-sitter have problems with Rrec grammars?  All but the simplest grammars will have recursion.
 
 Home page: Parsed Output - it's not clear to the lawyer why some text has been added and why it is coloured - there needs to be a better visual cue for what's going on
-Tree page:  given how difficult it is to draw a tree from top to bottom, why not draw it from left to right, similar to (but not exactly like) a folder tree?  e.g.
-  
 
-contract
-  -> component
-         -> statement
-             -> simple_statement
-                  -> identity
-                        -> [
-                            1
-                            ]
-                      holds
-                        -> it
-                            is
-                            not
-                            the
-                            case
-                            that
-                      date
-                        -> on
-                            the
-                            7
-                            month
-                              -> January
-                            26
-                      subject
-                        -> Alice
-                      modal_verb
-                        -> OBLIGATION
-                              ->Must
-                      verb
-                        -> PAY
-                      object
-                        -> nonnumerical_object
-                               -> OTHEROBJECT
-                                    objectthing
-      
 
-You could then put it inside a display object with its own scroll bars perhaps?  So you don't lose the information at the top of the screen
+2. in the Home view, in the right-hand window where we view the node annotations, implement a "folding" feature:
+    - if the user clicks on a node, that node only toggles between showing and hiding everything beneath it in the AST
+
+3. add a Print view which shows a printable view of the contract, including formatting
+    - the user can add/remove headings
+    - the user can add/remove simple BUI and font size formatting to any text
+    - the user can create BUI and size formatting styles for any node type (like setting colours in the developer view) - and these settings can be saved/loaded under different names
+
+4. in the Home view implement a "shift to here" feature for both windows:
+    - a shift-click (or similar) at a point anywhere in the AST shown in the right window causes the left window to move so that the point in the contract corresponding to the selected point in the AST is at centre (or top, but centre is probably better) of the left window.
+    - the same operation if performed at any point in the left window will cause the right window to move so  that the point in the AST corresponding to the selected point in the contract appears in the centre (preferably) of the right window.  NB what happens if the right window is showing a folded view of the AST? you could just position the relevant folded node in the centre of the right window, or unfold that node (and any relevant folded sub trees, but not irrelevant ones) so that the correct point in the AST shows in the centre of the right window.  Possibly the latter is more useful, but perhaps it could be a global preference setting for the IDE.

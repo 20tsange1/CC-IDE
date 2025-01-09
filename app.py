@@ -49,6 +49,16 @@ def parse_text():
     return jsonify({"parsed_text": parsed_text})
 
 
+# Define a route for parsing text
+@app.route("/parse-node", methods=["POST"])
+def parse_node_text():
+    # Get the text from the request
+    nodeID = request.json.get("nodeID")
+    # Basic parsing - you can replace this with custom parsing logic
+    parsed_text = handler.bnfSubStructure(nodeID)  # Example: Convert text to uppercase
+    return jsonify({"parsed_text": parsed_text})
+
+
 @app.route("/files", methods=["POST"])
 def list_files():
     # List all text files in the directory
@@ -238,7 +248,7 @@ def display_tree():
 @app.route("/tree_draw")
 def tree_draw():
     # Generate SVG for the tree
-    svg_content = visualiser.drawTree(handler.parse_tree, 5000, 10000)   
+    svg_content = visualiser.drawTree(handler.parse_tree)   
     svg_content = Markup(svg_content)
     return jsonify(content=svg_content)
 

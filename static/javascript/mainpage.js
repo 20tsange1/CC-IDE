@@ -191,7 +191,7 @@ function dnyamicAnalysis() {
 // ------------
 
 // Show or hide a popup
-function myFunction(elementID) {
+function popupFunction(elementID) {
     const popup = document.getElementById(elementID);
     popup.classList.toggle("show");
     event.stopPropagation(); // Prevent event propagation
@@ -203,3 +203,26 @@ document.addEventListener('click', () => {
         box.classList.remove("show"); // Hide visible popups
     });
 });
+
+// ------------
+// FOR NODE SUBSET
+// ------------
+
+// Show or hide a popup
+function nodeFold(elementID) {
+    parseNodeText(elementID);
+}
+
+// Function to parse text and update the parsed display
+function parseNodeText(nodeID) {
+    fetch('/parse-node', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nodeID: nodeID })
+    })
+        .then(response => response.json())
+        .then(data => {
+            parsedText.innerHTML = data.parsed_text; // Update parsed text
+        })
+        .catch(error => console.error('Error parsing text:', error));
+}

@@ -208,6 +208,25 @@ class Handler:
         # Return the results as an array
         return [start_byte, old_end_byte, new_end_byte, start_point, old_end_point, new_end_point,]
 
+    
+    def nodeAddText(self, node, finalarr):
+        # In the case of no children, this means that the node a terminal (leaf) node.
+        if node.child_count == 0:
+            text = node.text.decode("utf8")
+            
+            if node.parent and node.parent.type == "ERROR":
+                colour = "#f76f6f"
+                finalarr.append(f'<b style="color:{colour};">')
+
+            if node.parent and node.parent.type in self.highlights:
+                colour = self.highlights[node.parent.type]
+                if colour != "#000000":
+                    finalarr.append(f'<b style="color:{colour};">{text.strip()}</b>')
+                else:
+                    finalarr.append(f'{text.strip()}')
+            else:
+                finalarr.append(f'{text.strip()}')
+
 
     def nodeAutoSuggestion(self, node, finalarr):
         """ 
@@ -231,10 +250,10 @@ class Handler:
         if key in self.mapper and parent == "ERROR":
             hashed = hash(key)
             # Created a popup class within css.
-            finalarr.append(f'<span class="popup" style="color:{"grey"}" onclick="myFunction(\'{hashed}\')">...<span class="popuptext" id="{hashed}">{self.mapper[key]}</span></span>')
+            finalarr.append(f'<span class="popup" style="color:{"grey"}" onclick="popupFunction(\'{hashed}\')">...<span class="popuptext" id="{hashed}">{self.mapper[key]}</span></span>')
 
-
-    def exploreNodes(self, node, depth, arr, finalarr):
+    
+    def exploreNodes(self, node, depth, finalarr, checkid, reached):
         """
         Depth First Traversal, exploring each node and their children.
         We can then construct our final sentence back together, utilising
@@ -251,42 +270,36 @@ class Handler:
         
         """
 
-        # Adding prefix
-        if node and node.type in self.pref_suf_format:
-            if finalarr and finalarr[-1] != self.pref_suf_format[node.type]["notPrevious"]:
-                if self.pref_suf_format[node.type]["prefix"] != "":
-                    finalarr.append(self.pref_suf_format[node.type]["prefix"])
-            
-        # In the case of no children, this means that the node a terminal (leaf) node.
-        if node.child_count == 0:
-            text = node.text.decode("utf8")
-            
-            if node.parent and node.parent.type == "ERROR":
-                colour = "#f76f6f"
-                finalarr.append(f'<b style="color:{colour};">')
+        # If folding is required
+        if str(node.id) == str(checkid):
+            reached = 1
 
-            if node.parent and node.parent.type in self.highlights:
-                colour = self.highlights[node.parent.type]
-                if colour != "#000000":
-                    finalarr.append(f'<b style="color:{colour};">{text.strip()}</b>')
-                else:
-                    finalarr.append(f'{text.strip()}')
-            else:
-                finalarr.append(f'{text.strip()}')
+        if reached:
+            # Adding prefix
+            if node and node.type in self.pref_suf_format:
+                if finalarr and finalarr[-1] != self.pref_suf_format[node.type]["notPrevious"]:
+                    if self.pref_suf_format[node.type]["prefix"] != "":
+                        finalarr.append(self.pref_suf_format[node.type]["prefix"])
+
+            if depth < 4:
+                finalarr.append(f'<span style="color:{"red"}" onclick="nodeFold(\'{node.id}\')">^</span>')
+                
+            self.nodeAddText(node, finalarr)
 
         for c in (node.children):
-            self.exploreNodes(c, depth + 1, arr, finalarr)
+            self.exploreNodes(c, depth + reached, finalarr, checkid, reached)
 
-        if node.child_count == 0 and node.parent and node.parent.type == "ERROR":
-            finalarr.append('</b>')
+        if reached:
+            if node.child_count == 0 and node.parent and node.parent.type == "ERROR":
+                finalarr.append('</b>')
 
-        # Autosuggestion
-        self.nodeAutoSuggestion(node, finalarr)
+            # Autosuggestion
+            self.nodeAutoSuggestion(node, finalarr)
 
-        # Adding suffix
-        if node and node.type in self.pref_suf_format:
-            if self.pref_suf_format[node.type]["suffix"] != "":
-                finalarr.append(self.pref_suf_format[node.type]["suffix"])
+            # Adding suffix
+            if node and node.type in self.pref_suf_format:
+                if self.pref_suf_format[node.type]["suffix"] != "":
+                    finalarr.append(self.pref_suf_format[node.type]["suffix"])
 
 
     def bnfStructure(self, string):
@@ -310,13 +323,19 @@ class Handler:
 
         node = self.parse_tree.root_node
 
-        arr = []
         finalarr = []
 
-        self.exploreNodes(node, 0, arr, finalarr)
+        self.exploreNodes(node, 0, finalarr, "", 1)
 
         self.prevString = string
 
+        return ' '.join(finalarr)
+
+
+    def bnfSubStructure(self, nodeID):
+        node = self.parse_tree.root_node
+        finalarr = []
+        self.exploreNodes(node, 0, finalarr, nodeID, 0)
         return ' '.join(finalarr)
 
 
