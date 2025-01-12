@@ -96,3 +96,10 @@ Contract Metadata (Metadata in general)
 
 Store information about the contract, language, date, time, so on.
 Extend with languages too.
+
+
+#######
+
+Formatting
+
+Right now I use direct formatting, adding HTML formatting and then adding the text, shouldn't I be making subsections in HTML with the class, and then adding formatting to the class?

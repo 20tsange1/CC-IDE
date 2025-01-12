@@ -277,7 +277,7 @@ def load_template(filename):
     filepath = os.path.join(directory, filename)
     if os.path.isfile(f"templates/{filepath}"):
         page = render_template(filepath)
-        content = handler.bnfSubStructure("", fold=False)
+        content = handler.contractOutput()
         return jsonify({"template": page, "content": content})
     return jsonify({"error": "File not found"}), 404
 

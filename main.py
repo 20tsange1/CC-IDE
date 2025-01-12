@@ -343,6 +343,45 @@ class Handler:
         else:
             return ''
 
+    
+
+
+    ###############
+    # Final Output
+    ###############
+
+    def exploreNodesOutput(self, node, depth, finalarr):
+        """
+        
+        """
+        # Adding prefix
+        if node and node.type in self.pref_suf_format:
+            if finalarr and finalarr[-1] != self.pref_suf_format[node.type]["notPrevious"]:
+                if self.pref_suf_format[node.type]["prefix"] != "":
+                    finalarr.append(self.pref_suf_format[node.type]["prefix"])
+
+        if node.child_count == 0:
+            finalarr.append(node.text.decode("utf8"))
+
+        for c in (node.children):
+            self.exploreNodesOutput(c, depth + 1, finalarr)
+
+        # Adding suffix
+        if node and node.type in self.pref_suf_format:
+            if self.pref_suf_format[node.type]["suffix"] != "":
+                finalarr.append(self.pref_suf_format[node.type]["suffix"])
+
+
+    def contractOutput(self):
+        if self.parse_tree:
+            node = self.parse_tree.root_node
+            finalarr = []
+            self.exploreNodesOutput(node, 0, finalarr)
+            return ' '.join(finalarr)
+        else:
+            return ''
+
+
 
 if __name__ == "__main__":
     pass
