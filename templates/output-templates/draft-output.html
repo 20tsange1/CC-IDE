@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Output</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <h>Legal Firm</h>
+
+    <div id="content-container">
+        <!-- Contract content will be injected here -->
+        {{ content }}
+    </div>
+
+    <p>Copyright 2025</p>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='javascript/output-js/draft-ouput.js') }}"></script>
+
+</body>
+
+</html>

@@ -49,7 +49,6 @@ def parse_text():
     return jsonify({"parsed_text": parsed_text})
 
 
-# Define a route for parsing text
 @app.route("/parse-node", methods=["POST"])
 def parse_node_text():
     # Get the text from the request
@@ -94,8 +93,6 @@ def save_file():
     filepath = os.path.join(directory, filename)
     with open(filepath, "w") as file:
         file.write(content)
-
-    print(filepath)
 
     return jsonify({"message": "File saved successfully"}), 200
 
@@ -258,6 +255,32 @@ def file_draw():
     svg_content = visualiser.drawFile(handler.parse_tree)
     svg_content = Markup(svg_content)
     return jsonify(content=svg_content)
+
+
+# ------------
+# Home Page
+# ------------
+
+@app.route("/output")
+def output():
+    return render_template("output.html", current_page="output")
+
+@app.route("/pdf-choice", methods=["POST"])
+def pdf_choice():
+    data = request.get_json()
+    format_name = data.get("name")
+
+@app.route("/load-template/<filename>", methods=["POST"])
+def load_template(filename):
+    data = request.get_json()
+    directory = data.get("path")
+    filepath = os.path.join(directory, filename)
+    if os.path.isfile(f"templates/{filepath}"):
+        page = render_template(filepath)
+        content = handler.bnfSubStructure("", fold=False)
+        return jsonify({"template": page, "content": content})
+    return jsonify({"error": "File not found"}), 404
+
 
 # ------------
 # Analysis Page

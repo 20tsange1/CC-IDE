@@ -30,3 +30,69 @@ Comments on Comments:
 -> Add into visualisation tab, some type of PDF form?
 -> I'm thinking of HTML template with some sort of rendering such that the contract goes directly in. 
 -> But then you need to think about sub-titles and such.
+
+-> Add in HTML template which you can pick, and then render the template with the contract inside.
+-> Ignore subtitles for now.
+
+
+
+
+
+#########
+
+Framework Based IDE
+-> Plugins
+-> Variety of Languages
+-> Build and add on top
+
+Plugin Based IDE
+-> You choose the legal language being used.
+-> You then choose from / contribute to a library of analyses + visualisations + more developed for that legal language.
+-> Some may be general and suitable for all legal languages, some may only be for a certain grammar.
+
+If you look at how VSC and other IDEs work, a similar idea is implemented. You download the coding languages and relevant plugins, allowing you to develop in that language more effectively and efficiently.
+
+Also provides the opportunity for a community to form, as opposed to a siloed development group. So many languages exist, why keep it to yourself?
+
+-> Speeding up the development process tenfold, providing the perfect tool for an iterative approach.
+
+When developing a legal language, you have to ask yourself:
+1. Is this language suit for it's purpose? Does it allow us to write contracts the way we want to?
+2. Is this language complete? Does it cover what we want it to? Is it correctly written?
+3. Can this language be evaluated?
+
+
+
+########
+
+Version Control
+
+Actually quite simple in concept?
+-> Use git, run automated workflows, checking for consistency, ensuring grammar is correct, ensuring alignment + no loss of information.
+-> Keeps versions, name versions, provide comments, provide messages.
+-> Change the wording, but you don't change the cooncept (from coders to lawyers)
+
+-> You'd basically just need to package git into a new form. Automate pushes, commits, and so forth.
+-> Hardest part is probably problems with merging and out-of-date versions that need reconconciliation. Maybe just force?
+
+
+########
+
+Event Simulation
+
+Clauses and sub-clauses connected by C-AND
+
+You can basically create depth by connecting different "contracts" and build up depth in conditions. 
+
+-> [1] IF [2], [2] IF [3] OR [4], [3] IF [5] ...
+
+-> Are we looking at evaluation of a contract, a clause or? 
+-> What is our actual goal of the contract, what is our goal of the simulation?
+
+
+########
+
+Contract Metadata (Metadata in general)
+
+Store information about the contract, language, date, time, so on.
+Extend with languages too.

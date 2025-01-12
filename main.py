@@ -274,6 +274,7 @@ class Handler:
         if str(node.id) == str(checkid):
             reached = 1
 
+        # Reached is used for whether our desired node has been explored or not. If set to 1 initially, you will always traverse the whole tree.
         if reached:
             # Adding prefix
             if node and node.type in self.pref_suf_format:
@@ -302,7 +303,7 @@ class Handler:
                     finalarr.append(self.pref_suf_format[node.type]["suffix"])
 
 
-    def bnfStructure(self, string):
+    def bnfStructure(self, string=""):
         """
         Main function for evaluation / reevaluation of our input text.
         """
@@ -332,11 +333,15 @@ class Handler:
         return ' '.join(finalarr)
 
 
-    def bnfSubStructure(self, nodeID):
-        node = self.parse_tree.root_node
-        finalarr = []
-        self.exploreNodes(node, 0, finalarr, nodeID, 0)
-        return ' '.join(finalarr)
+    def bnfSubStructure(self, nodeID=""):
+        if self.parse_tree:
+            node = self.parse_tree.root_node
+            finalarr = []
+            reached = 1 if nodeID == "" else 0
+            self.exploreNodes(node, 0, finalarr, nodeID, reached)
+            return ' '.join(finalarr)
+        else:
+            return ''
 
 
 if __name__ == "__main__":
