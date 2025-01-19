@@ -16,10 +16,6 @@ Write up first draft / outline for diss.
 
 Comments on Comments:
 
-- Folding editor may be way too granular, i.e. way too many nodes to be able to split it at node level. Maybe up to a certain depth?
--> idea would be to assign each node a unique ID. Then from that, you will have to relay that back to the parser and BUI.
--> Then from the BUI, you would be able to press the node and then only things from that node onwards will be shown. Backend means that you use that ID as a flag, if parent not ID or self not ID, then don't show. This gets kinda hard to manage but definitely doable?
-
 -> How about. Adding node ID, which triggers a flag in the explore method.
 -> Which can then be reset.
 
@@ -35,7 +31,14 @@ Comments on Comments:
 -> Ignore subtitles for now.
 
 
+#########
+Folding Editor
 
+- Folding editor may be way too granular, i.e. way too many nodes to be able to split it at node level. Maybe up to a certain depth?
+-> idea would be to assign each node a unique ID. Then from that, you will have to relay that back to the parser and BUI.
+-> Then from the BUI, you would be able to press the node and then only things from that node onwards will be shown. Backend means that you use that ID as a flag, if parent not ID or self not ID, then don't show. This gets kinda hard to manage but definitely doable?
+
+Currently have a very rudimentary form, depends if you are following a dive deep or hide away principle. 
 
 
 #########
@@ -103,3 +106,43 @@ Extend with languages too.
 Formatting
 
 Right now I use direct formatting, adding HTML formatting and then adding the text, shouldn't I be making subsections in HTML with the class, and then adding formatting to the class?
+
+Another super helpful thing is you now get a way to interact with the HTML and actually use it for finding out the node types.
+
+In css, you can add before and after. This should be what you use.
+And then additionally, you can add other things inside.
+
+Swapped to CSS, instead of trying to do it in order, do it by styling. This is more correct in my opinion, nodes are their own type, you should be able to add styling to a node type. Idea is no loss of information too, when moving between styles.
+
+
+# Hierarchical
+
+# Tree view 1 tree view 2
+
+Is it possible to make it generic? At all? How much would need to be specified.
+
+Not everyone will have statements, conditions, no obvious solution.
+
+Generic Simulator, how would we achieve, drawbacks.
+
+
+
+###########
+DSL and MPS
+
+Why not? -> Explain
+
+
+###########
+
+Syntatic Sugar, what is actually necessary what isnt?
+
+Talk about lexing, tokens
+
+
+###########
+Logical Ambiguity
+
+Theres no brackets, so there is Ambiguity with the use of AND and OR. No precedence rule, and no way to work around it besides maybe order.
+
+Also, what about the case where a statement or definition becomes a condition in a future clause. Nested conditions.

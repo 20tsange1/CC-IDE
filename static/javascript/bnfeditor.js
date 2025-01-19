@@ -292,7 +292,7 @@ function createFormatOptions() {
         suffixInput.value = suffix;
         suffixInput.classList.add('format-input');
 
-        // NotPrevious input
+        // NodeType input
         const notPreviousInput = document.createElement('input');
         notPreviousInput.type = 'text';
         notPreviousInput.name = `${key}NotPrevious`;

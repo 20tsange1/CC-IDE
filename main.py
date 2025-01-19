@@ -218,14 +218,11 @@ class Handler:
                 colour = "#f76f6f"
                 finalarr.append(f'<b style="color:{colour};">')
 
-            if node.parent and node.parent.type in self.highlights:
-                colour = self.highlights[node.parent.type]
-                if colour != "#000000":
-                    finalarr.append(f'<b style="color:{colour};">{text.strip()}</b>')
-                else:
-                    finalarr.append(f'{text.strip()}')
+            if node.parent:
+                finalarr.append(f'<span class="{node.parent.type}">{text.strip()}</span>')
             else:
                 finalarr.append(f'{text.strip()}')
+            
 
 
     def nodeAutoSuggestion(self, node, finalarr):
@@ -276,31 +273,26 @@ class Handler:
 
         # Reached is used for whether our desired node has been explored or not. If set to 1 initially, you will always traverse the whole tree.
         if reached:
-            # Adding prefix
-            if node and node.type in self.pref_suf_format:
-                if finalarr and finalarr[-1] != self.pref_suf_format[node.type]["notPrevious"]:
-                    if self.pref_suf_format[node.type]["prefix"] != "":
-                        finalarr.append(self.pref_suf_format[node.type]["prefix"])
-
-            if depth < 4:
+            if depth < 3:
                 finalarr.append(f'<span style="color:{"red"}" onclick="nodeFold(\'{node.id}\')">^</span>')
                 
             self.nodeAddText(node, finalarr)
+
+            if node:
+                finalarr.append(f'<span class="{node.type}">')
 
         for c in (node.children):
             self.exploreNodes(c, depth + reached, finalarr, checkid, reached)
 
         if reached:
+            if node:
+                finalarr.append(f'</span>')
+
             if node.child_count == 0 and node.parent and node.parent.type == "ERROR":
                 finalarr.append('</b>')
 
             # Autosuggestion
             self.nodeAutoSuggestion(node, finalarr)
-
-            # Adding suffix
-            if node and node.type in self.pref_suf_format:
-                if self.pref_suf_format[node.type]["suffix"] != "":
-                    finalarr.append(self.pref_suf_format[node.type]["suffix"])
 
 
     def bnfStructure(self, string=""):

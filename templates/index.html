@@ -7,6 +7,7 @@
     <title>Text Parser</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styleparse.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='parsing-formatting/parse.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styleheader.css') }}">
 </head>
 
@@ -57,6 +58,10 @@
                         <div class="progress-bar"></div>
                     </div>
                     <div id="progress-val"></div>
+                </div>
+                <div>
+                    <h3>Problematic ID Analysis</h3>
+                    <ul id="problematic-ids"></ul>
                 </div>
             </div>
         </div>

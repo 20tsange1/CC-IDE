@@ -1,17 +1,17 @@
-contract~~<br><br>~~~~~~
+contract~~~~content: "\A\A"; white-space: pre;~~~~
 component~~~~~~~~
 definition~~~~~~~~
-simple_definition~~<br><br>~~</div><br><br>~~<br><br>~~
+simple_definition~~~~~~~~
 numerical_expression~~~~~~~~
 operator~~~~~~~~
 conditional_definition~~~~~~~~
-statement~~~~~~~~
+statement~~~~content: "\A\A"; white-space: pre;~~~~
 conditional_statement~~~~~~~~
-simple_statement~~<br><br>~~</div><br><br>~~<br><br>~~
-condition~~~~~~~~
-simple_condition~~<br><br>~~</div><br><br>~~<br><br>~~
+simple_statement~~~~~~~~
+condition~~~~content: "\A\A"; white-space: pre;~~~~
+simple_condition~~~~~~~~
 boolean_expression~~~~~~~~
-ID~~<div style="margin-left: 2em;">~~~~~~
+ID~~~~~~~~
 holds~~~~~~~~
 subject~~~~~~~~
 verb~~~~~~~~

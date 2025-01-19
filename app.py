@@ -1,7 +1,8 @@
 import sys
+
 sys.path
-sys.path.append('./tool-visualisations/')
-sys.path.append('./tool-analysis/')
+sys.path.append("./tool-visualisations/")
+sys.path.append("./tool-analysis/")
 
 # For building webapp and making sure content is safe.
 from flask import Flask, render_template, request, jsonify, render_template_string
@@ -13,6 +14,7 @@ from dynamicanalysis import DynamicAnalysis
 from staticanalysis import StaticAnalysis
 from visualiser import Visualiser
 from ontology import Ontology
+from metadata import MetaData
 
 # Necessary
 import os
@@ -23,6 +25,7 @@ ont = Ontology()
 dynamic_analyser = DynamicAnalysis()
 static_analyser = StaticAnalysis()
 visualiser = Visualiser()
+metadata = MetaData()
 
 CONTRACT_FILES_DIR = "contracts"  # Directory to store contracts
 TEXT_FILES_DIR = "text-files"  # Directory to store text files
@@ -33,10 +36,13 @@ TEXT_FILES_DIR = "text-files"  # Directory to store text files
 #
 #   Mainly for parsing and dynamic analysis
 
+
 @app.route("/")
 def index():
     # print(handler.highlights)
-    return render_template("index.html", current_page="home", prev_string=handler.prevString)
+    return render_template(
+        "index.html", current_page="home", prev_string=handler.prevString
+    )
 
 
 # Define a route for parsing text
@@ -94,6 +100,9 @@ def save_file():
     with open(filepath, "w") as file:
         file.write(content)
 
+    if directory == "contracts":
+        metadata.contract_meta(directory, filename, content)
+
     return jsonify({"message": "File saved successfully"}), 200
 
 
@@ -123,6 +132,9 @@ def create_file():
         return jsonify({"error": "Invalid input"}), 400
 
     filepath = os.path.join(directory, filename) + ".txt"
+
+    if os.path.isfile(filepath):
+        return jsonify({"error": "File already exists"}), 400
     with open(filepath, "w") as file:
         file.write(" ")
 
@@ -132,10 +144,15 @@ def create_file():
 @app.route("/dynamic-analysis", methods=["POST"])
 def dynamic_analysis():
     percentage = dynamic_analyser.error_analyser(handler.parse_tree)
+    problematicIDs = dynamic_analyser.id_analyser(handler.parse_tree)
 
     return (
         jsonify(
-            {"message": "Contract Analysed Successfully", "percentage": percentage}
+            {
+                "message": "Contract Analysed Successfully",
+                "percentage": percentage,
+                "problematic_ids": problematicIDs,
+            }
         ),
         200,
     )
@@ -168,10 +185,32 @@ def parse_bnf():
 
     try:
         handler.reparseBNF(f"{directory}/{filename}", ont.ontologies)
+        metadata.bnf_meta(directory, filename)
+        metadata.grammar_meta(directory, filename)
     except Exception as e:
         return jsonify({"error": f"{e}"}), 400
 
     return jsonify({"message": "BNF Parsed successfully"}), 200
+
+
+def outputCSS(highlights, formatting):
+    """
+    Function for outputing colours and formatting options into a css file.
+    Leerages the use of CSS before and after for prefix and suffix.
+    """
+    with open("static/parsing-formatting/parse.css", "w") as file:
+        formats = ""
+        for node in highlights.keys():
+            prefix = formatting[node]["prefix"]
+            suffix = formatting[node]["suffix"]
+            notprev = formatting[node]["notPrevious"]
+            if prefix:
+                formats += f".{node}::before {{ {prefix} }}\n"
+            if suffix:
+                formats += f".{node}::after {{ {suffix} }}\n"
+            formats += f".{node} {{ color: {highlights[node]}; {'font-weight: bold;' if highlights[node] != '#000000' else ''} {notprev} }}\n"
+
+        file.write(formats)
 
 
 @app.route("/submit-colour-options", methods=["POST"])
@@ -181,10 +220,9 @@ def submit_colour_options():
     highlight_colours = data.get("colors", {})
     handler.highlights = highlight_colours
 
-    # print(handler.highlights)
-    # print(highlight_colours)
+    outputCSS(handler.highlights, handler.pref_suf_format)
 
-    with open('text-files/nodecolours.txt', 'w') as file:
+    with open("text-files/nodecolours.txt", "w") as file:
         coloursFormat = ""
         for node, colour in highlight_colours.items():
             coloursFormat += f"{node}:{colour}\n"
@@ -200,7 +238,9 @@ def submit_format_options():
     formatting_options = data.get("formats", {})
     handler.pref_suf_format = formatting_options
 
-    with open('text-files/nodeformats.txt', 'w') as file:
+    outputCSS(handler.highlights, handler.pref_suf_format)
+
+    with open("text-files/nodeformats.txt", "w") as file:
         formats = ""
         for node, formatting in formatting_options.items():
             prefix = formatting["prefix"]
@@ -212,13 +252,17 @@ def submit_format_options():
     return "Formatting Applied"
 
 
-@app.route('/get-node-types-colour')
+@app.route("/get-node-types-colour")
 def get_node_types_colour():
     # For choosing colours for each of the node types.
-    node_types_colour = [(t, handler.highlights[t] if t in handler.highlights else "") for t in handler.node_types]
+    node_types_colour = [
+        (t, handler.highlights[t] if t in handler.highlights else "")
+        for t in handler.node_types
+    ]
     return jsonify(node_types_colour)
 
-@app.route('/get-node-types-format')
+
+@app.route("/get-node-types-format")
 def get_node_types_format():
     # For choosing colours for each of the node types.
     node_types = []
@@ -226,7 +270,12 @@ def get_node_types_format():
     formatref = handler.pref_suf_format
     for t in handler.node_types:
         if t in handler.pref_suf_format:
-            add = (t, formatref[t]["prefix"], formatref[t]["suffix"], formatref[t]["notPrevious"])
+            add = (
+                t,
+                formatref[t]["prefix"],
+                formatref[t]["suffix"],
+                formatref[t]["notPrevious"],
+            )
         else:
             add = (t, "", "", "")
         node_types.append(add)
@@ -238,16 +287,19 @@ def get_node_types_format():
 # Visualisation Page
 # ------------
 
+
 @app.route("/tree")
 def display_tree():
     return render_template("treeview.html", current_page="tree")
 
+
 @app.route("/tree_draw")
 def tree_draw():
     # Generate SVG for the tree
-    svg_content = visualiser.drawTree(handler.parse_tree)   
+    svg_content = visualiser.drawTree(handler.parse_tree)
     svg_content = Markup(svg_content)
     return jsonify(content=svg_content)
+
 
 @app.route("/file_draw")
 def file_draw():
@@ -261,14 +313,17 @@ def file_draw():
 # Home Page
 # ------------
 
+
 @app.route("/output")
 def output():
     return render_template("output.html", current_page="output")
+
 
 @app.route("/pdf-choice", methods=["POST"])
 def pdf_choice():
     data = request.get_json()
     format_name = data.get("name")
+
 
 @app.route("/load-template/<filename>", methods=["POST"])
 def load_template(filename):
@@ -288,17 +343,49 @@ def load_template(filename):
 #
 #   Event Simulation
 
+
 @app.route("/analysis")
 def analysis_page():
     return render_template("analysis.html", current_page="analysis")
 
-@app.route("/event-simulation", methods=["POST"])
+
+@app.route("/event-simulation")
 def static_analysis():
-    static_analyser.event_simulation(handler.parse_tree)
-    return jsonify({"message": "Successful Analysis"}), 200
+    static_analyser.simulate(handler.parse_tree)
+    return jsonify({"message": "Simulation Successful"}), 200
 
 
+@app.route("/event-read")
+def event_sim_events():
+    conditions = [
+        [i.identifier, i.flag, i.sentence]
+        for i in static_analyser.event_simulator.conditions.values()
+    ]
+    states = [
+        [i.identifier, i.evaluate(), i.sentence]
+        for i in static_analyser.event_simulator.state_def.values()
+    ]
+    return (
+        jsonify(
+            {
+                "conditions": conditions,
+                "states": states,
+                "message": "Successful Analysis",
+            }
+        ),
+        200,
+    )
 
+@app.route("/event-toggle", methods=["POST"])
+def event_sim_toggle():
+    data = request.get_json()
+    identifier = data.get("identifier")
+    event_sim = static_analyser.event_simulator
+    if identifier in event_sim.conditions:
+        event_sim.toggle_condition(identifier)
+        return jsonify({"message": "Successful toggle"}), 200
+    else:
+        return jsonify({"error": "Unsuccessful toggle"}), 404
 
 
 if __name__ == "__main__":

@@ -144,18 +144,21 @@ for contract in conditionals:
 
     for c in contract[0]:
         identity = c[1:]
-        conditions[identity] = Condition(identity)
+        if identity not in conditions:
+            conditions[identity] = Condition(identity)
         conditions_temp.append(conditions[identity])
 
     for c in contract[1]:
         identity = c[1:]
-        state_def[identity] = Statement(identity, False)
+        if identity not in state_def:
+            state_def[identity] = Statement(identity, False)
         state_def[identity].conditions = conditions_temp
 
     if len(contract) > 2:
         for c in contract[2]:
             identity = c[1:]
-            state_def[identity] = Statement(identity, True)
+            if identity not in state_def:
+                state_def[identity] = Statement(identity, True)
             state_def[identity].conditions = conditions_temp
         
 
@@ -169,8 +172,9 @@ conditions["2"].flag = True
 print(conditions)
 print(state_def)
 
-conditions["1"].flag = True
-conditions["2"].flag = True
+# conditions["1"].flag = True
+# conditions["2"].flag = True
+print(state_def["3"].conditions)
 
 
 

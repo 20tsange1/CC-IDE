@@ -10,7 +10,7 @@ const parsedText = document.getElementById('parsedText'); // Parsed text display
 // A function for encapsulating all necessary parsing processes
 function full_process() {
     parseText();
-    dnyamicAnalysis();
+    dynamicAnalysis();
 }
 
 // Function to parse text and update the parsed display
@@ -165,9 +165,7 @@ createBtn.addEventListener('click', () => {
 // FOR ANALYSIS
 // ------------
 
-// Perform dynamic analysis and update the progress bar
-function dnyamicAnalysis() {
-    const progressBar = document.querySelector(".progress-bar");
+function dynamicAnalysis() {
     fetch('/dynamic-analysis', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -176,15 +174,32 @@ function dnyamicAnalysis() {
         .then(response => response.json())
         .then(data => {
             if (data.message) {
-                const result = data.percentage;
-                progressBar.style.width = `${result}%`; // Update progress bar
-                document.getElementById('progress-val').textContent = `${result}%`; // Update progress text
+                errorAnalysis(data.percentage);
+                idAnalysis(data.problematic_ids);
             } else {
                 alert('Error running analysis');
             }
         })
         .catch(error => console.error('Error running analysis:', error));
 }
+
+// Perform dynamic analysis and update the progress bar
+function errorAnalysis(result) {
+    const progressBar = document.querySelector(".progress-bar");
+    progressBar.style.width = `${result}%`; // Update progress bar
+    document.getElementById('progress-val').textContent = `${result}%`; // Update progress text
+}
+
+function idAnalysis(problematic_ids) {
+    const idList = document.getElementById('problematic-ids');
+    idList.replaceChildren();
+    problematic_ids.forEach(identifier => {
+        const li = document.createElement("li");
+        li.textContent = identifier;
+        idList.appendChild(li);
+    });
+    }
+
 
 // ------------
 // FOR POPUPS
