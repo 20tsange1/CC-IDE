@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BNF Editor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/stylebnf.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleheader.css') }}">
+</head>
+
+<body>
+    {% include 'header.html' %}
+
+    <h1 id="center">BNF Editor</h1>
+
+    <div id="container">
+        <!-- File selection area -->
+        <div id="fileList">
+            <h2>Available Files</h2>
+            <ul id="files"></ul>
+            <select id="filenameSelect">
+                <option value="">Select a file...</option>
+            </select>
+        </div>
+
+        <!-- Text editor area -->
+        <div id="editor">
+            <h2>Edit File</h2>
+            <textarea id="fileContent" placeholder="File content will appear here..." rows="20" cols="100"></textarea>
+            <div>
+                <button id="saveBtn">Save</button>
+                <button id="applyBtn">Save & Apply</button>
+                <button id="deleteBtn">Delete</button>
+            </div>
+            <div>
+                <input type="text" id="createName"></input>
+                <button id="createBtn">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <h1 id="center">Highlight Options</h1>
+    <div id="container">
+        <!-- Highlighter options -->
+        <div id="highlighter">
+            <h2>Highlight Options</h2>
+            <button type="button" id="toggleColorsBtn">Show Colors</button>
+            <div id="colorOptionsContainer" style="display: none">
+                <!-- Dynamic color entries will be added here -->
+            </div>
+            <button type="button" id="saveColorsBtn" style="display: none">Save Colors</button>
+        </div>
+    </div>
+
+    <h1 id="center">Formatting Options</h1>
+    <div id="container">
+        <!-- Highlighter options -->
+        <div id="formatter">
+            <h2>Formatting Options</h2>
+            <button type="button" id="toggleFormatsBtn">Show Nodes</button>
+            <div id="formatOptionsContainer" style="display: none">
+                <!-- Dynamic formatting entries will be added here -->
+            </div>
+            <button type="button" id="saveFormatsBtn" style="display: none">Save Format</button>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='javascript/bnfeditor.js') }}"></script>
+    
+</body>
+
+</html>

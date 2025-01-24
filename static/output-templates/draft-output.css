@@ -1,0 +1,62 @@
+.contractbody {
+    font-family: Arial, sans-serif;
+    margin: 40px;
+    line-height: 1.6;
+}
+
+h1, h2, h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.contract-section {
+    margin-bottom: 30px;
+}
+
+.section-title {
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 10px;
+}
+
+.terms-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.terms-list li {
+    margin-bottom: 10px;
+}
+
+.signature-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
+}
+
+.signature-block {
+    width: 45%;
+    text-align: center;
+}
+
+.signature-line {
+    border-bottom: 1px solid #000;
+    width: 80%;
+    margin-top: 20px;
+}
+
+.date-line {
+    border-bottom: 1px solid #000;
+    width: 50%;
+    margin-top: 20px;
+}
+
+.footer {
+    text-align: center;
+    font-size: 0.9em;
+    margin-top: 50px;
+}
+
+.footer p {
+    margin: 5px 0;
+}
