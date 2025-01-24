@@ -3,8 +3,9 @@ from collections import deque
 class DrawTree:
 
     def __init__(self):
-        pass
-
+        self.maxwidth = 0
+        self.maxheight = 0
+    
     def calculateWidths(self, node, levelwidth, level=0):
         # Increment node count at the current level
         if level >= len(levelwidth):
@@ -34,6 +35,10 @@ class DrawTree:
         x = (levelwidth[level].popleft() + levelwidth[level][0]) // 2 - (width // 2)
         content = f'<rect x="{x}" y="{level * 100}" rx="10" ry="10" width="{width}" height="50" style="fill:blue;stroke:black;stroke-width:2;opacity:0.5" />\n'
         content += f'<text x="{x + width // 2}" y="{level * 100 + 25}" font-size="15" text-anchor="middle">{text}</text>\n'
+
+        self.maxheight = max(self.maxheight, level*100 + 50)
+        self.maxwidth = max(self.maxwidth, x + width)
+
         return content
 
 
@@ -50,6 +55,9 @@ class DrawTree:
             for i, child in enumerate(node.children):
                 content += f'<line x1="{x+width//2}" y1="{level * 100+50}" x2="{levelwidth[level+1][0] + (levelwidth[level+1][1] - levelwidth[level+1][0]) // 2}" y2="{level*100 + 100}" stroke="black"/>'
                 content += self.exploreNodes(child, level + 1, levelwidth)
+            
+            self.maxheight = max(self.maxheight, level*100 + 50)
+            self.maxwidth = max(self.maxwidth, x + width)
 
             return content
 
@@ -65,13 +73,13 @@ class DrawTree:
         # Good enough for now, but next, want to recursively calculate all widths and subwidths, then propagate back upwards.
 
 
-    def buildTree(self, tree, width, height):
+    def buildTree(self, tree):
         if tree:
             levelwidth = []
             self.calculateWidths(tree.root_node, levelwidth)
             # print(levelwidth)
             content = self.exploreNodes(tree.root_node, 0, levelwidth)
             # print(content)
-            return f'<svg width="{width}" height="{height}">{content}</svg>'
+            return f'<svg width="{self.maxwidth}" height="{self.maxheight}">{content}</svg>'
         else:
             return ""

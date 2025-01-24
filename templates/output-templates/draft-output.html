@@ -1,0 +1,103 @@
+<style>
+    .contractbody {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        line-height: 1.6;
+    }
+
+    h1, h2, h3 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .contract-section {
+        margin-bottom: 30px;
+    }
+
+    .section-title {
+        font-weight: bold;
+        text-decoration: underline;
+        margin-bottom: 10px;
+    }
+
+    .terms-list {
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+    .terms-list li {
+        margin-bottom: 10px;
+    }
+
+    .signature-section {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 50px;
+    }
+
+    .signature-block {
+        width: 45%;
+        text-align: center;
+    }
+
+    .signature-line {
+        border-bottom: 1px solid #000;
+        width: 80%;
+        margin-top: 20px;
+    }
+
+    .date-line {
+        border-bottom: 1px solid #000;
+        width: 50%;
+        margin-top: 20px;
+    }
+
+    .footer {
+        text-align: center;
+        font-size: 0.9em;
+        margin-top: 50px;
+    }
+
+    .footer p {
+        margin: 5px 0;
+    }
+
+</style>
+</head>
+<body class="contractbody">
+<h1>Contract Agreement</h1>
+<h2>THIS AGREEMENT is made and entered into on this [Date], by and between:</h2>
+
+<!-- Parties Section -->
+<div id="content-container">
+</div>
+
+<!-- Signatures Section -->
+<div class="signature-section">
+    <div class="signature-block">
+        <p>Party A</p>
+        <div class="signature-line"></div>
+        <p>[Full Name/Title]</p>
+        <div class="date-line"></div>
+        <p>Date</p>
+    </div>
+    <div class="signature-block">
+        <p>Party B</p>
+        <div class="signature-line"></div>
+        <p>[Full Name/Title]</p>
+        <div class="date-line"></div>
+        <p>Date</p>
+    </div>
+</div>
+
+<!-- Footer Section -->
+<div class="footer">
+    <p>&copy; [Year] [Law Firm Name]. All rights reserved.</p>
+    <p>For any inquiries, please contact us at [Law Firm Email Address].</p>
+</div>
+
+<script type="text/javascript" src="{{ url_for('static', filename='javascript/output-js/draft-ouput.js') }}"></script>
+
+</body>
+
+</html>

@@ -1,35 +1,3 @@
 <OBLIGATION> : Must, Have To, Need To, Should, Ought To
 <PERMISSION> : Can, May, Could, Might
 <PROHIBITION> : Must Not, Cannot, May Not, Should Not
-
-
-Parser for Subject / Object ?
-
-<VEHICLE> : Vehicle
-    | <CAR>
-    | <TRUCK>
-    | <MOTORCYCLE>
-
-<CAR> : Porsche, Toyota, Ferarri
-
-Is A ^
-
-
-Vehicle with a sunroof
-
-What kinds of testcases, what kind of language should we consider
-Additional information of ontology, check if it can be resolved.
-
-Minimum Viable Product -> Next steps
-
-Jupyter Notebook style or ontology view - isolate.
-
-If several relationships, how can it be extensible? 
-If relationships used in simulation, what do they mean? Maybe relationship is known to grammar.
-"Common Knowledge" vs Defined Knowledge
-In simulation, Is A relationship is easier to evaluate.
-If developer can add relationship into BNF + list of relationships available for ontology.
-Lawyer can extend ontology? 
-Match it verbatim - will have to be word for word?
-
-Simulator does test for Is A relationship, Relationship defined for Has A relationship

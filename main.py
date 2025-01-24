@@ -1,7 +1,12 @@
+import sys
+sys.path.append('tool-auxiliary/')
+
 from parser import BNFParser
-import os
-from tree_sitter import Language, Parser
 from ontology import Ontology
+
+from tree_sitter import Language, Parser
+
+import os
 import time
 import glob
 import subprocess
@@ -58,10 +63,19 @@ class Handler:
         self.highlights = {}
         with open("text-files/nodecolours.txt", "r") as file:
             for lines in file.readlines():
-                # print(lines.split(":"))
                 nodename, colour = lines.split(":")
                 if nodename in self.node_types:
                     self.highlights[nodename] = colour.strip()
+
+        # Adding prefix and suffix
+        # {prefix, suffix, notPrevious}
+        self.pref_suf_format = {}
+        with open("text-files/nodeformats.txt", "r") as file:
+            for lines in file.readlines():
+                nodename, prefix, suffix, notprev, _ = lines.split("~~")
+                if nodename in self.node_types:
+                    self.pref_suf_format[nodename] = {"prefix": prefix, "suffix": suffix, "notPrevious": notprev}
+        
         
 
     def reparseBNF(self, fileName, ontology):
@@ -78,10 +92,7 @@ class Handler:
             ontologies=ontology)
         bnfparser.main()
 
-        # Enters the file and runs tree-sitter on the grammar json.
-        # For some reason, if you delete just the file itself, and use the same name, it breaks.
-        # Possibly due to some sort of caching done by the Tree-Sitter library itself?
-        # So instead we have used an increment.
+        # self.edit used as an iterator for version number
         if os.path.isfile(f"build/my-language{self.edit}.so"):
             os.remove(f"build/my-language{self.edit}.so")
 
@@ -91,13 +102,11 @@ class Handler:
         process = subprocess.Popen(commands, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         (out, err) = process.communicate()
         # Error handling in the case that we have issues
+        # Need to redo this, be a lil more specific.
         if err:
             raise Exception("""Issue generating grammar. Please ensure you have followed the syntax for defining a grammar. If defining recursiveness of your rules:
             'L::=' - Left Recursive
             'R::=' - Right Recursive""") 
-
-        # print(out, err)
-
 
         self.edit += 1
 
@@ -204,8 +213,49 @@ class Handler:
         # Return the results as an array
         return [start_byte, old_end_byte, new_end_byte, start_point, old_end_point, new_end_point,]
 
+    
+    def nodeAddText(self, node, finalarr):
+        # In the case of no children, this means that the node a terminal (leaf) node.
+        if node.child_count == 0:
+            text = node.text.decode("utf8")
+            
+            if node.parent and node.parent.type == "ERROR":
+                colour = "#f76f6f"
+                finalarr.append(f'<b style="color:{colour};">')
 
-    def exploreNodes(self, node, depth, arr, finalarr):
+            if node.parent:
+                finalarr.append(f'<span class="{node.parent.type}">{text.strip()}</span>')
+            else:
+                finalarr.append(f'{text.strip()}')
+            
+
+
+    def nodeAutoSuggestion(self, node, finalarr):
+        """ 
+        Doing the AutoSuggestion Mapping
+
+        Checking your current node, previous node, and parent node.
+        Then using that to see if it is a valid triplet within the language.
+        If it is, we can then provide a suggestion for the next node.
+        """
+
+        prev_sibling = ""
+        parent = ""
+
+        if node.prev_sibling:
+            prev_sibling = node.prev_sibling.type
+        if node.parent:
+            parent = node.parent.type
+
+        key = (node.type, prev_sibling, parent)
+        
+        if key in self.mapper and parent == "ERROR":
+            hashed = hash(key)
+            # Created a popup class within css.
+            finalarr.append(f'<span class="popup" style="color:{"grey"}" onclick="popupFunction(\'{hashed}\')">...<span class="popuptext" id="{hashed}">{self.mapper[key]}</span></span>')
+
+    
+    def exploreNodes(self, node, depth, finalarr, checkid, reached):
         """
         Depth First Traversal, exploring each node and their children.
         We can then construct our final sentence back together, utilising
@@ -222,74 +272,35 @@ class Handler:
         
         """
 
+        # If folding is required
+        if str(node.id) == str(checkid):
+            reached = 1
 
-        if depth >= len(arr):
-            arr.append([])
+        # Reached is used for whether our desired node has been explored or not. If set to 1 initially, you will always traverse the whole tree.
+        if reached:
+            if depth < 3:
+                finalarr.append(f'<span style="color:{"red"}" onclick="nodeFold(\'{node.id}\')">^</span>')
+                
+            self.nodeAddText(node, finalarr)
 
-        # Need to add a more elegant way of doing this. FORMATTING
-        #
-        ##################
-        #   EDIT
-        ##################
-        if node and node.type == "identity":
-            if finalarr[-1] != "\n\n":
-                finalarr.append("\n\n")
-        elif node.parent and (node.parent.type == "conditional_statement" or node.parent.type == "condition"):
-            if finalarr[-1] != "\n\n":
-                finalarr.append("\n\n")
-            
-        # In the case of children, this means that the node is not a terminal (leaf) node.
-        # While the node type may be beneficial, the text does not exist at this level.
-        if node.child_count > 0:
-            arr[depth].append(f"<b>{node.type}</b>")
-        else:
-            text = node.text.decode("utf8")
-            arr[depth].append(f"<b>{text}</b>")
-            
-            if node.parent and node.parent.type == "ERROR":
-                colour = "#f76f6f"
-                # finalarr.append(f'<b style="color:{colour};">ERROR</b>')
-                finalarr.append(f'<b style="color:{colour};">')
-
-            if node.parent and node.parent.type in self.highlights:
-                colour = self.highlights[node.parent.type]
-                if colour != "#000000":
-                    finalarr.append(f'<b style="color:{colour};">{text.strip()}</b>')
-                else:
-                    finalarr.append(f'{text.strip()}')
-            else:
-                finalarr.append(f'{text.strip()}')
-
+            if node:
+                finalarr.append(f'<span class="{node.type}">')
 
         for c in (node.children):
-            self.exploreNodes(c, depth + 1, arr, finalarr)
+            self.exploreNodes(c, depth + reached, finalarr, checkid, reached)
 
-        if node.child_count == 0 and node.parent and node.parent.type == "ERROR":
-            finalarr.append('</b>')
+        if reached:
+            if node:
+                finalarr.append(f'</span>')
 
-        # Doing the AutoSuggestion Mapping
-        prev_sibling = ""
-        parent = ""
+            if node.child_count == 0 and node.parent and node.parent.type == "ERROR":
+                finalarr.append('</b>')
 
-        if node.prev_sibling:
-            prev_sibling = node.prev_sibling.type
-        if node.parent:
-            parent = node.parent.type
-
-        key = (node.type, prev_sibling, parent)
-        
-        if key in self.mapper and parent == "ERROR":
-        # if key in self.mapper and node.next_sibling == None: # For the case where you only want it if it is incomplete
-        # node.prev_sibling would then be if you want to add some formatting Pre-node, next_sibling Post-node
-            # [FUTURE] - Add in a way to view what this suggestion consists of + how to fulfil
-            # Currently, we only have a highlevel suggestion, based on node-types, not by words.
-            # finalarr.append(f'<b style="background-color:{"green"}; color:{"white"}"> {self.mapper[key]} </b>')
-            hashed = hash(key)
-            finalarr.append(f'<span class="popup" style="color:{"grey"}" onclick="myFunction(\'{hashed}\')">...<span class="popuptext" id="{hashed}">{self.mapper[key]}</span></span>')
+            # Autosuggestion
+            self.nodeAutoSuggestion(node, finalarr)
 
 
-
-    def bnfStructure(self, string):
+    def bnfStructure(self, string=""):
         """
         Main function for evaluation / reevaluation of our input text.
         """
@@ -310,31 +321,64 @@ class Handler:
 
         node = self.parse_tree.root_node
 
-        arr = []
         finalarr = []
 
-        self.exploreNodes(node, 0, arr, finalarr)
+        self.exploreNodes(node, 0, finalarr, "", 1)
 
         self.prevString = string
 
         return ' '.join(finalarr)
 
-        # return '\n'.join([str(i) for i in arr]) + '\n\n' + ' '.join(finalarr)
+
+    def bnfSubStructure(self, nodeID=""):
+        if self.parse_tree:
+            node = self.parse_tree.root_node
+            finalarr = []
+            reached = 1 if nodeID == "" else 0
+            self.exploreNodes(node, 0, finalarr, nodeID, reached)
+            return ' '.join(finalarr)
+        else:
+            return ''
+
+    
+
+
+    ###############
+    # Final Output
+    ###############
+
+    def exploreNodesOutput(self, node, depth, finalarr):
+        """
+        
+        """
+        # Adding prefix
+        if node and node.type in self.pref_suf_format:
+            if finalarr and finalarr[-1] != self.pref_suf_format[node.type]["notPrevious"]:
+                if self.pref_suf_format[node.type]["prefix"] != "":
+                    finalarr.append(self.pref_suf_format[node.type]["prefix"])
+
+        if node.child_count == 0:
+            finalarr.append(node.text.decode("utf8"))
+
+        for c in (node.children):
+            self.exploreNodesOutput(c, depth + 1, finalarr)
+
+        # Adding suffix
+        if node and node.type in self.pref_suf_format:
+            if self.pref_suf_format[node.type]["suffix"] != "":
+                finalarr.append(self.pref_suf_format[node.type]["suffix"])
+
+
+    def contractOutput(self):
+        if self.parse_tree:
+            node = self.parse_tree.root_node
+            finalarr = []
+            self.exploreNodesOutput(node, 0, finalarr)
+            return ' '.join(finalarr)
+        else:
+            return ''
+
 
 
 if __name__ == "__main__":
-
-    # ont = Ontology()
-    # ont.breakdown("text-files/ontologies.txt")
-
-    handle = Handler()
-
-    # handle.reparseBNF(ont.ontologies)
-
-    # TESTS
-
-    strCheck =  ("[1] it is not the case that on the 7 January 26 Alice Must PAY OTHEROBJECT objectthing")
-
-    tree = handle.bnfStructure(strCheck)
-    
-    # handle.drawTree()
+    pass

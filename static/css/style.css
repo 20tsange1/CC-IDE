@@ -1,0 +1,57 @@
+body {
+    font-family: "Roboto", serif;
+    font-weight: 300;
+    font-style: normal;
+}
+
+/* Style the container layout */
+#container {
+    display: flex;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Style the container layout */
+#containerSmall {
+    display: flex;
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+
+/* Button styling */
+.button-style {
+    padding: 0.5rem;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+    color: #fff;
+    margin: 0.5rem;
+}
+
+
+
+.progress-container {
+    width: 100%;
+    background-color: #e0e0e0;  
+    border-radius: 5px;
+    height: 30px;
+}
+
+.progress-bar {
+    width: 100%; /* Set your static progress here (0% to 100%) */
+    height: 100%;
+    background-color: #4caf50;
+    border-radius: 5px;
+}
+
+.explanation {
+    width: 25%;
+    height: 100%;
+    background-color: #79ad87;
+    color: white;
+    border-radius: 5px;
+    padding: 2.5rem;
+}

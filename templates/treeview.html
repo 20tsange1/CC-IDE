@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BNF Editor</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='styleheader.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styleheader.css') }}">
 </head>
 
 <body>
@@ -21,36 +21,11 @@
     <a class="" href="#" onclick="loadContent('file', this)">File Struc</a>
   </div>
 
-  <div id="content-container">
+  <div id="content-container" style="overflow-y: scroll; overflow-x: scroll; max-height: 30rem;">
     <!-- Dynamic content will be injected here -->
   </div>
 
-  <script>
-    function loadContent(type, clickedLink) {
-      fetch(`/${type}_draw`)
-        .then(response => response.json())  // Get content as JSON
-        .then(data => {
-          // Update the content dynamically
-          var element = document.getElementById('content-container')
-          element.innerHTML = data.content;
-
-          updateActiveLink(clickedLink);
-        });
-    }
-
-    function updateActiveLink(clickedElement) {
-      // Get all the links
-      const links = document.querySelectorAll('.subheader a');
-
-      // Remove active class from all links
-      links.forEach(link => {
-        link.classList.remove('active');
-      });
-
-      // Add active class to the clicked link
-      clickedElement.classList.add('active');
-    }
-  </script>
+  <script type="text/javascript" src="{{ url_for('static', filename='javascript/visualise.js') }}"></script>
 
 
 </body>

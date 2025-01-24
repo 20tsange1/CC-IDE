@@ -1,0 +1,28 @@
+.clause-container {
+    display: flex;
+}
+
+.column {
+    flex: 50%;
+    display:flex;
+    justify-content: center;
+    text-align: center;
+    width: 50%;
+}
+
+.flag {
+    border-radius: 5px;
+    margin: 1rem;
+    padding: 1rem;
+    font-size: 1.2rem;
+    width: 40%;
+}
+
+.flagTrue {
+    background-color: rgb(134, 197, 134);
+}
+
+
+.flagFalse {
+    background-color: rgb(255, 165, 158);
+}

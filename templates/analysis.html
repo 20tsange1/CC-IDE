@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BNF Editor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styleheader.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styleanalysis.css') }}">
+</head>
+
+<body>
+  {% include 'header.html' %}
+
+  Event Simulation (WIP)
+
+  <div class="clause-container">
+
+    <div class="column">
+
+      Conditions
+      
+      <ul id="conditions"></ul>
+
+    </div>
+
+    <div class="column">
+
+      States
+
+      <ul id="states"></ul>
+      
+    </div>
+
+  </div>
+
+  <script type="text/javascript" src="{{ url_for('static', filename='javascript/static_analysis.js') }}"></script>
+
+
+</body>
+
+</html>
