@@ -26,7 +26,7 @@ otter: OTTER
 
 OTTER : '::=' ;
 LOTTER: 'L::=';
-ROTTER : 'R::=' ;
+ROTTER: 'R::=';
 SPLITTER: '|' ;
 CHEVRON: '<'  ;
 ICHEVRON: '>' ; // inverted chevron

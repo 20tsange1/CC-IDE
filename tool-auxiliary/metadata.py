@@ -17,7 +17,7 @@ class MetaData:
         """
         For outputting to a file.
 
-        Data Format is a dictionary, with key and data values.
+        Data Format is a dictionary, with key and data values. In python, traversal is guaranteed insert order.
 
         We are storing it within .ini files (info).
         """
@@ -42,6 +42,18 @@ class MetaData:
 
         
     def contract_meta(self, directory, filename, content):
+        """
+        Contract Metadata
+
+        Contains:
+            Contract Name - Filename
+            Contract Version - Number of updates to the contract
+            Grammar Name - Grammar in use
+            Grammar Version - Version
+            Creation Date - Date contract was created, file was created
+            Update Date - Date contract was updated, file was saved
+            Hash - Hash of the text content within the contract, for integrity
+        """
         time = datetime.datetime.now()
 
         save_name = f"{directory}/meta/{filename[:-4]}.ini"
@@ -73,6 +85,15 @@ class MetaData:
 
         
     def bnf_meta(self, directory, filename):
+        """
+        BNF Metadata
+
+        Contains:
+            Grammar Name - The grammar in question
+            Grammar Version - Version
+            Creation Date - Date grammar was created, file was created
+            Update Date - Date grammar was updated, file was saved
+        """
         time = datetime.datetime.now()
 
         save_name = f"{directory}/meta/{filename[:-4]}.ini"
@@ -92,6 +113,14 @@ class MetaData:
         
 
     def grammar_meta(self, directory, filename):
+        """
+        Grammar Metadata - Storing information about CURRENT grammar in use
+
+        Contains:
+            Grammar Name - The grammar in question
+            Grammar Version - Version
+            Apply Date - Date grammar was applied
+        """
         time = datetime.datetime.now()
         
         # Information about the grammar
@@ -102,7 +131,7 @@ class MetaData:
         prev_grammar_meta = self._read_meta(grammar_meta_name)
         version = int(prev_grammar_meta["Grammar_Version"].strip()) if "Grammar_Version" in prev_grammar_meta else ""
         
-        meta: {
+        meta = {
             "Grammar_Name": filename[:-4],
             "Grammar_Version": version,
             "Apply_Date": time

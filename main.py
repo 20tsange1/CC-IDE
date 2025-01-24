@@ -1,7 +1,12 @@
+import sys
+sys.path.append('tool-auxiliary/')
+
 from parser import BNFParser
-import os
-from tree_sitter import Language, Parser
 from ontology import Ontology
+
+from tree_sitter import Language, Parser
+
+import os
 import time
 import glob
 import subprocess

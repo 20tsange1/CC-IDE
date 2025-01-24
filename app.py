@@ -1,8 +1,10 @@
 import sys
 
 sys.path
-sys.path.append("./tool-visualisations/")
-sys.path.append("./tool-analysis/")
+sys.path.append("tool-visualisations/")
+sys.path.append("tool-analysis/")
+sys.path.append("tool-auxiliary/")
+sys.path.append("tool-auxiliary/antlr/")
 
 # For building webapp and making sure content is safe.
 from flask import Flask, render_template, request, jsonify, render_template_string
