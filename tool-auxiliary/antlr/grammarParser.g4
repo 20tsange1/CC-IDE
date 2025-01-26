@@ -1,30 +1,51 @@
 // Grammar for parsing grammars
 grammar grammarParser;
-gram: component
-    | component+
+gram: component+
     ;
     
-component: symbol otter symbol SEMICOLON
-    | symbol otter arg (SPLITTER arg)* SEMICOLON
+component: symbol otter arg (SPLITTER arg)* SEMICOLON
     ;
 
-arg: symbol+
+arg: entersymbol+
+    ;
+    
+entersymbol: checksymbol optionalsymbol
+    | checksymbol repeatsymbol
+    | checksymbol repeat1symbol
+    | checksymbol
+    ;
+    
+    
+optionalsymbol: QUESTION
     ;
 
-symbol: bracketsymbol
-    | symbol QUESTION
-    | symbol PLUS
-    | symbol STAR
-    | CHEVRON WORD ICHEVRON
-    | QUOTE WORD* QUOTE
-    | WORD
+repeatsymbol: STAR
     ;
 
-bracketsymbol: OPENBRACKET symbol+ CLOSEBRACKET
+repeat1symbol: PLUS
+    ;
+
+bracketsymbol: OPENBRACKET arg CLOSEBRACKET
+    ;
+    
+checksymbol: bracketsymbol
+    | symbol
+    | strings
+    | regex
+    ;
+    
+symbol: CHEVRON WORD ICHEVRON
     ;
 
 otter: OTTER
     | WORD? OTTER
+    ;
+    
+strings: QUOTE WORD* QUOTE
+    | WORD
+    ;
+
+regex: SLASH WORD SLASH
     ;
 
 OTTER : '::=' ;
@@ -38,8 +59,9 @@ QUESTION: '?';
 PLUS: '+';
 STAR: '*';
 SEMICOLON: ';';
+SLASH: '/';
 
 INT : [0-9]+ ;
-WORD: ~[ \t\n?"<>:|;()]+;
+WORD: ~[ \t\n?"<>:|;()/]+;
 ID: [a-zA-Z_][a-zA-Z_0-9]* ;
 WS: [ \t\n\r\f]+ -> skip ;

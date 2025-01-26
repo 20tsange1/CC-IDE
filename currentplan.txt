@@ -201,7 +201,7 @@ Explain Tree-Sitter LR, LALR, GLR
 https://github.com/eatkins/tree-sitter-ebnf-generator/tree/master
 
 
-Looking further into it, first, rewrite the parser to include everythign from tree-sitter. But we can leverage aliases.
+Looking further into it, first, rewrite the parser to include everythign from tree-sitter. But we can leverage aliases - Basically imitate condition, statement, definition.
 
 
 L - Left Precedence
@@ -209,3 +209,24 @@ R - Right Precedence
 P - Precedence
 PD - Precedence Dynamic
 T - Token
+TI - Token Immediate
+
+Have changed the parser, but need to fix brackets. Brackets should be either ignored or have something applied to it. can ignore for now, but it is lowkey a bigger issue.
+
+Also remember to explain precedence number.
+
+Write about the logical fallacies or inconsistencies. If Then, But not every case needs an else. Conflicting clauses?
+
+Idea for bracket is you set it as a expression itself, and then you just pop it off and add it to the next one. So you evaluate and then throw back into new expression.
+^ Has been done
+
+Problem now is back to the autosuggestion. How do we do autosuggestion? 
+
+Because now there may be optionals, there may be repeats, many things to consider.
+
+
+
+Furthermore, in tree-sitter swap to treecursor, more efficient + use lookahead to discover possible next steps.
+
+
+Write a grammar for discounts. Show versatility.
