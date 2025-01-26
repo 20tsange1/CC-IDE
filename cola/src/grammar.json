@@ -943,8 +943,8 @@
                 "name": "num"
               },
               {
-                "type": "STRING",
-                "value": "(<num>)"
+                "type": "SYMBOL",
+                "name": "num"
               },
               {
                 "type": "STRING",

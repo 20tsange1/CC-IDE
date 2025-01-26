@@ -4,7 +4,7 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
@@ -584,10 +584,6 @@
     "type": "verb_status",
     "named": true,
     "fields": {}
-  },
-  {
-    "type": "(<num>)",
-    "named": false
   },
   {
     "type": "AMOUNT",

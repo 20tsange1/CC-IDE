@@ -251,13 +251,13 @@ class BNFParser:
             str: The constructed grammar structure.
         """
         retStr = ""
-        for rule in rulesArr:
-            retStr += rule + "\n\n"
+        for symbol, ottertype, rule in rulesArr:
+            retStr += self.buildRule(symbol, ottertype, rule) + "\n\n"
         return retStr
 
     def main(self):
         # input_stream = FileStream(self.fileName)
-        input_stream = FileStream(self.fileName)
+        input_stream = FileStream("bnf.txt")
         lexer = grammarParserLexer(input_stream)
         stream = CommonTokenStream(lexer)
         parser = grammarParserParser(stream)
