@@ -251,10 +251,12 @@ class Handler:
         key = (node.type, prev_sibling, parent)
         
         if key in self.mapper and parent == "ERROR":
+
             hashed = hash(key)
             # Created a popup class within css.
             finalarr.append(f'<span class="popup" style="color:{"grey"}" onclick="popupFunction(\'{hashed}\')">...<span class="popuptext" id="{hashed}">{self.mapper[key]}</span></span>')
 
+    
     def exploreNodes(self, cursor, finalarr, checkid, reached):
 
         node = cursor.node
@@ -265,8 +267,8 @@ class Handler:
             reached = 1
 
         if reached:
-            if cursor.depth < 3:
-                finalarr.append(f'<span style="color:{"red"}" onclick="nodeFold(\'{node.id}\')">^</span>')
+            # if cursor.depth < 3:
+            #     finalarr.append(f'<span style="color:{"red"}" onclick="nodeFold(\'{node.id}\')">^</span>')
                 
             self.nodeAddText(node, finalarr)
 
@@ -286,7 +288,7 @@ class Handler:
             if node.child_count == 0 and node.parent and node.parent.type == "ERROR":
                 finalarr.append('</b>')
 
-            # self.nodeAutoSuggestion(node, finalarr)
+            self.nodeAutoSuggestion(node, finalarr)
         
         return cursor
 
