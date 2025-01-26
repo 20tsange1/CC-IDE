@@ -37,9 +37,16 @@ Within this IDE, the form used is:
     Optional:
         <name>? | terminal?
 
-    Right Recursive or Left Recursive:
-        <name> R::= expansion;
-        <name> L::= expansion;
+    Right Precedence or Left Precedence:
+        <name> R6::= expansion;
+        <name> L7::= expansion;
+
+    Where the number is the value assigned to the precedence.
+
+    Hidden Nodes
+        <_name> ::= expansion;
+
+    Means that the node is hidden from the AST, allowing you to have a more streamlined exploration.
 
 A few important things to note is
 1. The use of regex is enabled, allowing you to capture strings using regex. This makes it easier for us to capture terminals in the language.

@@ -1,7 +1,12 @@
+import sys
+sys.path.append('tool-auxiliary/')
+
 from parser import BNFParser
-import os
-from tree_sitter import Language, Parser
 from ontology import Ontology
+
+from tree_sitter import Language, Parser, LookaheadIterator
+
+import os
 import time
 import glob
 import subprocess
@@ -28,9 +33,10 @@ class Handler:
     def reset(self):
         # For purposes related to Parsing both the Grammar and our Language
         self.buildLanguage()
+        self.language = Language(f"build/my-language{self.edit}.so", "cola")
         self.parser = None
         self.parser = Parser()
-        self.parser.set_language(Language(f"build/my-language{self.edit}.so", "cola"))
+        self.parser.set_language(self.language)
         
         # For storing the string that is to be processed
         self.currentString = bytes("""hello""", "utf8")
@@ -218,14 +224,11 @@ class Handler:
                 colour = "#f76f6f"
                 finalarr.append(f'<b style="color:{colour};">')
 
-            if node.parent and node.parent.type in self.highlights:
-                colour = self.highlights[node.parent.type]
-                if colour != "#000000":
-                    finalarr.append(f'<b style="color:{colour};">{text.strip()}</b>')
-                else:
-                    finalarr.append(f'{text.strip()}')
+            if node.parent:
+                finalarr.append(f'<span class="{node.parent.type}">{text.strip()}</span>')
             else:
                 finalarr.append(f'{text.strip()}')
+            
 
 
     def nodeAutoSuggestion(self, node, finalarr):
@@ -252,55 +255,40 @@ class Handler:
             # Created a popup class within css.
             finalarr.append(f'<span class="popup" style="color:{"grey"}" onclick="popupFunction(\'{hashed}\')">...<span class="popuptext" id="{hashed}">{self.mapper[key]}</span></span>')
 
-    
-    def exploreNodes(self, node, depth, finalarr, checkid, reached):
-        """
-        Depth First Traversal, exploring each node and their children.
-        We can then construct our final sentence back together, utilising
-        information from our parse tree to process the text in a useful manner.
-        """
+    def exploreNodes(self, cursor, finalarr, checkid, reached):
 
-        """
-        One of the problems with exploring it in a DFS fashion is that we are not utilising the tools provided
-        by tree-sitter as well as we can. Tree-sitter has a TreeCursor object that traverses a tree efficiently.
-        
-        class tree_sitter.TreeCursor
-        
-        https://tree-sitter.github.io/py-tree-sitter/classes/tree_sitter.TreeCursor.html
-        
-        """
+        node = cursor.node
 
-        # If folding is required
+        flag = True
+
         if str(node.id) == str(checkid):
             reached = 1
 
-        # Reached is used for whether our desired node has been explored or not. If set to 1 initially, you will always traverse the whole tree.
         if reached:
-            # Adding prefix
-            if node and node.type in self.pref_suf_format:
-                if finalarr and finalarr[-1] != self.pref_suf_format[node.type]["notPrevious"]:
-                    if self.pref_suf_format[node.type]["prefix"] != "":
-                        finalarr.append(self.pref_suf_format[node.type]["prefix"])
-
-            if depth < 4:
+            if cursor.depth < 3:
                 finalarr.append(f'<span style="color:{"red"}" onclick="nodeFold(\'{node.id}\')">^</span>')
                 
             self.nodeAddText(node, finalarr)
 
-        for c in (node.children):
-            self.exploreNodes(c, depth + reached, finalarr, checkid, reached)
+            if node:
+                finalarr.append(f'<span class="{node.type}">')
+
+        if cursor.goto_first_child():
+            while flag:
+                self.exploreNodes(cursor, finalarr, checkid, reached)
+                flag = cursor.goto_next_sibling()
+            cursor.goto_parent()
 
         if reached:
+            if node:
+                finalarr.append(f'</span>')
+
             if node.child_count == 0 and node.parent and node.parent.type == "ERROR":
                 finalarr.append('</b>')
 
-            # Autosuggestion
-            self.nodeAutoSuggestion(node, finalarr)
-
-            # Adding suffix
-            if node and node.type in self.pref_suf_format:
-                if self.pref_suf_format[node.type]["suffix"] != "":
-                    finalarr.append(self.pref_suf_format[node.type]["suffix"])
+            # self.nodeAutoSuggestion(node, finalarr)
+        
+        return cursor
 
 
     def bnfStructure(self, string=""):
@@ -322,11 +310,11 @@ class Handler:
         else:
             self.parse_tree = self.parser.parse(bytes(string, "utf8"))
 
-        node = self.parse_tree.root_node
+        cursor = self.parse_tree.walk()
 
         finalarr = []
 
-        self.exploreNodes(node, 0, finalarr, "", 1)
+        self.exploreNodes(cursor, finalarr, "", 1)
 
         self.prevString = string
 
@@ -335,10 +323,10 @@ class Handler:
 
     def bnfSubStructure(self, nodeID=""):
         if self.parse_tree:
-            node = self.parse_tree.root_node
+            cursor = self.parse_tree.walk()
             finalarr = []
             reached = 1 if nodeID == "" else 0
-            self.exploreNodes(node, 0, finalarr, nodeID, reached)
+            self.exploreNodes(cursor, finalarr, nodeID, reached)
             return ' '.join(finalarr)
         else:
             return ''

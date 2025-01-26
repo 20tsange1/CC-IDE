@@ -1,16 +1,23 @@
 <start> ::= <sentence>
+            ;
 
 <sentence> ::= <word> AND <sentence>
            | <word>
+           ;
            
 
 <word> ::=  <number>
-           | <text>
+            | <text>
+            ;
 
 <number> ::= <num>+
+            ;
 
 <text> ::= <string>+
+            ;
 
 <string> ::= /[a-zA-Z]+/
+            ;
 
 <num> ::= /[0-9]+/
+            ;

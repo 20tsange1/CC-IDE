@@ -16,10 +16,6 @@ Write up first draft / outline for diss.
 
 Comments on Comments:
 
-- Folding editor may be way too granular, i.e. way too many nodes to be able to split it at node level. Maybe up to a certain depth?
--> idea would be to assign each node a unique ID. Then from that, you will have to relay that back to the parser and BUI.
--> Then from the BUI, you would be able to press the node and then only things from that node onwards will be shown. Backend means that you use that ID as a flag, if parent not ID or self not ID, then don't show. This gets kinda hard to manage but definitely doable?
-
 -> How about. Adding node ID, which triggers a flag in the explore method.
 -> Which can then be reset.
 
@@ -35,7 +31,14 @@ Comments on Comments:
 -> Ignore subtitles for now.
 
 
+#########
+Folding Editor
 
+- Folding editor may be way too granular, i.e. way too many nodes to be able to split it at node level. Maybe up to a certain depth?
+-> idea would be to assign each node a unique ID. Then from that, you will have to relay that back to the parser and BUI.
+-> Then from the BUI, you would be able to press the node and then only things from that node onwards will be shown. Backend means that you use that ID as a flag, if parent not ID or self not ID, then don't show. This gets kinda hard to manage but definitely doable?
+
+Currently have a very rudimentary form, depends if you are following a dive deep or hide away principle. 
 
 
 #########
@@ -103,3 +106,127 @@ Extend with languages too.
 Formatting
 
 Right now I use direct formatting, adding HTML formatting and then adding the text, shouldn't I be making subsections in HTML with the class, and then adding formatting to the class?
+
+Another super helpful thing is you now get a way to interact with the HTML and actually use it for finding out the node types.
+
+In css, you can add before and after. This should be what you use.
+And then additionally, you can add other things inside.
+
+Swapped to CSS, instead of trying to do it in order, do it by styling. This is more correct in my opinion, nodes are their own type, you should be able to add styling to a node type. Idea is no loss of information too, when moving between styles.
+
+
+# Hierarchical
+
+# Tree view 1 tree view 2
+
+Is it possible to make it generic? At all? How much would need to be specified.
+
+Not everyone will have statements, conditions, no obvious solution.
+
+Generic Simulator, how would we achieve, drawbacks.
+
+
+
+###########
+DSL and MPS
+
+Why not? -> Explain
+
+
+###########
+
+Syntatic Sugar, what is actually necessary what isnt?
+
+Talk about lexing, tokens
+
+
+###########
+Logical Ambiguity
+
+Theres no brackets, so there is Ambiguity with the use of AND and OR. No precedence rule, and no way to work around it besides maybe order.
+
+Also, what about the case where a statement or definition becomes a condition in a future clause. Nested conditions.
+
+
+Furthermore, what about in the case of grammars where they do not cover both sides.
+
+
+###########
+
+There is a problem with moving the different views into files in app.py
+
+This is due to the dependencies between the objects and functions, whereby the pages require the use of an object from app.py but cannot access it in the new file. When attempting to import it, it ends up becoming a circular import.
+
+
+###########
+
+Backwards compatability of grammars needs to be testable, done through "unit tests"
+
+Testing of grammar and outputted AST (or in the case where structure is changed, parsability of contract under new grammar).
+
+
+
+
+##########
+
+Event has thing occuring on a day, thing occuring must have been expressed or checked against things in the contract.
+
+Unexpected Events
+
+If it becomes true, we can turn it into a true condition.
+
+Condition -> Statement -> Condition -> Statement (Nested conditions)
+
+
+Lawyers trying out permutations of grammar, permutations of language, necessary for changes.
+
+
+
+Furthermore, what we could do is use something like an indicative / auxiliary node. Where you basically have a specific part of your BNF that is added to indicate that a certain sentence or set of child nodes will be part of a condition, statement, or definition. What this allows you to do is then use the tools that we have provided regarding event simulation, non-restrictive to a specific language, and be able to indicate which one of a language's non-terminals are condition, statements, or definitions.
+
+Can be done two ways, either require the developer to add it into their own grammar in the BNF. OR, we provide some sort of notation like C:= or S:= or D:=, which then automatically replaces every instance of itself with <condition> where <condition> := YOUR_TYPE. This then means that we can use the existing event simulation tools. One problem that arises is the existence of IFs, THENs and ELSEs. We can provide the same structure and place it into the grammar, but the lawyers would have to know that it exists, because it may implicitly exist within the grammar (we added it, not them).
+
+
+
+###########
+
+Differences between contracts.
+
+
+Parser Generator.
+Recursive Descent LL(1)
+
+Explain Tree-Sitter LR, LALR, GLR
+
+https://github.com/eatkins/tree-sitter-ebnf-generator/tree/master
+
+
+Looking further into it, first, rewrite the parser to include everythign from tree-sitter. But we can leverage aliases - Basically imitate condition, statement, definition.
+
+
+L - Left Precedence
+R - Right Precedence
+P - Precedence
+PD - Precedence Dynamic
+T - Token
+TI - Token Immediate
+
+Have changed the parser, but need to fix brackets. Brackets should be either ignored or have something applied to it. can ignore for now, but it is lowkey a bigger issue.
+
+Also remember to explain precedence number.
+
+Write about the logical fallacies or inconsistencies. If Then, But not every case needs an else. Conflicting clauses?
+
+Idea for bracket is you set it as a expression itself, and then you just pop it off and add it to the next one. So you evaluate and then throw back into new expression.
+^ Has been done
+
+Problem now is back to the autosuggestion. How do we do autosuggestion? 
+
+Because now there may be optionals, there may be repeats, many things to consider.
+
+
+
+Furthermore, in tree-sitter swap to treecursor, more efficient + use lookahead to discover possible next steps.
+
+
+Write a grammar for discounts. Show versatility.

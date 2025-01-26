@@ -35,7 +35,7 @@ class BNFParser:
         node_types (list): List of all node types encountered.
         node_children (list): Tracks children for each node.
         nodes (list): List of all parsed nodes as `Component` objects.
-        recurseMap (dict): Maps recursiveness types to syntax representation.
+        otterMap (dict): Maps otter types to syntax representation.
     """
 
     def __init__(self, fileName, output, head="text-files/head.txt", tail="text-files/tail.txt", ontologies={}, nodenames="text-files/nodenames.txt"):
@@ -52,7 +52,15 @@ class BNFParser:
         self.nodes = []
 
         # Mapping to recursiveness
-        self.recurseMap = {0: "", 1: "prec.left(", 2: "prec.right("}
+        self.otterMap = {
+            "NONE": "", 
+            "L": "prec.left(", 
+            "R": "prec.right(", 
+            "P": "prec(", 
+            "PD": "prec.dynamic(", 
+            "T": "token(", 
+            "TI": "token.immediate("
+        }
 
     def evaluate(self, word):
         """
@@ -178,26 +186,33 @@ class BNFParser:
             pass
         return retStr
 
-    def buildRecursiveness(self, recursiveness, rules):
+    def buildOtterType(self, ottertype, rules):
         """
-        For declaring the recursiveness of a rule, we define 0 as none, 1 as left and 2 as right.
-        Constructs the recursive aspect of a grammar rule.
+        For declaring the ottertype of a rule, we define 0 as none, 1 as left and 2 as right.
+        Constructs the ottertype of a grammar rule.
 
         Args:
-            recursiveness (int): The type of recursiveness (0 = none, 1 = left, 2 = right).
+            type (int): The type of ottertype (0 = none, 1 = left, 2 = right).
             rules (list): List of sequences.
 
         Returns:
-            str: The constructed recursive rule.
+            str: The constructed rule with the ottertype.
         """
+
+        val_type, val_num = ottertype
         retStr = ""
-        retStr += self.recurseMap[recursiveness] + self.buildInnerRule(rules)
-        if recursiveness != 0:
-            retStr += ")"
+
+        retStr += self.otterMap[val_type]
+        if val_num != '0' and val_type not in ["T", "TI"]:
+            retStr += val_num + ","
+        retStr += self.buildInnerRule(rules)
         
+        if val_type != "NONE":
+            retStr += ")"
+
         return retStr
         
-    def buildRule(self, symbol, recursiveness, rules):
+    def buildRule(self, symbol, ottertype, rules):
         """
         Building a rule recursiveley.
         Constructs a grammar rule for a specific symbol.
@@ -216,7 +231,7 @@ class BNFParser:
 
             self.node_children.append([])
             
-            retStr += word + ": $ => " + self.buildRecursiveness(recursiveness, rules) + ","
+            retStr += word + ": $ => " + self.buildOtterType(ottertype, rules) + ","
             
             self.nodes.append(Component(word, self.node_children.pop()))
 
@@ -236,12 +251,13 @@ class BNFParser:
             str: The constructed grammar structure.
         """
         retStr = ""
-        for symbol, recursiveness, rule in rulesArr:
-            retStr += self.buildRule(symbol, recursiveness, rule) + "\n\n"
+        for symbol, ottertype, rule in rulesArr:
+            retStr += self.buildRule(symbol, ottertype, rule) + "\n\n"
         return retStr
 
     def main(self):
-        input_stream = FileStream(self.fileName)
+        # input_stream = FileStream(self.fileName)
+        input_stream = FileStream("bnf.txt")
         lexer = grammarParserLexer(input_stream)
         stream = CommonTokenStream(lexer)
         parser = grammarParserParser(stream)
@@ -262,20 +278,20 @@ class BNFParser:
                 # The grammar 
                 file.write(self.buildGrammar(arr))
 
-                # The additionally rules from the ontology
-                for ont in self.mapped.values():
-                    file.write(ont + "\n\n")
+            #     # The additionally rules from the ontology
+            #     for ont in self.mapped.values():
+            #         file.write(ont + "\n\n")
             
             with open(self.tail, 'r') as tail:
                 text = tail.read()
             with open(self.output, 'a') as file:
                 file.write(text)
             
-            # Writing out the types of the nodes, used for auto-suggestions
-            with open(self.nodenames, 'w') as file:
-                for types in self.node_types:
-                    file.write(types + "\n")
+            # # Writing out the types of the nodes, used for auto-suggestions
+            # with open(self.nodenames, 'w') as file:
+            #     for types in self.node_types:
+            #         file.write(types + "\n")
 
 
 if __name__ == '__main__':
-    main(sys.argv)
+    BNFParser.main(sys.argv)

@@ -1,81 +1,102 @@
 <contract> ::= <component>
              | <component> C-AND <contract>
+ ;
 
 <component> ::= <definition>
               | <conditional-definition>
               | <statement>
               | <conditional-statement>
+ ;
 
 <definition> ::= <simple-definition>
                | <simple-definition> AND <definition>
+ ;
 
 <simple-definition> ::= <identity> <subject> IS <subject>
                       | <identity> <subject> EQUALS <numerical-expression>
+ ;
 
 <numerical-expression> ::= <num>
                         | <numerical-object>
                         | <numerical-object> <operator> <numerical-expression>
+ ;
 
 <operator> ::= PLUS
              | MINUS
              | TIMES
              | DIVIDE
+ ;
 
 <conditional-definition> ::= <definition> IF <condition>
                            | IF <condition> THEN <definition>
+ ;
 
 <statement> ::= <simple-statement>
               | <simple-statement> OR <statement>
               | <simple-statement> AND <statement>
+ ;
 
 <conditional-statement> ::= <statement> IF <condition>
                           | IF <condition> THEN <statement>
+ ;
 
 <simple-statement> ::= <identity> <holds>? <subject> <modal-verb> <verb> <object> <date>
                      | <identity> <holds>? <subject> <date> <modal-verb> <verb> <object>
                      | <identity> <holds>? <date> <subject> <modal-verb> <verb> <object>
                      | <identity> <holds>? <date> <subject> <verb-status> <object> <date>
+ ;
 
 <condition> ::= <simple-condition>
               | <simple-condition> OR <condition>
               | <simple-condition> AND <condition>
+ ;
 
 <simple-condition> ::= <identity> <holds>? <subject> <verb-status> <object> <date>
                      | <identity> <holds>? <subject> <date> <verb-status> <object>
                      | <identity> <holds>? <date> <subject> <verb-status> <object>
+ ;
 
 <boolean-expression> ::= <subject> <verb-status> <comparison> <subject>
+ ;
 
 <identity> ::= [ <num> ]
        | [ <num> ( <num> ) ]
+ ;
 
 <holds> ::= it is the case that
           | it is not the case that
+ ;
 
 <subject> ::= <string>
+ ;
 
 <verb> ::= DELIVER
          | PAY
          | CHARGE
          | SEND
+ ;
 
 <verb-status> ::= DELIVERED
                 | PAID
                 | CHARGED
                 | SENT
+ ;
 
 <comparison> ::= LESS THAN
                | EQUAL TO
                | MORE THAN
+ ;
 
 <modal-verb> ::= OBLIGATION
                | PERMISSION
                | PROHIBITION
+ ;
 
 <date> ::= on the <num> <month> <num>
          | on ANYDATE
          | on ADATE
          | on THEDATE
+ ;
 
 <month> ::= January
           | February
@@ -89,21 +110,27 @@
           | October
           | November
           | December
+ ;
 
 <object> ::= <numerical-object>
            | <nonnumerical-object>
+ ;
 
 <numerical-object> ::= POUNDS <num>
                      | DOLLARS <num>
                      | EUROS <num>
                      | FRANCS <num>
                      | AMOUNT <subject>
+ ;
 
 <nonnumerical-object> ::= SOMECURRENCY <string>
                         | REPORT <string>
                         | NAMEDOBJECT <string>
                         | OTHEROBJECT <string>
+ ;
 
 <string> ::= /[a-zA-Z]+/
+ ;
 
 <num> ::= /[0-9]+/
+ ;

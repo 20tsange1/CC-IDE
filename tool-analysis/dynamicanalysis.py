@@ -28,9 +28,10 @@ class DynamicAnalysis:
         pass
 
     def error_analyser(self, parse_tree):
-
-        # Example of an analyser, this one just counts the number of errors / total number of nodes
-        # Maybe swap to number of words, bytes
+        """
+        Example of an analyser, this one just counts the number of errors / total number of nodes
+        Maybe swap to number of words, bytes
+        """
 
         count = 0
         total = 0
@@ -52,3 +53,41 @@ class DynamicAnalysis:
                 total += 1
 
         return int((1 - (count / (total))) * 100) if total > 0 else 0
+
+    def id_analyser(self, parse_tree):
+
+        """
+        Analysing identifiers, making sure they are used correctly.
+        Make sure there are no overlaps, and make sure they are the right types.
+        """
+
+        existingIDs = {}
+
+        problems = set()
+
+        mapper = {"simple_definition": 'D', "simple_statement": 'S', "simple_condition": 'C'} 
+
+        if parse_tree != None:
+            s = [parse_tree.root_node]
+
+            while s:
+                node = s.pop()
+
+                if node.parent and node.parent.type == "ID":
+                    identifier = node.text.decode("utf-8")
+                    if identifier not in ["[", "]"]:
+                        if identifier in existingIDs:
+
+                            # Need to also add in checking the actual sentence behind it to make sure it is either the same.
+                            # or is a reference.
+
+                            if existingIDs[identifier] != node.parent.parent.type:
+                                problems.add(identifier)
+                        else:
+                            existingIDs[identifier] = node.parent.parent.type
+
+                if node.child_count > 0:
+                    for child in node.children:
+                        s.append(child)
+
+        return sorted(list(problems))
