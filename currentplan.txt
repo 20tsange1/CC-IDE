@@ -201,8 +201,7 @@ Explain Tree-Sitter LR, LALR, GLR
 https://github.com/eatkins/tree-sitter-ebnf-generator/tree/master
 
 
-Looking further into it, first, rewrite the parser to include everythign from tree-sitter. But we can leverage aliases - Basically imitate condition, statement, definition.
-
+#Looking further into it, first, rewrite the parser to include everythign from tree-sitter. But we can leverage aliases - Basically imitate condition, statement, definition.
 
 L - Left Precedence
 R - Right Precedence
@@ -211,18 +210,20 @@ PD - Precedence Dynamic
 T - Token
 TI - Token Immediate
 
-Have changed the parser, but need to fix brackets. Brackets should be either ignored or have something applied to it. can ignore for now, but it is lowkey a bigger issue.
+#Have changed the parser, but need to fix brackets. Brackets should be either ignored or have something applied to it. can ignore for now, but it is lowkey a bigger issue.
 
 Also remember to explain precedence number.
 
 Write about the logical fallacies or inconsistencies. If Then, But not every case needs an else. Conflicting clauses?
 
-Idea for bracket is you set it as a expression itself, and then you just pop it off and add it to the next one. So you evaluate and then throw back into new expression.
+#Idea for bracket is you set it as a expression itself, and then you just pop it off and add it to the next one. So you evaluate and then throw back into new expression.
 ^ Has been done
 
-Problem now is back to the autosuggestion. How do we do autosuggestion? 
+#Problem now is back to the autosuggestion. How do we do autosuggestion? 
 
 Because now there may be optionals, there may be repeats, many things to consider.
+
+Have fixed partially, but a new problem is that it just jumps past all the errors and matches the next valid one. So we end up signalling the wrong error.
 
 
 
@@ -230,3 +231,68 @@ Furthermore, in tree-sitter swap to treecursor, more efficient + use lookahead t
 
 
 Write a grammar for discounts. Show versatility.
+
+
+###########
+
+To do indicative nodes / indirection nodes, we can either map it to a new node, use an alias, or replace the name.
+
+But we have enabled it through reworking the parser. Additionally, now tree-sitter is utilised more effectively.
+
+
+###########
+
+Think of intellectual points, 3+.
+
+Generalisation, how do we give meaning to BNFs, 
+
+Test suite for grammars, make sure it works.
+
+Then generate random events, make it not work.
+
+Document with bullet points, how to approach, what functionality.
+
+
+
+
+
+
+
+##############
+Ontologies
+
+<OBLIGATION> : Must, Have To, Need To, Should, Ought To
+<PERMISSION> : Can, May, Could, Might
+<PROHIBITION> : Must Not, Cannot, May Not, Should Not
+
+
+Parser for Subject / Object ?
+
+<VEHICLE> : Vehicle
+    | <CAR>
+    | <TRUCK>
+    | <MOTORCYCLE>
+
+<CAR> : Porsche, Toyota, Ferarri
+
+Is A ^
+
+
+Vehicle with a sunroof
+
+What kinds of testcases, what kind of language should we consider
+Additional information of ontology, check if it can be resolved.
+
+Minimum Viable Product -> Next steps
+
+Jupyter Notebook style or ontology view - isolate.
+
+If several relationships, how can it be extensible? 
+If relationships used in simulation, what do they mean? Maybe relationship is known to grammar.
+"Common Knowledge" vs Defined Knowledge
+In simulation, Is A relationship is easier to evaluate.
+If developer can add relationship into BNF + list of relationships available for ontology.
+Lawyer can extend ontology? 
+Match it verbatim - will have to be word for word?
+
+Simulator does test for Is A relationship, Relationship defined for Has A relationship

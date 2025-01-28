@@ -119,19 +119,6 @@
               "name": "numerical_expression"
             }
           ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "ID"
-            },
-            {
-              "type": "STRING",
-              "value": "D"
-            }
-          ]
         }
       ]
     },
@@ -608,19 +595,6 @@
                 "name": "date"
               }
             ]
-          },
-          {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "ID"
-              },
-              {
-                "type": "STRING",
-                "value": "S"
-              }
-            ]
           }
         ]
       }
@@ -868,19 +842,6 @@
               {
                 "type": "SYMBOL",
                 "name": "boolean_expression"
-              }
-            ]
-          },
-          {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "ID"
-              },
-              {
-                "type": "STRING",
-                "value": "C"
               }
             ]
           }

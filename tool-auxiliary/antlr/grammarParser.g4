@@ -3,7 +3,10 @@ grammar grammarParser;
 gram: component+
     ;
     
-component: symbol otter arg (SPLITTER arg)* SEMICOLON
+component: symbol otter expansion SEMICOLON
+    ;
+    
+expansion: arg (SPLITTER arg)*
     ;
 
 arg: entersymbol+
@@ -25,7 +28,7 @@ repeatsymbol: STAR
 repeat1symbol: PLUS
     ;
 
-bracketsymbol: OPENBRACKET arg CLOSEBRACKET
+bracketsymbol: OPENBRACKET expansion CLOSEBRACKET
     ;
     
 checksymbol: bracketsymbol

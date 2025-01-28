@@ -109,7 +109,8 @@ applyBtn.addEventListener('click', () => {
                     .then(response => response.json())
                     .then(data => {
                             alert(data.message || 'Error parsing file');
-                            createColorOptions();
+                            getNodeTypesColour();
+                            getNodeTypesFormat();
                         })
                             .catch(error => console.error('Error parsing file:', error));
                     } else {
@@ -268,7 +269,7 @@ function getNodeTypesFormat() {
 // Create format options for each key
 function createFormatOptions() {
     formatOptionsContainer.innerHTML = ''; // Clear existing options
-    keysArrayFormat.forEach(([key, prefix, suffix, notPrevious]) => {
+    keysArrayFormat.forEach(([key, prefix, suffix, inline]) => {
         const entryDiv = document.createElement('div');
         entryDiv.classList.add('format-entry');
 
@@ -293,17 +294,17 @@ function createFormatOptions() {
         suffixInput.classList.add('format-input');
 
         // NodeType input
-        const notPreviousInput = document.createElement('input');
-        notPreviousInput.type = 'text';
-        notPreviousInput.name = `${key}NotPrevious`;
-        notPreviousInput.placeholder = 'NotPrevious';
-        notPreviousInput.value = notPrevious;
-        notPreviousInput.classList.add('format-input');
+        const inlineInput = document.createElement('input');
+        inlineInput.type = 'text';
+        inlineInput.name = `${key}Inline`;
+        inlineInput.placeholder = 'Inline';
+        inlineInput.value = inline;
+        inlineInput.classList.add('format-input');
 
         entryDiv.appendChild(keyLabel);
         entryDiv.appendChild(prefixInput);
         entryDiv.appendChild(suffixInput);
-        entryDiv.appendChild(notPreviousInput);
+        entryDiv.appendChild(inlineInput);
 
         formatOptionsContainer.appendChild(entryDiv);
     });
@@ -320,15 +321,15 @@ toggleFormatsBtn.addEventListener('click', () => {
 // Save the selected formatting options
 saveFormatsBtn.addEventListener('click', () => {
     const formatData = {};
-    keysArrayFormat.forEach(([key, prefix, suffix, notPrevious]) => {
+    keysArrayFormat.forEach(([key, prefix, suffix, inline]) => {
         const prefixInput = document.querySelector(`input[name="${key}Prefix"]`);
         const suffixInput = document.querySelector(`input[name="${key}Suffix"]`);
-        const notPreviousInput = document.querySelector(`input[name="${key}NotPrevious"]`);
+        const inlineInput = document.querySelector(`input[name="${key}Inline"]`);
 
         formatData[key] = {
             prefix: prefixInput.value,
             suffix: suffixInput.value,
-            notPrevious: notPreviousInput.value,
+            inline: inlineInput.value,
         };
     });
 

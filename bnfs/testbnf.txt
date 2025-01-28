@@ -1,10 +1,29 @@
-<contract> 
-::= <component>
- ;
+<contract> ::= <start>+
+;
 
-<component> 
-R6::= (<string> <num>?)? BYE
- ;
+<start> ::= (<user> has <discount> if <negated>? <conditional>.)
+;
+
+<user> ::= <string>
+;
+
+<negated> ::= (it is not true that)
+;
+
+<discount> ::= <num>% (discount | off)?
+;
+
+<conditional> ::= <condition1> | <condition2> | <condition3>
+;
+
+<condition1> ::= (they are a member)
+;
+
+<condition2> ::= (they are male)
+;
+
+<condition3> ::= (they are female)
+;
 
 <string> ::= /[a-zA-Z]+/
  ;

@@ -18,7 +18,6 @@
 <simple-definition> 
 ::= <ID> <subject> IS <subject>
  | <ID> <subject> EQUALS <numerical-expression>
- | <ID> D
  ;
 
 <numerical-expression> 
@@ -59,7 +58,6 @@ R::= <ID> <holds>? <subject> <modal-verb> <verb> <object> <receiver> <date>
  | <ID> <holds>? <subject> <date> <modal-verb> <verb> <object> <receiver>
  | <ID> <holds>? <date> <subject> <modal-verb> <verb> <object> <receiver>
  | <ID> <holds>? <subject> <verb-status> <object> <receiver> <date>
- | <ID> S
  ;
 
 <condition> 
@@ -74,7 +72,6 @@ R::= <ID> <holds>? <subject> <verb-status> <object> <receiver> <date>
  | <ID> <holds>? <date> <subject> <verb-status> <object> <receiver>
  | <ID> <holds>? <subject> <modal-verb> <verb> <object> <receiver> <date>
  | <ID> <holds>? <boolean-expression>
- | <ID> C
  ;
 
 <boolean-expression> 

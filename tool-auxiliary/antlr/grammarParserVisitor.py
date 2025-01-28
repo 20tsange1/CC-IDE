@@ -7,12 +7,34 @@ else:
 
 # This class defines a complete generic visitor for a parse tree produced by grammarParserParser.
 
+class Component:
+    def __init__(self, name, children=[]):
+        self.name = name
+        self.children = children
+        self.next = {}
+        self.prev = {}
+
+    def __repr__(self):
+        return self.name
+
 class grammarParserVisitor(ParseTreeVisitor):
     """
     What I may want to try do is have two separate structures.
     One for the text to become a tree-sitter grammar.
     One for autosuggestion and node child, parent, combinations.
     """
+
+    def __init__(self):
+        super().__init__()
+        
+        # NODEMAP
+        self.node_children = []
+        self.nodes = []
+
+        # NODETYPES
+        self.node_types = []
+
+
 
     # Visit a parse tree produced by grammarParserParser#gram.
     def visitGram(self, ctx:grammarParserParser.GramContext):
@@ -33,18 +55,20 @@ class grammarParserVisitor(ParseTreeVisitor):
             ;
         """
         symbol = ""
-        arg_arr = []
-        
 
         if isinstance(ctx.getChild(0), grammarParserParser.SymbolContext):
             symbol = ctx.getChild(0).getChild(1).getText().replace("-", "_")
+            
+        # NODEMAP
+        self.node_children.append([])
 
         otter_type = self.visit(ctx.getChild(1))
 
-        for i in range(2, ctx.getChildCount(), 2): # We know that all everything else is just arguments.
-            # So you are iterating through the children and checking the arguments
-            # 1 or more arguments, guaranteed to be split by a | 
-            arg_arr.append(self.visit(ctx.getChild(i)))
+        arg_arr = self.visit(ctx.getChild(2))
+
+        # NODEMAP
+        self.nodes.append(Component(symbol, self.node_children.pop()))
+        self.node_types.append(symbol)
 
         arg_choice_string = ""
 
@@ -57,6 +81,19 @@ class grammarParserVisitor(ParseTreeVisitor):
             return f"{symbol}: $ => {otter_type}{arg_choice_string}),"
         else:
             return f"{symbol}: $ => {arg_choice_string},"
+
+    # Visit a parse tree produced by grammarParserParser#expansion.
+    def visitExpansion(self, ctx:grammarParserParser.ExpansionContext):
+        arg_arr = []
+        for i in range(0, ctx.getChildCount(), 2): # We know that all everything else is just arguments.
+            # So you are iterating through the children and checking the arguments
+            # 1 or more arguments, guaranteed to be split by a | 
+
+            # NODEMAP
+            self.node_children[-1].append([])
+
+            arg_arr.append(self.visit(ctx.getChild(i)))
+        return arg_arr
 
 
     # Visit a parse tree produced by grammarParserParser#arg.
@@ -132,8 +169,13 @@ class grammarParserVisitor(ParseTreeVisitor):
             ;
         """
         # ( ARGUMENT ), so we return the evaluation of the argument
-        return self.visit(ctx.getChild(1))
-        # return self.visitChildren(ctx)
+        arg_arr = self.visit(ctx.getChild(1))
+        arg_choice_string = ""
+        if len(arg_arr) <= 1:
+            arg_choice_string += "(" + '\n,'.join(arg_arr) + "\n)"
+        else:
+            arg_choice_string += "choice(\n\t" + '\n\t,'.join(arg_arr) + "\n)"
+        return arg_choice_string
 
 
     # Visit a parse tree produced by grammarParserParser#checksymbol.
@@ -157,6 +199,10 @@ class grammarParserVisitor(ParseTreeVisitor):
         It is guaranteed that the name will be the second child.
         """
         symbol = ctx.getChild(1).getText().replace("-", "_")
+
+        # NODEMAP
+        self.node_children[-1][-1].append(symbol)
+        
         return f"$.{symbol}"
 
 
@@ -205,6 +251,9 @@ class grammarParserVisitor(ParseTreeVisitor):
             ;
         """
         text = ctx.getText()
+
+        # NODEMAP
+        self.node_children[-1][-1].append(text)
 
         # Adding quotations to the text, so it is considered a string
         if text[0] == text[-1] == "'":

@@ -28,8 +28,10 @@ class MetaData:
         with open(location, "w") as file:
             file.write(meta)
 
+        return True
 
-    def _read_meta(self, location):
+
+    def read_meta(self, location):
         """
         For reading a previous metadata file.
         """
@@ -37,7 +39,7 @@ class MetaData:
         if os.path.isfile(location):
             with open(location, "r") as file:
                 lines = file.readlines()
-                info = {name: element for name, element in [l.split(": ") for l in lines]}
+                info = {name: element.strip() for name, element in [l.split(": ") for l in lines] if len(element.strip()) > 0}
         return info
 
         
@@ -61,12 +63,12 @@ class MetaData:
         hashed = hash(content)
 
         # Reading previous metadata
-        prev_meta = self._read_meta(save_name)
+        prev_meta = self.read_meta(save_name)
         version = int(prev_meta["Contract_Version"].strip()) + 1 if "Contract_Version" in prev_meta else 1
         creation_date = prev_meta["Creation_Date"].strip() if "Creation_Date" in prev_meta else time
 
         # Reading current grammar metadata
-        curr_grammar = self._read_meta("bnfs/grammar.ini")
+        curr_grammar = self.read_meta("bnfs/grammar.ini")
         grammar_version = int(curr_grammar["Grammar_Version"].strip()) if "Grammar_Version" in curr_grammar else ""
         grammar_name = curr_grammar["Grammar_Name"].strip() if "Grammar_Name" in curr_grammar else ""
         
@@ -83,6 +85,8 @@ class MetaData:
 
         self._output_meta(save_name, meta)
 
+        return True
+
         
     def bnf_meta(self, directory, filename):
         """
@@ -98,7 +102,7 @@ class MetaData:
 
         save_name = f"{directory}/meta/{filename[:-4]}.ini"
 
-        prev_meta = self._read_meta(save_name)
+        prev_meta = self.read_meta(save_name)
         version = int(prev_meta["Grammar_Version"].strip()) + 1 if "Grammar_Version" in prev_meta else ""
         creation_date = prev_meta["Creation_Date"].strip() if "Creation_Date" in prev_meta else ""
 
@@ -110,6 +114,8 @@ class MetaData:
         }
 
         self._output_meta(save_name, meta)
+
+        return True
         
 
     def grammar_meta(self, directory, filename):
@@ -128,7 +134,7 @@ class MetaData:
         
         save_name = f"{directory}/grammar.ini"
 
-        prev_grammar_meta = self._read_meta(grammar_meta_name)
+        prev_grammar_meta = self.read_meta(grammar_meta_name)
         version = int(prev_grammar_meta["Grammar_Version"].strip()) if "Grammar_Version" in prev_grammar_meta else ""
         
         meta = {
@@ -138,3 +144,5 @@ class MetaData:
         }
 
         self._output_meta(save_name, meta)
+        
+        return True

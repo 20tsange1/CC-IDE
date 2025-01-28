@@ -31,7 +31,6 @@ definition: $ => choice(
 simple_definition: $ => choice(
 	seq($.ID, $.subject, 'IS', $.subject)
 	,seq($.ID, $.subject, 'EQUALS', $.numerical_expression)
-	,seq($.ID, 'D')
 ),
 
 numerical_expression: $ => prec.left(choice(
@@ -72,7 +71,6 @@ simple_statement: $ => prec.right(choice(
 	,seq($.ID, optional($.holds), $.subject, $.date, $.modal_verb, $.verb, $.object, $.receiver)
 	,seq($.ID, optional($.holds), $.date, $.subject, $.modal_verb, $.verb, $.object, $.receiver)
 	,seq($.ID, optional($.holds), $.subject, $.verb_status, $.object, $.receiver, $.date)
-	,seq($.ID, 'S')
 )),
 
 condition: $ => prec.right(choice(
@@ -87,7 +85,6 @@ simple_condition: $ => prec.right(choice(
 	,seq($.ID, optional($.holds), $.date, $.subject, $.verb_status, $.object, $.receiver)
 	,seq($.ID, optional($.holds), $.subject, $.modal_verb, $.verb, $.object, $.receiver, $.date)
 	,seq($.ID, optional($.holds), $.boolean_expression)
-	,seq($.ID, 'C')
 )),
 
 boolean_expression: $ => (seq($.subject, $.verb_status, $.comparison, $.subject)
@@ -95,7 +92,8 @@ boolean_expression: $ => (seq($.subject, $.verb_status, $.comparison, $.subject)
 
 ID: $ => prec.right(choice(
 	seq('[', $.num, ']')
-	,seq('[', $.num, $.num, ']')
+	,seq('[', $.num, ($.num
+), ']')
 )),
 
 holds: $ => choice(
