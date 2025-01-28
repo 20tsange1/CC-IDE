@@ -1,3 +1,0 @@
-<OBLIGATION> : Must, Have To, Need To, Should, Ought To
-<PERMISSION> : Can, May, Could, Might
-<PROHIBITION> : Must Not, Cannot, May Not, Should Not
