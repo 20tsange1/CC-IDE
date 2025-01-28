@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Parser</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleparse.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='parsing-formatting/parse.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleheader.css') }}">
+</head>
+
+<body>
+    {% include 'header.html' %}
+
+    <div id="container">
+        <!-- Left: Text editor -->
+        <div id="editor">
+            <h2>Available Files</h2>
+            <ul id="files"></ul>
+            <div id="containerSmall">
+                <div>
+                    <select id="filenameSelect">
+                        <option value="">Select a file...</option>
+                    </select>
+                    <button class="button-style" id="saveBtn">Save</button>
+                    <button class="button-style" id="deleteBtn">Delete</button>
+                </div>
+                <div>
+                    <input type="text" id="createName"></input>
+                    <button class="button-style" id="createBtn">Create</button>
+                </div>
+            </div>
+            <h2 id="titleHolder">Edit Text</h2>
+            <textarea id="inputText"
+                placeholder="Type your text here...">{% if prev_string %}{{prev_string}}{% endif %}</textarea>
+        </div>
+
+        <!-- Parsed output section -->
+        <div id="output">
+            <h2>Parsed Output</h2>
+            <div id="containerSmall">
+                <div>
+                    <button class="button-style" id="resetBtn" onclick="parseText()">Reset</button>
+                </div>
+            </div>
+            <div id="parsedText"></div>
+        </div>
+
+        <div>
+            <!-- Contract Analytics -->
+            <div id="analytics">
+                <h2>Dynamic Analytics</h2>
+                <div>
+                    <h3>Error Analysis</h3>
+                    <div class="progress-container">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <div id="progress-val"></div>
+                </div>
+                <div>
+                    <h3>Problematic ID Analysis</h3>
+                    <ul id="problematic-ids"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for dynamic content -->
+    <script type="text/javascript" src="{{ url_for('static', filename='javascript/mainpage.js') }}"></script>
+
+</body>
+
+</html>
