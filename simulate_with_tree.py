@@ -1,3 +1,7 @@
+import sys
+sys.path.append('tool-auxiliary/')
+sys.path.append('tool-auxiliary/antlr')
+
 from main import Handler
 
 handler = Handler()

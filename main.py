@@ -3,8 +3,9 @@ sys.path.append('tool-auxiliary/')
 
 from parser import BNFParser
 from ontology import Ontology
+from metadata import MetaData
 
-from tree_sitter import Language, Parser
+from tree_sitter import Language, Parser, LookaheadIterator
 
 import os
 import time
@@ -33,9 +34,10 @@ class Handler:
     def reset(self):
         # For purposes related to Parsing both the Grammar and our Language
         self.buildLanguage()
+        self.language = Language(f"build/my-language{self.edit}.so", "cola")
         self.parser = None
         self.parser = Parser()
-        self.parser.set_language(Language(f"build/my-language{self.edit}.so", "cola"))
+        self.parser.set_language(self.language)
         
         # For storing the string that is to be processed
         self.currentString = bytes("""hello""", "utf8")
@@ -45,51 +47,73 @@ class Handler:
         
         # Comparison of string
         self.prevString = ""
-        
-        # For mapping auto suggestions, based on previous node, parent node and current node/text
-        self.mapper = {}
-        with open("text-files/nodemappings.txt", "r") as file:
-            for lines in file.readlines():
-                line = lines.strip().split(",")
-                self.mapper[tuple(line[:3])] = set(line[3:-1])
+
+        self.grammar_name = ""
+        checker = MetaData()
+        prev_meta = checker.read_meta("bnfs/grammar.ini")
+        if "Grammar_Name" in prev_meta:
+            self.grammar_name = prev_meta["Grammar_Name"]
+
+        grammar_info_path = f"text-files/{self.grammar_name}/"
+        node_types_path = "nodenames.txt"
+        node_map_path = "nodemappings.txt"
+        node_highlights_path = "nodecolours.txt"
+        node_formats_path = "nodeformats.txt"
 
         # For the different node types
         self.node_types = []
-        with open("text-files/nodenames.txt", "r") as file:
-            for lines in file.readlines():
-                self.node_types.append(lines.strip())
+        if os.path.isfile(grammar_info_path + node_types_path):
+            with open(grammar_info_path + node_types_path, "r") as file:
+                for lines in file.readlines():
+                    self.node_types.append(lines.strip())
+        
+        # For mapping auto suggestions, based on previous node, parent node and current node/text
+        self.mapper = {}
+        if os.path.isfile(grammar_info_path + node_map_path):
+            with open(grammar_info_path + node_map_path, "r") as file:
+                for lines in file.readlines():
+                    line = lines.strip().split(",")
+                    self.mapper[tuple(line[:3])] = set(line[3:-1])
                 
         # Storing whether a node type should be highlighted - Previous colours stored in nodecolours.txt
         self.highlights = {}
-        with open("text-files/nodecolours.txt", "r") as file:
-            for lines in file.readlines():
-                nodename, colour = lines.split(":")
-                if nodename in self.node_types:
-                    self.highlights[nodename] = colour.strip()
+        if os.path.isfile(grammar_info_path + node_highlights_path):
+            with open(grammar_info_path + node_highlights_path, "r") as file:
+                for lines in file.readlines():
+                    nodename, colour = lines.split(":")
+                    if nodename in self.node_types:
+                        self.highlights[nodename] = colour.strip()
+
+                for nodename in self.node_types:
+                    if nodename not in self.highlights:
+                        self.highlights[nodename] = "#000000"
 
         # Adding prefix and suffix
-        # {prefix, suffix, notPrevious}
+        # {prefix, suffix, inline}
         self.pref_suf_format = {}
-        with open("text-files/nodeformats.txt", "r") as file:
-            for lines in file.readlines():
-                nodename, prefix, suffix, notprev, _ = lines.split("~~")
-                if nodename in self.node_types:
-                    self.pref_suf_format[nodename] = {"prefix": prefix, "suffix": suffix, "notPrevious": notprev}
+        if os.path.isfile(grammar_info_path + node_formats_path):
+            with open(grammar_info_path + node_formats_path, "r") as file:
+                for lines in file.readlines():
+                    nodename, prefix, suffix, inline, _ = lines.split("~~")
+                    if nodename in self.node_types:
+                        self.pref_suf_format[nodename] = {"prefix": prefix, "suffix": suffix, "inline": inline}
         
         
 
-    def reparseBNF(self, fileName, ontology):
+    def reparseBNF(self, file_name, grammar_name, ontology):
         """
         Function used for parsing a BNF stored within a text file. Calls upon tree-sitter to initialise
         a tree-sitter grammar and allow us to begin parsing with our language.
         """
         # Turn our BNF into the grammar.js file
         bnfparser = BNFParser(
-            fileName=fileName, 
+            fileName=file_name, 
+            grammar_name = grammar_name,
             output="cola/grammar.js", 
             head="text-files/head.txt", 
             tail="text-files/tail.txt", 
-            ontologies=ontology)
+            ontologies=ontology
+            )
         bnfparser.main()
 
         # self.edit used as an iterator for version number
@@ -113,12 +137,13 @@ class Handler:
         self.node_types = bnfparser.node_types
         self.nodes = bnfparser.nodes
 
-        self.autosuggestion()
+        self.autosuggestion(grammar_name)
 
-        self.reset()
+        return
+
 
     # NEED TO MOVE EVERYTHING TO NEW CLASSES & FILES, MAKE IT MORE MODULAR.
-    def autosuggestion(self):
+    def autosuggestion(self, grammar_name):
         # Make a mapping system based on Current, Prev, Parent
         mapper = {}
 
@@ -146,13 +171,15 @@ class Handler:
                     mapper[key].add(childnext)
                     mapper[key2].add(childnext)
 
-        with open("text-files/nodemappings.txt", "w") as file:
+        with open(f"text-files/{grammar_name[:-4]}/nodemappings.txt", "w") as file:
             for i in mapper.items():
                 arr = list(i[0])
                 arr.extend(list(i[1]))
                 for item in arr:
                     file.write(item + ",")
                 file.write("\n")
+
+        return
 
 
     def buildLanguage(self):
@@ -223,10 +250,8 @@ class Handler:
                 colour = "#f76f6f"
                 finalarr.append(f'<b style="color:{colour};">')
 
-            if node.parent:
-                finalarr.append(f'<span class="{node.parent.type}">{text.strip()}</span>')
-            else:
-                finalarr.append(f'{text.strip()}')
+            if node.parent and len(node.children) == 0:
+                finalarr.append(f'{text}')
             
 
 
@@ -250,54 +275,46 @@ class Handler:
         key = (node.type, prev_sibling, parent)
         
         if key in self.mapper and parent == "ERROR":
+
             hashed = hash(key)
             # Created a popup class within css.
             finalarr.append(f'<span class="popup" style="color:{"grey"}" onclick="popupFunction(\'{hashed}\')">...<span class="popuptext" id="{hashed}">{self.mapper[key]}</span></span>')
 
     
-    def exploreNodes(self, node, depth, finalarr, checkid, reached):
-        """
-        Depth First Traversal, exploring each node and their children.
-        We can then construct our final sentence back together, utilising
-        information from our parse tree to process the text in a useful manner.
-        """
+    def exploreNodes(self, cursor, finalarr, checkid, reached):
 
-        """
-        One of the problems with exploring it in a DFS fashion is that we are not utilising the tools provided
-        by tree-sitter as well as we can. Tree-sitter has a TreeCursor object that traverses a tree efficiently.
-        
-        class tree_sitter.TreeCursor
-        
-        https://tree-sitter.github.io/py-tree-sitter/classes/tree_sitter.TreeCursor.html
-        
-        """
+        node = cursor.node
 
-        # If folding is required
+        flag = True
+
         if str(node.id) == str(checkid):
             reached = 1
 
-        # Reached is used for whether our desired node has been explored or not. If set to 1 initially, you will always traverse the whole tree.
         if reached:
-            if depth < 3:
-                finalarr.append(f'<span style="color:{"red"}" onclick="nodeFold(\'{node.id}\')">^</span>')
+            # if cursor.depth < 3:
+            #     finalarr.append(f'<span style="color:{"red"}" onclick="nodeFold(\'{node.id}\')">^</span>')
                 
             self.nodeAddText(node, finalarr)
 
-            if node:
+            if node and node.children:
                 finalarr.append(f'<span class="{node.type}">')
 
-        for c in (node.children):
-            self.exploreNodes(c, depth + reached, finalarr, checkid, reached)
+        if cursor.goto_first_child():
+            while flag:
+                self.exploreNodes(cursor, finalarr, checkid, reached)
+                flag = cursor.goto_next_sibling()
+            cursor.goto_parent()
 
         if reached:
-            if node:
+            if node and node.children:
                 finalarr.append(f'</span>')
 
             if node.child_count == 0 and node.parent and node.parent.type == "ERROR":
                 finalarr.append('</b>')
 
-            # Autosuggestion
             self.nodeAutoSuggestion(node, finalarr)
+        
+        return cursor
 
 
     def bnfStructure(self, string=""):
@@ -319,23 +336,24 @@ class Handler:
         else:
             self.parse_tree = self.parser.parse(bytes(string, "utf8"))
 
-        node = self.parse_tree.root_node
+        cursor = self.parse_tree.walk()
 
         finalarr = []
 
-        self.exploreNodes(node, 0, finalarr, "", 1)
+        self.exploreNodes(cursor, finalarr, "", 1)
 
         self.prevString = string
 
-        return ' '.join(finalarr)
+        return ''.join([((i + ' ') if i[-1] != '>' else i) for i in finalarr])
+        # return ' '.join(finalarr)
 
 
     def bnfSubStructure(self, nodeID=""):
         if self.parse_tree:
-            node = self.parse_tree.root_node
+            cursor = self.parse_tree.walk()
             finalarr = []
             reached = 1 if nodeID == "" else 0
-            self.exploreNodes(node, 0, finalarr, nodeID, reached)
+            self.exploreNodes(cursor, finalarr, nodeID, reached)
             return ' '.join(finalarr)
         else:
             return ''
@@ -352,10 +370,10 @@ class Handler:
         
         """
         # Adding prefix
-        if node and node.type in self.pref_suf_format:
-            if finalarr and finalarr[-1] != self.pref_suf_format[node.type]["notPrevious"]:
-                if self.pref_suf_format[node.type]["prefix"] != "":
-                    finalarr.append(self.pref_suf_format[node.type]["prefix"])
+        # if node and node.type in self.pref_suf_format:
+        #     if finalarr and finalarr[-1] != self.pref_suf_format[node.type]["inline"]:
+        #         if self.pref_suf_format[node.type]["prefix"] != "":
+        #             finalarr.append(self.pref_suf_format[node.type]["prefix"])
 
         if node.child_count == 0:
             finalarr.append(node.text.decode("utf8"))

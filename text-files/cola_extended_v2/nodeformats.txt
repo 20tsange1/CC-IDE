@@ -1,5 +1,5 @@
-contract~~~~content: "\A\A"; white-space: pre;~~~~
-component~~~~~~~~
+contract~~~~content: "\A\A"; white-space: pre;~~display: block;~~
+component~~~~~~display: block; margin: 2rem;~~
 definition~~~~~~~~
 simple_definition~~~~~~~~
 numerical_expression~~~~~~~~

@@ -1,6 +1,6 @@
 .contract::after { content: "\A\A"; white-space: pre; }
-.contract { color: #29b359; font-weight: bold;  }
-.component { color: #000000;   }
+.contract { color: #29b359; font-weight: bold; display: block; }
+.component { color: #000000;  display: block; margin: 2rem; }
 .definition { color: #52c9f4; font-weight: bold;  }
 .simple_definition { color: #50c9f4; font-weight: bold;  }
 .numerical_expression { color: #000000;   }

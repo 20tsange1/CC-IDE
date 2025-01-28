@@ -31,6 +31,7 @@ metadata = MetaData()
 
 CONTRACT_FILES_DIR = "contracts"  # Directory to store contracts
 TEXT_FILES_DIR = "text-files"  # Directory to store text files
+BNF_DIR = "bnfs"
 
 # ------------
 # Home Page
@@ -66,6 +67,18 @@ def parse_node_text():
     return jsonify({"parsed_text": parsed_text})
 
 
+def check_if_current_grammar(directory, filename, grammar_name):
+    # print(directory + f"/meta/{filename[::-4]}.ini")
+    if directory == "contracts":
+        curr_meta = metadata.read_meta(directory + f"/meta/{filename[:-4]}.ini")
+        # print(curr_meta, grammar_name)
+        if "Grammar_Name" in curr_meta:
+            return grammar_name == curr_meta["Grammar_Name"]
+        else:
+            return False
+    else:
+        return True
+
 @app.route("/files", methods=["POST"])
 def list_files():
     # List all text files in the directory
@@ -73,7 +86,12 @@ def list_files():
     directory = data.get("path")
     ending = data.get("ends")
     contains = data.get("contains")
-    files = [f for f in os.listdir(directory) if f.endswith(ending) and contains in f]
+    files = []
+
+    for f in os.listdir(directory):
+        if f.endswith(ending) and contains in f and check_if_current_grammar(directory, f, handler.grammar_name):
+            files.append(f)
+
     return jsonify(files)
 
 
@@ -186,9 +204,10 @@ def parse_bnf():
     ont.breakdown(ontdirectory + "/ontologies.txt")
 
     try:
-        handler.reparseBNF(f"{directory}/{filename}", ont.ontologies)
+        handler.reparseBNF(f"{directory}/{filename}", filename, ont.ontologies)
         metadata.bnf_meta(directory, filename)
         metadata.grammar_meta(directory, filename)
+        handler.reset()
     except Exception as e:
         return jsonify({"error": f"{e}"}), 400
 
@@ -200,19 +219,26 @@ def outputCSS(highlights, formatting):
     Function for outputing colours and formatting options into a css file.
     Leerages the use of CSS before and after for prefix and suffix.
     """
+
     with open("static/parsing-formatting/parse.css", "w") as file:
         formats = ""
         for node in highlights.keys():
-            prefix = formatting[node]["prefix"]
-            suffix = formatting[node]["suffix"]
-            notprev = formatting[node]["notPrevious"]
-            if prefix:
-                formats += f".{node}::before {{ {prefix} }}\n"
-            if suffix:
-                formats += f".{node}::after {{ {suffix} }}\n"
-            formats += f".{node} {{ color: {highlights[node]}; {'font-weight: bold;' if highlights[node] != '#000000' else ''} {notprev} }}\n"
+
+            if node in formatting:
+                prefix = formatting[node]["prefix"]
+                suffix = formatting[node]["suffix"]
+                inline = formatting[node]["inline"]
+                if prefix:
+                    formats += f".{node}::before {{ {prefix} }}\n"
+                if suffix:
+                    formats += f".{node}::after {{ {suffix} }}\n"
+                formats += f".{node} {{ color: {highlights[node]}; {'font-weight: bold;' if highlights[node] != '#000000' else ''} {inline} }}\n"
+            else:
+                formats += f".{node} {{ color: {highlights[node]}; }}\n"
 
         file.write(formats)
+
+    return True
 
 
 @app.route("/submit-colour-options", methods=["POST"])
@@ -224,7 +250,7 @@ def submit_colour_options():
 
     outputCSS(handler.highlights, handler.pref_suf_format)
 
-    with open("text-files/nodecolours.txt", "w") as file:
+    with open(f"text-files/{handler.grammar_name}/nodecolours.txt", "w") as file:
         coloursFormat = ""
         for node, colour in highlight_colours.items():
             coloursFormat += f"{node}:{colour}\n"
@@ -242,13 +268,13 @@ def submit_format_options():
 
     outputCSS(handler.highlights, handler.pref_suf_format)
 
-    with open("text-files/nodeformats.txt", "w") as file:
+    with open(f"text-files/{handler.grammar_name}/nodeformats.txt", "w") as file:
         formats = ""
         for node, formatting in formatting_options.items():
             prefix = formatting["prefix"]
             suffix = formatting["suffix"]
-            notprev = formatting["notPrevious"]
-            formats += f"{node}~~{prefix}~~{suffix}~~{notprev}~~\n"
+            inline = formatting["inline"]
+            formats += f"{node}~~{prefix}~~{suffix}~~{inline}~~\n"
         file.write(formats)
 
     return "Formatting Applied"
@@ -276,7 +302,7 @@ def get_node_types_format():
                 t,
                 formatref[t]["prefix"],
                 formatref[t]["suffix"],
-                formatref[t]["notPrevious"],
+                formatref[t]["inline"],
             )
         else:
             add = (t, "", "", "")

@@ -1,0 +1,7 @@
+Member has 7% discount if it is not true that they are a member. 
+
+Member has 8% off if they are female.
+
+Member has 8% discount if they are male.
+
+Member has 16% discount if they are a member.
