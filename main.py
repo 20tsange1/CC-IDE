@@ -97,6 +97,9 @@ class Handler:
                     nodename, prefix, suffix, inline, _ = lines.split("~~")
                     if nodename in self.node_types:
                         self.pref_suf_format[nodename] = {"prefix": prefix, "suffix": suffix, "inline": inline}
+
+
+        self.checkid = set()
         
         
 
@@ -243,10 +246,11 @@ class Handler:
     
     def nodeAddText(self, node, finalarr):
         # In the case of no children, this means that the node a terminal (leaf) node.
-        if node.child_count == 0:
+        if not node.children:
             text = node.text.decode("utf8")
             
-            if node.parent and node.parent.type == "ERROR":
+            # Attribute describing if node is an error node
+            if node.is_error:
                 colour = "#f76f6f"
                 finalarr.append(f'<b style="color:{colour};">')
 
@@ -287,15 +291,18 @@ class Handler:
 
         flag = True
 
-        if str(node.id) == str(checkid):
-            reached = 1
+        # if str(node.id) == str(checkid):
+        if str(node.id) in checkid:
+            reached = 0
 
+        # Checks if it is in chosen range
         if reached:
-            # if cursor.depth < 3:
-            #     finalarr.append(f'<span style="color:{"red"}" onclick="nodeFold(\'{node.id}\')">^</span>')
+            # if 1 <= cursor.depth <= 3:
+            #     finalarr.append(f'<span style="color: #{hex(2-cursor.depth)[2:]*3}" onclick="nodeFold(\'{node.id}\')">></span>')
                 
             self.nodeAddText(node, finalarr)
 
+            # Sets up the css structure
             if node and node.children:
                 finalarr.append(f'<span class="{node.type}">')
 
@@ -306,11 +313,12 @@ class Handler:
             cursor.goto_parent()
 
         if reached:
+
+            if not node.children and node.is_error:
+                finalarr.append('</b>')
+
             if node and node.children:
                 finalarr.append(f'</span>')
-
-            if node.child_count == 0 and node.parent and node.parent.type == "ERROR":
-                finalarr.append('</b>')
 
             self.nodeAutoSuggestion(node, finalarr)
         
@@ -340,21 +348,23 @@ class Handler:
 
         finalarr = []
 
-        self.exploreNodes(cursor, finalarr, "", 1)
+        # self.exploreNodes(cursor, finalarr, "", 1)
+        self.exploreNodes(cursor, finalarr, self.checkid, 1)
 
         self.prevString = string
 
-        return ''.join([((i + ' ') if i[-1] != '>' else i) for i in finalarr])
-        # return ' '.join(finalarr)
+        # This prevents it from adding an extra space for the span, which messes with the desired output.
+        return ''.join([((i + ' ') if i and i[-1] != '>' else i) for i in finalarr])
 
 
     def bnfSubStructure(self, nodeID=""):
         if self.parse_tree:
             cursor = self.parse_tree.walk()
             finalarr = []
-            reached = 1 if nodeID == "" else 0
-            self.exploreNodes(cursor, finalarr, nodeID, reached)
-            return ' '.join(finalarr)
+            if nodeID == "":
+                self.checkid = set()
+            self.exploreNodes(cursor, finalarr, self.checkid, 1)
+            return ''.join([((i + ' ') if i and i[-1] != '>' else i) for i in finalarr])
         else:
             return ''
 

@@ -63,6 +63,7 @@ def parse_node_text():
     # Get the text from the request
     nodeID = request.json.get("nodeID")
     # Basic parsing - you can replace this with custom parsing logic
+    handler.checkid.add(str(nodeID))
     parsed_text = handler.bnfSubStructure(nodeID)  # Example: Convert text to uppercase
     return jsonify({"parsed_text": parsed_text})
 
