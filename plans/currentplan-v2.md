@@ -12,6 +12,12 @@ Split into two categories. Dynamic to run while contract is being written. Allow
 
 Analysis is always done on the tree but separate to the parsing. This prevents conflicts by keeping analysis isolated and not tampering with the root tree.
 
+## LSP 
+- Autosuggestion
+- Syntax Highlighting
+- Error Highlighting
+- Hover Information (Node Type)
+- Autocomplete (WIP - Plan is to use lookaheaditerator)
 
 ## PDF view
 
@@ -53,6 +59,10 @@ How do we ensure that a general solution can work?
 How do we test?
 How can we use indirection or indicative nodes?
 
+What is the purpose of developing a language server?
+How can we leverage tree-sitter to create a LSP alternative, providing the same features without needed the setup?
+
+Does HTML work in every case? Where might it not work?
 
 # Glossary
 

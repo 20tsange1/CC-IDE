@@ -34,6 +34,9 @@ class grammarParserVisitor(ParseTreeVisitor):
         # NODETYPES
         self.node_types = []
 
+        # NODEINDIRECTION
+        self.node_replace = []
+
 
 
     # Visit a parse tree produced by grammarParserParser#gram.
@@ -62,7 +65,7 @@ class grammarParserVisitor(ParseTreeVisitor):
         # NODEMAP
         self.node_children.append([])
 
-        otter_type = self.visit(ctx.getChild(1))
+        otter_type = self.visitOtter(ctx.getChild(1), symbol)
 
         arg_arr = self.visit(ctx.getChild(2))
 
@@ -207,7 +210,7 @@ class grammarParserVisitor(ParseTreeVisitor):
 
 
     # Visit a parse tree produced by grammarParserParser#otter.
-    def visitOtter(self, ctx:grammarParserParser.OtterContext):
+    def visitOtter(self, ctx:grammarParserParser.OtterContext, node_type):
         """
         otter: OTTER
             | WORD? OTTER
@@ -233,12 +236,22 @@ class grammarParserVisitor(ParseTreeVisitor):
             "T": "token", 
             "TI": "token.immediate",
         }
+
+        otter_map_replace = {
+            "C": "condition",
+            "S": "statement",
+            "D": "definition",
+            "CC": "clause",
+        }
         
         
         if text in otter_map_num:
             return f"{otter_map_num[text]}({num}," if len(num) > 0 else f"{otter_map_num[text]}("
         elif text in otter_map_no_num:
             return f"{otter_map_num[text]}("
+        elif text in otter_map_replace:
+            self.node_replace.append((node_type, otter_map_replace[text]))
+            return ""
         else:
             return ""
 

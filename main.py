@@ -245,17 +245,30 @@ class Handler:
 
     
     def nodeAddText(self, node, finalarr):
-        # In the case of no children, this means that the node a terminal (leaf) node.
-        if not node.children:
-            text = node.text.decode("utf8")
-            
-            # Attribute describing if node is an error node
-            if node.is_error:
-                colour = "#f76f6f"
-                finalarr.append(f'<b style="color:{colour};">')
+        if node:
+            # In the case of no children, this means that the node a terminal (leaf) node.
+            if node.children:
+                # Sets up the css structure + Hover text
+                finalarr.append(f'<span title="{node.type}" class="{node.type}">')
+            else:
+                text = node.text.decode("utf8")
+                
+                # Attribute describing if node is an error node
+                if node.is_error:
+                    colour = "#f76f6f"
+                    finalarr.append(f'<b style="color:{colour};">')
 
-            if node.parent and len(node.children) == 0:
-                finalarr.append(f'{text}')
+                if node.parent:
+                    finalarr.append(f'{text}')
+
+
+    def nodeAddTextEnd(self, node, finalarr):
+        if node.children:
+            if node:
+                finalarr.append(f'</span>')
+        else:
+            if node.is_error:
+                finalarr.append('</b>')
             
 
 
@@ -302,10 +315,6 @@ class Handler:
                 
             self.nodeAddText(node, finalarr)
 
-            # Sets up the css structure
-            if node and node.children:
-                finalarr.append(f'<span class="{node.type}">')
-
         if cursor.goto_first_child():
             while flag:
                 self.exploreNodes(cursor, finalarr, checkid, reached)
@@ -313,12 +322,8 @@ class Handler:
             cursor.goto_parent()
 
         if reached:
-
-            if not node.children and node.is_error:
-                finalarr.append('</b>')
-
-            if node and node.children:
-                finalarr.append(f'</span>')
+            
+            self.nodeAddTextEnd(node, finalarr)
 
             self.nodeAutoSuggestion(node, finalarr)
         

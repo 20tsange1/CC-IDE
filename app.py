@@ -158,6 +158,7 @@ def create_file():
         return jsonify({"error": "File already exists"}), 400
     with open(filepath, "w") as file:
         file.write(" ")
+        metadata.contract_meta(directory, filename + ".txt", " ")
 
     return jsonify({"message": "File created successfully"}), 200
 

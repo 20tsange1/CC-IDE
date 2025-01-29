@@ -1,0 +1,27 @@
+  [1] it is the case that ServiceProvider must deliver OTHEROBJECT agreedService to Client on 10 February 2024
+
+C-AND
+
+[2] Client must pay POUNDS 100 to ServiceProvider before 10 March 2024
+
+C-AND
+
+IF [3] ServiceProvider delivered OTHEROBJECT agreedService to Client after 10 February 2024
+
+AND
+
+[10] ServiceProvider delivered OTHEROBJECT agreedService to Client after 10 February 2024
+
+THEN [4] ServiceProvider must refund POUNDS 10 to Client before 17 February 2024
+
+C-AND
+
+[5] Client may deliver REPORT requestForRefund to ServiceProvider before 13 February 2024
+
+C-AND
+
+IF [6] it is not the case that Client paid POUNDS 100 to ServiceProvider before 10 April 2024
+
+THEN [7] it is the case that ServiceProvider may deliver REPORT terminationOfAgreement to Client after 10 April 2024
+
+ELSE [8] it is not the case that ServiceProvider may deliver REPORT terminationOfAgreement to Client after 10 April 2024

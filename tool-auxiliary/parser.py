@@ -8,6 +8,7 @@ from grammarParserParser import grammarParserParser
 from grammarParserVisitor import grammarParserVisitor
 
 import os
+import re
 
 class Component:
     def __init__(self, name, children=[]):
@@ -54,7 +55,7 @@ class BNFParser:
         self.node_children = []
         self.nodes = []
 
-    def buildGrammar(self, rulesArr):
+    def buildGrammar(self, rulesArr, replaceArr):
         """
         Building a grammar recursively.
         Constructs the complete grammar structure from an array of rules.
@@ -68,6 +69,17 @@ class BNFParser:
         retStr = ""
         for rule in rulesArr:
             retStr += rule + "\n\n"
+
+        for symbol, replacement in replaceArr:
+            # Few different ways to do this.
+                # 1. Use an alias, shows up as though it is that node type
+                # 2. Replace the symbol name with our desired name
+            # Using negative lookahead, to make sure we only match symbol instead of matching anything else.
+            pattern = f"\$\.{symbol}(?!\w)"
+            replace_str = f"alias($.{symbol}, $.{replacement})"
+            # retStr = retStr.replace(f"$.{symbol}", f"alias($.{symbol}, $.{replacement})")
+            retStr = re.sub(pattern, replace_str, retStr)
+        
         return retStr
 
     def main(self):
@@ -88,6 +100,8 @@ class BNFParser:
             self.node_children = vinterp.node_children
             self.nodes = vinterp.nodes
 
+            self.node_replace = vinterp.node_replace
+
             # For the head and the tail, we have a predefined structure, so we are just filling it in.
             with open(self.head, 'r') as head:
                 text = head.read()
@@ -98,7 +112,7 @@ class BNFParser:
 
             with open(self.output, 'a') as file:
                 # The grammar 
-                file.write(self.buildGrammar(arr))
+                file.write(self.buildGrammar(arr, self.node_replace))
 
                 # # The additionally rules from the ontology
                 # for ont in self.mapped.values():

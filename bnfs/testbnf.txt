@@ -1,7 +1,7 @@
 <contract> ::= <start>+
 ;
 
-<start> ::= (<user> has <discount> if <negated>? <conditional>.)
+<start> CC::= (<user> has <discount> if <negated>? <conditional>.)
 ;
 
 <user> ::= <string>
@@ -10,10 +10,10 @@
 <negated> ::= (it is not true that)
 ;
 
-<discount> ::= <num>% (discount | off)?
+<discount> S::= <num>% (discount | off)?
 ;
 
-<conditional> ::= <condition1> | <condition2> | <condition3>
+<conditional> C::= <condition1> | <condition2> | <condition3>
 ;
 
 <condition1> ::= (they are a member)
