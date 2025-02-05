@@ -1,5 +1,24 @@
 [
   {
+    "type": "amount",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "num",
+          "named": true
+        },
+        {
+          "type": "string",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "clause",
     "named": true,
     "fields": {},
@@ -12,15 +31,11 @@
           "named": true
         },
         {
-          "type": "negated",
+          "type": "date",
           "named": true
         },
         {
           "type": "statement",
-          "named": true
-        },
-        {
-          "type": "user",
           "named": true
         }
       ]
@@ -31,43 +46,23 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
-          "type": "condition1",
+          "type": "date",
           "named": true
         },
         {
-          "type": "condition2",
-          "named": true
-        },
-        {
-          "type": "condition3",
+          "type": "string",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "condition1",
+    "type": "conditions",
     "named": true,
-    "fields": {}
-  },
-  {
-    "type": "condition2",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "condition3",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "contract",
-    "named": true,
-    "root": true,
     "fields": {},
     "children": {
       "multiple": true,
@@ -81,16 +76,47 @@
     }
   },
   {
-    "type": "negated",
+    "type": "contract",
     "named": true,
-    "fields": {}
+    "root": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "conditions",
+          "named": true
+        },
+        {
+          "type": "obligations",
+          "named": true
+        },
+        {
+          "type": "parties",
+          "named": true
+        },
+        {
+          "type": "signatures",
+          "named": true
+        },
+        {
+          "type": "string",
+          "named": true
+        },
+        {
+          "type": "termination",
+          "named": true
+        }
+      ]
+    }
   },
   {
-    "type": "statement",
+    "type": "date",
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
@@ -101,13 +127,47 @@
     }
   },
   {
-    "type": "user",
+    "type": "obligations",
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "clause",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "parties",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "party",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "party",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
         {
           "type": "string",
           "named": true
@@ -116,55 +176,108 @@
     }
   },
   {
-    "type": "%",
+    "type": "signatures",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "amount",
+          "named": true
+        },
+        {
+          "type": "date",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "string",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "termination",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "clause",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "$",
     "named": false
   },
   {
-    "type": ".",
+    "type": ",",
     "named": false
   },
   {
-    "type": "a",
+    "type": "-",
     "named": false
   },
   {
-    "type": "are",
+    "type": ":",
     "named": false
   },
   {
-    "type": "discount",
+    "type": "by",
     "named": false
   },
   {
-    "type": "female",
+    "type": "conditions",
     "named": false
   },
   {
-    "type": "has",
+    "type": "contract",
     "named": false
+  },
+  {
+    "type": "delivers",
+    "named": false
+  },
+  {
+    "type": "expires",
+    "named": false
+  },
+  {
+    "type": "from",
+    "named": false
+  },
+  {
+    "type": "identifier",
+    "named": true
   },
   {
     "type": "if",
-    "named": false
-  },
-  {
-    "type": "is",
-    "named": false
-  },
-  {
-    "type": "it",
-    "named": false
-  },
-  {
-    "type": "male",
-    "named": false
-  },
-  {
-    "type": "member",
-    "named": false
-  },
-  {
-    "type": "not",
     "named": false
   },
   {
@@ -172,7 +285,27 @@
     "named": true
   },
   {
-    "type": "off",
+    "type": "obligations",
+    "named": false
+  },
+  {
+    "type": "on",
+    "named": false
+  },
+  {
+    "type": "parties",
+    "named": false
+  },
+  {
+    "type": "pays",
+    "named": false
+  },
+  {
+    "type": "required",
+    "named": false
+  },
+  {
+    "type": "signatures",
     "named": false
   },
   {
@@ -180,15 +313,23 @@
     "named": true
   },
   {
-    "type": "that",
+    "type": "termination",
     "named": false
   },
   {
-    "type": "they",
+    "type": "then",
     "named": false
   },
   {
-    "type": "true",
+    "type": "upon",
+    "named": false
+  },
+  {
+    "type": "{",
+    "named": false
+  },
+  {
+    "type": "}",
     "named": false
   }
 ]

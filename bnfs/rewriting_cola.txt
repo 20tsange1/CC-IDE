@@ -61,8 +61,17 @@ R::= <ID> <holds>? <subject> <modal-verb> <verb> <object> <receiver> <date>
  ;
 
 <component-condition> 
-R::= <condition> (OR <condition>)* (AND <condition>)*
+R::= <condition> (<or> <condition>)*
+| <condition> (<and> <condition>)*
  ;
+
+<and> ::=
+AND
+;
+
+<or> ::=
+OR
+;
 
 <condition> 
 R::= <ID> <holds>? <subject> <verb-status> <object> <receiver> <date>

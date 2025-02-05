@@ -36,8 +36,8 @@ L::= <num>
 <conditional-definition> 
 ::= <definition> IF <condition>
  | IF <condition> THEN <definition>
- | <definition> IF <condition> ELSE <definition>
- | IF <condition> THEN <definition> ELSE <definition>
+ | <definition> IF <condition> <else> <definition>
+ | IF <condition> THEN <definition> <else> <definition>
  ;
 
 <statement> 
@@ -49,9 +49,13 @@ L::= <num>
 <conditional-statement> 
 ::= <statement> IF <condition>
  | IF <condition> THEN <statement>
- | <statement> IF <condition> ELSE <statement>
- | IF <condition> THEN <statement> ELSE <statement>
+ | <statement> IF <condition> <else> <statement>
+ | IF <condition> THEN <statement> <else> <statement>
  ;
+
+<else>
+::= ELSE
+;
 
 <simple-statement> 
 R::= <ID> <holds>? <subject> <modal-verb> <verb> <object> <receiver> <date>
@@ -62,8 +66,8 @@ R::= <ID> <holds>? <subject> <modal-verb> <verb> <object> <receiver> <date>
 
 <condition> 
 R::= <simple-condition>
- | <simple-condition> OR <condition>
- | <simple-condition> AND <condition>
+ | <simple-condition> or <condition>
+ | <simple-condition> and <condition>
  ;
 
 <simple-condition> 

@@ -50,10 +50,12 @@ class BNFParser:
         self.nodenames = nodenames
         # self.ontologies = ontologies
         # self.mapped = {}
-        self.node_types = []
+        self.node_types = {}
 
         self.node_children = []
         self.nodes = []
+
+        self.nodes_changed = {}
 
     def buildGrammar(self, rulesArr, replaceArr):
         """
@@ -74,11 +76,14 @@ class BNFParser:
             # Few different ways to do this.
                 # 1. Use an alias, shows up as though it is that node type
                 # 2. Replace the symbol name with our desired name
-            # Using negative lookahead, to make sure we only match symbol instead of matching anything else.
+            # Using negative lookahead, to make sure we only match symbol instead of matching anything else.    
             pattern = f"\$\.{symbol}(?!\w)"
             replace_str = f"alias($.{symbol}, $.{replacement})"
             # retStr = retStr.replace(f"$.{symbol}", f"alias($.{symbol}, $.{replacement})")
             retStr = re.sub(pattern, replace_str, retStr)
+
+            if symbol in self.node_types:
+                self.node_types[symbol] = replacement
         
         return retStr
 
@@ -95,7 +100,7 @@ class BNFParser:
             vinterp = grammarParserVisitor()
             arr = vinterp.visit(tree)
 
-            self.node_types = vinterp.node_types
+            self.node_types = {t:t for t in vinterp.node_types}
 
             self.node_children = vinterp.node_children
             self.nodes = vinterp.nodes
@@ -138,8 +143,9 @@ class BNFParser:
                     file.write('')
 
             with open(path + '/' + self.nodenames, 'w') as file:
-                for types in self.node_types:
-                    file.write(types + "\n")
+                for types, mapped in self.node_types.items():
+                    # print(types, mapped)
+                    file.write(f"{types}:{mapped}\n")
 
             print("PARSED")
 

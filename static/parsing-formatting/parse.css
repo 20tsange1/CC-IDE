@@ -1,11 +1,18 @@
-.contract { color: #000000;   }
-.start { color: #c37474; font-weight: bold; display: block; margin: 2rem; }
-.user { color: #208497; font-weight: bold;  }
-.negated { color: #85adff; font-weight: bold;  }
-.discount { color: #384cad; font-weight: bold;  }
-.conditional { color: #000000;   }
-.condition1 { color: #000000;   }
-.condition2 { color: #000000;   }
-.condition3 { color: #000000;   }
-.string { color: #000000;   }
-.num { color: #000000;   }
+.contract {   }
+.parties { color: #52807f; font-weight: bold; display: block; margin: 2rem; }
+.party { color: #010101; font-weight: bold; display: block; margin: 1rem; }
+.obligations { color: #a25757; font-weight: bold; display: block; margin: 2rem; }
+.clause { color: #030303; font-weight: bold; display: block; margin: 1rem; }
+.conditions { color: #6eaa8b; font-weight: bold; display: block; margin: 2rem; }
+.condition { color: #050505; font-weight: bold; display: block; margin: 1rem; }
+.termination { color: #ce5d55; font-weight: bold; display: block; margin: 2rem; }
+.clause { color: #050505; font-weight: bold; display: block; margin: 1rem; }
+.signatures {   }
+.amount {   }
+.date {   }
+.identifier {   }
+.string {   }
+.num {   }
+.statement {  }
+.clause {  }
+.statement {  }

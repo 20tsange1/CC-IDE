@@ -1,28 +1,48 @@
 <contract> ::= <start>+
 ;
 
-<start> CC::= (<user> has <discount> if <negated>? <conditional>.)
+<start> CC::= (<user> has <discount>.)
 ;
 
 <user> ::= <string>
 ;
 
-<negated> ::= (it is not true that)
+<negation> N::= (it is not true that)
 ;
 
-<discount> S::= <num>% (discount | off)?
+<discount> S::= <num>% (discount | off)? if <conditional>
 ;
 
-<conditional> C::= <condition1> | <condition2> | <condition3>
+<conditional_upper> B::= <bracketopen> <conditional> <bracketclose>
 ;
 
-<condition1> ::= (they are a member)
+<bracketopen> ::= [
 ;
 
-<condition2> ::= (they are male)
+<bracketclose> ::= ]
 ;
 
-<condition3> ::= (they are female)
+<conditional> ::= <conditional_upper>
+| <conditional_and>
+| <conditional_or>
+| <condition_n>
+;
+
+<conditional_and> ::= (<conditional_upper> | <condition_n>) (<and_connect> (<conditional_upper> | <condition_n>))+
+;
+
+<and_connect> A::=
+and
+;
+
+<conditional_or> ::= (<conditional_upper> | <condition_n>) (<or_connect> (<conditional_upper> | <condition_n>))+
+;
+
+<or_connect> O::=
+or
+;
+
+<condition_n> C::= <negation>? (<string>)+
 ;
 
 <string> ::= /[a-zA-Z]+/

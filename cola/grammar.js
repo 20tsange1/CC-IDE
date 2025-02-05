@@ -11,42 +11,58 @@ module.exports = grammar({
   name: "cola",
 
   rules: {
-contract: $ => (repeat1(alias($.start, $.clause))
+contract: $ => (seq('contract', repeat1($.string), '{', $.parties, $.obligations, optional($.conditions), optional($.termination), optional($.signatures), '}')
 ),
 
-start: $ => ((seq($.user, 'has', alias($.discount, $.statement), 'if', optional($.negated), alias($.conditional, $.condition), '.')
-)
+parties: $ => (seq('parties', '{', repeat1($.party), '}')
 ),
 
-user: $ => ($.string
+party: $ => (seq($.identifier, ":", repeat1($.string), ",")
 ),
 
-negated: $ => ((seq('it', 'is', 'not', 'true', 'that')
-)
+obligations: $ => (seq('obligations', '{', repeat1((alias($.obligation, $.clause)
+)), '}')
 ),
 
-discount: $ => (seq($.num, '%', optional(choice(
-	'discount'
-	,'off'
+obligation: $ => (alias($.obligate, $.statement)
+),
+
+obligate: $ => choice(
+	seq($.identifier, 'delivers', repeat1($.string), 'by', $.date, ",")
+	,seq($.identifier, 'pays', $.identifier, $.amount, 'upon', repeat1($.string), ",")
+),
+
+conditions: $ => (seq('conditions', '{', repeat1(alias($.condition_check, $.clause)), '}')
+),
+
+condition_check: $ => (seq('if', $.condition, 'then', $.statement, ',')
+),
+
+condition: $ => (seq(repeat1($.string), optional($.date))
+),
+
+statement: $ => (seq(repeat1($.string), optional($.amount))
+),
+
+termination: $ => (seq('termination', '{', repeat1(alias($.termination_clause, $.clause)), '}')
+),
+
+termination_clause: $ => choice(
+	seq('contract', 'expires', 'on', $.date, ',')
+	,seq('if', $.condition, 'then', $.statement, ',')
+),
+
+signatures: $ => (seq('signatures', 'required', 'from', $.identifier, repeat((seq(',', $.identifier)
 )))
 ),
 
-conditional: $ => choice(
-	$.condition1
-	,$.condition2
-	,$.condition3
+amount: $ => (seq('$', $.num, repeat($.string))
 ),
 
-condition1: $ => ((seq('they', 'are', 'a', 'member')
-)
+date: $ => (seq($.num, "-", $.num, "-", $.num)
 ),
 
-condition2: $ => ((seq('they', 'are', 'male')
-)
-),
-
-condition3: $ => ((seq('they', 'are', 'female')
-)
+identifier: $ => (/[a-zA-Z_][a-zA-Z0-9_]*/
 ),
 
 string: $ => (/[a-zA-Z]+/

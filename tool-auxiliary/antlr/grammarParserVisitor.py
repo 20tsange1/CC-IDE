@@ -242,6 +242,9 @@ class grammarParserVisitor(ParseTreeVisitor):
             "S": "statement",
             "D": "definition",
             "CC": "clause",
+            "B": "bracket",
+            "A": "and",
+            "O": "or",
         }
         
         
@@ -269,7 +272,7 @@ class grammarParserVisitor(ParseTreeVisitor):
         self.node_children[-1][-1].append(text)
 
         # Adding quotations to the text, so it is considered a string
-        if text[0] == text[-1] == "'":
+        if text[0] == text[-1] == "'" or text[0] == text[-1] == '"':
             return text
         else:
             return f"'{text}'"

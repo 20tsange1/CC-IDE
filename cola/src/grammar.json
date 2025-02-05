@@ -3,47 +3,37 @@
   "name": "cola",
   "rules": {
     "contract": {
-      "type": "REPEAT1",
-      "content": {
-        "type": "ALIAS",
-        "content": {
-          "type": "SYMBOL",
-          "name": "start"
-        },
-        "named": true,
-        "value": "clause"
-      }
-    },
-    "start": {
       "type": "SEQ",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "user"
-        },
-        {
           "type": "STRING",
-          "value": "has"
+          "value": "contract"
         },
         {
-          "type": "ALIAS",
+          "type": "REPEAT1",
           "content": {
             "type": "SYMBOL",
-            "name": "discount"
-          },
-          "named": true,
-          "value": "statement"
+            "name": "string"
+          }
         },
         {
           "type": "STRING",
-          "value": "if"
+          "value": "{"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "parties"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "obligations"
         },
         {
           "type": "CHOICE",
           "members": [
             {
               "type": "SYMBOL",
-              "name": "negated"
+              "name": "conditions"
             },
             {
               "type": "BLANK"
@@ -51,50 +41,438 @@
           ]
         },
         {
-          "type": "ALIAS",
-          "content": {
-            "type": "SYMBOL",
-            "name": "conditional"
-          },
-          "named": true,
-          "value": "condition"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "termination"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "signatures"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "STRING",
-          "value": "."
+          "value": "}"
         }
       ]
     },
-    "user": {
-      "type": "SYMBOL",
-      "name": "string"
-    },
-    "negated": {
+    "parties": {
       "type": "SEQ",
       "members": [
         {
           "type": "STRING",
-          "value": "it"
+          "value": "parties"
         },
         {
           "type": "STRING",
-          "value": "is"
+          "value": "{"
+        },
+        {
+          "type": "REPEAT1",
+          "content": {
+            "type": "SYMBOL",
+            "name": "party"
+          }
         },
         {
           "type": "STRING",
-          "value": "not"
-        },
-        {
-          "type": "STRING",
-          "value": "true"
-        },
-        {
-          "type": "STRING",
-          "value": "that"
+          "value": "}"
         }
       ]
     },
-    "discount": {
+    "party": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        },
+        {
+          "type": "STRING",
+          "value": ":"
+        },
+        {
+          "type": "REPEAT1",
+          "content": {
+            "type": "SYMBOL",
+            "name": "string"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ","
+        }
+      ]
+    },
+    "obligations": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "obligations"
+        },
+        {
+          "type": "STRING",
+          "value": "{"
+        },
+        {
+          "type": "REPEAT1",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "SYMBOL",
+              "name": "obligation"
+            },
+            "named": true,
+            "value": "clause"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "}"
+        }
+      ]
+    },
+    "obligation": {
+      "type": "ALIAS",
+      "content": {
+        "type": "SYMBOL",
+        "name": "obligate"
+      },
+      "named": true,
+      "value": "statement"
+    },
+    "obligate": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "identifier"
+            },
+            {
+              "type": "STRING",
+              "value": "delivers"
+            },
+            {
+              "type": "REPEAT1",
+              "content": {
+                "type": "SYMBOL",
+                "name": "string"
+              }
+            },
+            {
+              "type": "STRING",
+              "value": "by"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "date"
+            },
+            {
+              "type": "STRING",
+              "value": ","
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "identifier"
+            },
+            {
+              "type": "STRING",
+              "value": "pays"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "identifier"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "amount"
+            },
+            {
+              "type": "STRING",
+              "value": "upon"
+            },
+            {
+              "type": "REPEAT1",
+              "content": {
+                "type": "SYMBOL",
+                "name": "string"
+              }
+            },
+            {
+              "type": "STRING",
+              "value": ","
+            }
+          ]
+        }
+      ]
+    },
+    "conditions": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "conditions"
+        },
+        {
+          "type": "STRING",
+          "value": "{"
+        },
+        {
+          "type": "REPEAT1",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "SYMBOL",
+              "name": "condition_check"
+            },
+            "named": true,
+            "value": "clause"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "}"
+        }
+      ]
+    },
+    "condition_check": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "if"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "condition"
+        },
+        {
+          "type": "STRING",
+          "value": "then"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "statement"
+        },
+        {
+          "type": "STRING",
+          "value": ","
+        }
+      ]
+    },
+    "condition": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "REPEAT1",
+          "content": {
+            "type": "SYMBOL",
+            "name": "string"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "date"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "REPEAT1",
+          "content": {
+            "type": "SYMBOL",
+            "name": "string"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "amount"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "termination": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "termination"
+        },
+        {
+          "type": "STRING",
+          "value": "{"
+        },
+        {
+          "type": "REPEAT1",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "SYMBOL",
+              "name": "termination_clause"
+            },
+            "named": true,
+            "value": "clause"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "}"
+        }
+      ]
+    },
+    "termination_clause": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "contract"
+            },
+            {
+              "type": "STRING",
+              "value": "expires"
+            },
+            {
+              "type": "STRING",
+              "value": "on"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "date"
+            },
+            {
+              "type": "STRING",
+              "value": ","
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "if"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "condition"
+            },
+            {
+              "type": "STRING",
+              "value": "then"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "statement"
+            },
+            {
+              "type": "STRING",
+              "value": ","
+            }
+          ]
+        }
+      ]
+    },
+    "signatures": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "signatures"
+        },
+        {
+          "type": "STRING",
+          "value": "required"
+        },
+        {
+          "type": "STRING",
+          "value": "from"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": ","
+              },
+              {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "amount": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "$"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "num"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "string"
+          }
+        }
+      ]
+    },
+    "date": {
       "type": "SEQ",
       "members": [
         {
@@ -103,102 +481,25 @@
         },
         {
           "type": "STRING",
-          "value": "%"
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "STRING",
-                  "value": "discount"
-                },
-                {
-                  "type": "STRING",
-                  "value": "off"
-                }
-              ]
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        }
-      ]
-    },
-    "conditional": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "condition1"
+          "value": "-"
         },
         {
           "type": "SYMBOL",
-          "name": "condition2"
+          "name": "num"
+        },
+        {
+          "type": "STRING",
+          "value": "-"
         },
         {
           "type": "SYMBOL",
-          "name": "condition3"
+          "name": "num"
         }
       ]
     },
-    "condition1": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "they"
-        },
-        {
-          "type": "STRING",
-          "value": "are"
-        },
-        {
-          "type": "STRING",
-          "value": "a"
-        },
-        {
-          "type": "STRING",
-          "value": "member"
-        }
-      ]
-    },
-    "condition2": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "they"
-        },
-        {
-          "type": "STRING",
-          "value": "are"
-        },
-        {
-          "type": "STRING",
-          "value": "male"
-        }
-      ]
-    },
-    "condition3": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "they"
-        },
-        {
-          "type": "STRING",
-          "value": "are"
-        },
-        {
-          "type": "STRING",
-          "value": "female"
-        }
-      ]
+    "identifier": {
+      "type": "PATTERN",
+      "value": "[a-zA-Z_][a-zA-Z0-9_]*"
     },
     "string": {
       "type": "PATTERN",

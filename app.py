@@ -210,6 +210,8 @@ def parse_bnf():
         metadata.bnf_meta(directory, filename)
         metadata.grammar_meta(directory, filename)
         handler.reset()
+
+        outputCSS(handler.highlights, handler.pref_suf_format)
     except Exception as e:
         return jsonify({"error": f"{e}"}), 400
 
@@ -226,17 +228,21 @@ def outputCSS(highlights, formatting):
         formats = ""
         for node in highlights.keys():
 
+            node_name_actual = node
+            if node in handler.node_types:
+                node_name_actual = handler.node_types[node]
+
             if node in formatting:
                 prefix = formatting[node]["prefix"]
                 suffix = formatting[node]["suffix"]
                 inline = formatting[node]["inline"]
                 if prefix:
-                    formats += f".{node}::before {{ {prefix} }}\n"
+                    formats += f".{node_name_actual}::before {{ {prefix} }}\n"
                 if suffix:
-                    formats += f".{node}::after {{ {suffix} }}\n"
-                formats += f".{node} {{ color: {highlights[node]}; {'font-weight: bold;' if highlights[node] != '#000000' else ''} {inline} }}\n"
+                    formats += f".{node_name_actual}::after {{ {suffix} }}\n"
+                formats += f".{node_name_actual} {{ {'color: ' + highlights[node] + '; font-weight: bold;' if highlights[node] != '#000000' else ''} {inline} }}\n"
             else:
-                formats += f".{node} {{ color: {highlights[node]}; }}\n"
+                formats += f".{node_name_actual} {{ {'color: ' + highlights[node] + '; font-weight: bold;' if highlights[node] != '#000000' else ''} }}\n"
 
         file.write(formats)
 
@@ -388,7 +394,7 @@ def static_analysis():
 @app.route("/event-read")
 def event_sim_events():
     conditions = [
-        [i.identifier, i.flag, i.sentence]
+        [i.identifier, i.evaluate(), i.sentence]
         for i in static_analyser.event_simulator.conditions.values()
     ]
     states = [

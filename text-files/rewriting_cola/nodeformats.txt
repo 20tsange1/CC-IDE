@@ -1,0 +1,38 @@
+contract~~~~~~~~
+component~~~~~~display: block; margin: 2rem;~~
+component_definition~~~~~~~~
+definition~~~~~~display: block; margin: 2rem;~~
+numerical_expression~~~~~~~~
+operator~~~~~~~~
+conditional_definition~~~~~~display: block; margin: 2rem;~~
+component_statement~~~~~~~~
+conditional_statement~~~~~~display: block; margin: 2rem;~~
+else~~~~~~~~
+statement~~~~~~display: block; margin: 2rem;~~
+component_condition~~~~~~~~
+condition~~~~~~display: block; margin: 2rem;~~
+boolean_expression~~~~~~~~
+ID~~~~~~~~
+holds~~~~~~~~
+subject~~~~~~~~
+verb~~~~~~~~
+verb_status~~~~~~~~
+comparison~~~~~~~~
+equal~~~~~~~~
+more_than~~~~~~~~
+modal_verb~~~~~~~~
+obligation~~~~~~~~
+date~~~~~~~~
+temporal_quantifier~~~~~~~~
+specific_date~~~~~~~~
+temporal_offset~~~~~~~~
+month~~~~~~~~
+object~~~~~~~~
+numerical_object~~~~~~~~
+nonnumerical_object~~~~~~~~
+pounds~~~~~~~~
+dollars~~~~~~~~
+euros~~~~~~~~
+receiver~~~~~~~~
+string~~~~~~~~
+num~~~~~~~~

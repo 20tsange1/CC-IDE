@@ -1,0 +1,55 @@
+
+<contract> ::= contract <string>+ { <parties> <obligations> <conditions>? <termination>? <signatures>? }
+;
+
+<parties> ::= parties { <party>+ }
+;
+
+<party> ::= <identifier> ":" <string>+ ","
+;
+
+<obligations> ::= obligations { (<obligation>)+ }
+;
+<obligation> CC::= <obligate>
+;
+
+<obligate> S::= <identifier> delivers <string>+ by <date> "," |
+                 <identifier> pays <identifier> <amount> upon <string>+ ","
+;
+
+<conditions> ::= conditions { <condition_check>+ }
+;
+
+<condition_check> CC::= if <condition> then <statement>,
+;
+
+<condition> ::= <string>+ <date>?
+;
+
+<statement> ::= <string>+ <amount>?
+;
+
+
+<termination> ::= termination { <termination_clause>+ }
+;
+
+<termination_clause> CC::= contract expires on <date>, |
+                         if <condition> then <statement>,
+;
+
+<signatures> ::= signatures required from <identifier> (, <identifier>)*
+;
+
+<amount> ::= $ <num> <string>*
+;
+
+<date> ::= <num>"-"<num>"-"<num>
+;
+<identifier> ::= /[a-zA-Z_][a-zA-Z0-9_]*/
+;
+
+<string> ::= /[a-zA-Z]+/
+ ;
+
+<num> ::= /[0-9]+/
+ ;

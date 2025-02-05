@@ -14,31 +14,46 @@ class Condition:
     def __repr__(self):
         return self.identifier + " --- " + str(self.flag)
 
+    def evaluate(self):
+        return self.flag
+
+
 class Statement:
-    def __init__(self, identifier, sentence, ifelse):
+    def __init__(self, identifier, sentence, if_else, and_or):
         self.identifier = identifier
-        self.sentence = sentence # The actual phrase behind it.
+        self.sentence = sentence
         self.conditions = []
-        self.ifelse = ifelse # True = Else, False = Not Else
+        self.if_else = if_else
+        self.and_or = and_or # AND = TRUE, OR = FALSE
 
     def __repr__(self):
         return self.identifier + " --- " + str(self.evaluate())
-        # return self.identifier + " --- " + str(self.evaluate()) + "---" + str(self.conditions)
-    
-    def evaluate(self):
-        flag = True
-        for e in self.conditions:
-            flag = flag and e.flag
 
-        if self.ifelse: # True when not ALL ANDs. 
+    def evaluate(self):
+        flag = False
+
+        if self.and_or:
+            # When it is an AND
+            flag = True
+            for c in self.conditions:
+                flag = flag and c.evaluate()
+        else:
+            # When it is an OR
+            flag = False
+            for c in self.conditions:
+                flag = flag or c.evalute()
+        
+        if self.if_else:
             return not flag
         else:
             return flag
 
+
+
 handler = Handler()
 
 parseString = ""
-with open("contracts/testContract.txt", "r") as file:
+with open("contracts/discount_v1.txt", "r") as file:
     parseString = file.read()
 
 
@@ -63,7 +78,7 @@ For this example, we will contain it to just clauses with conditions and stateme
 Our first move is to find out what are the conditions, what are the statements, and what links to what.
 """
 
-mapper = {"statement": "S", "definition": "D", "condition": "C", "else":"E"}
+mapper = {"statement": "S", "definition": "D", "condition": "C", "else":"E", "bracket":"B"}
 
 clause_arr = []
 
@@ -83,10 +98,16 @@ def explore(node):
         if c.type in mapper:
             mapped = mapper[c.type]
 
-            if mapped == "C":
+            if mapped == "B":
+                clause_arr.append([[], []])
+                explore(c)
+                state = Statement(str(c.id), c.text.decode("utf8"), if_else=False, and_or=True)
+                state.conditions =  clause_arr.pop()[0]
+                clause_arr[-1][0].append(state)
+            elif mapped == "C":
                 clause_arr[-1][0].append(Condition(str(c.id), c.text.decode("utf8")))
             elif mapped == "S" or mapped == "D":
-                state = Statement(str(c.id), c.text.decode("utf8"), len(clause_arr[-1]) == 3)
+                state = Statement(str(c.id), c.text.decode("utf8"), len(clause_arr[-1]) == 3, and_or=True)
                 clause_arr[-1][-1].append(state)
                 state.conditions = clause_arr[-1][0]
             elif mapped == "E":
@@ -100,9 +121,11 @@ find_clauses(handler.parse_tree)
 conditions = {}
 state_def = {}
 
-for clauses in clause_arr:
-    
+for clauses in clause_arr:    
+
+    # print(clauses)
     for c in clauses[0]:
+        # print(c)
         conditions[c.identifier] = c
 
     for s in clauses[1]:
@@ -112,10 +135,10 @@ for clauses in clause_arr:
         for e in clauses[2]:
             state_def[e.identifier] = e
 
-print(clause_arr)
+# print(clause_arr)
 
-# clause_arr[2][0][0].flag = True
-# clause_arr[2][0][1].flag = True
+# # clause_arr[2][0][0].flag = True
+# # clause_arr[2][0][1].flag = True
 
 print(clause_arr)
 

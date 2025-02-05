@@ -52,6 +52,21 @@ For example, statements can be displayed with blocks, making it more clear to th
 Additionally, the formatting has been swapped to being language-specific, allowing you to swap between different styles for different languages.
 
 
+## Logical Operators
+
+Evaluation of logical operators have been added, allowing us to consider the conditions within a clause, flagging them as true or false. In turn, we then evaluate the conditions that build up a (set of) statements and evaluate the statement itself.
+
+
+Semantics should be in the non-terminals.
+
+You can define multiple things as statements / conditions / clauses. It allows you to have greater flexibility, while assinging semantics.
+
+
+
+
+##
+Time. How do we represent time, translate into a "universal time"?
+
 ## Current Challenges?
 
 How do we simulate events? 
@@ -63,6 +78,22 @@ What is the purpose of developing a language server?
 How can we leverage tree-sitter to create a LSP alternative, providing the same features without needed the setup?
 
 Does HTML work in every case? Where might it not work?
+
+How can we check if grammars are equivalent or a subset of another? Checking parents?
+
+
+
+
+Interesting things that came up.
+
+Definitions, you need to be able to define certain things. Types, so on. And check for it.
+
+Indentations for associativity of AND / OR? Implicit or explicit, bracket or no bracket.
+
+Functions?
+
+JL4, what are they doing? How are they handling each section?
+
 
 # Glossary
 

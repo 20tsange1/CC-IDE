@@ -61,13 +61,19 @@ class Handler:
         node_formats_path = "nodeformats.txt"
 
         # For the different node types
-        self.node_types = []
+        # TYPE:MAPPING
+        self.node_types = {}
         if os.path.isfile(grammar_info_path + node_types_path):
             with open(grammar_info_path + node_types_path, "r") as file:
                 for lines in file.readlines():
-                    self.node_types.append(lines.strip())
+                    line = lines.split(":")
+                    if len(line) > 1:
+                        self.node_types[line[0]] = line[1].strip()
+                    else:
+                        self.node_types[line[0]] = line[0]
         
         # For mapping auto suggestions, based on previous node, parent node and current node/text
+        #(CHILD,CHILDPREV,CURRENT)
         self.mapper = {}
         if os.path.isfile(grammar_info_path + node_map_path):
             with open(grammar_info_path + node_map_path, "r") as file:
@@ -139,6 +145,8 @@ class Handler:
 
         self.node_types = bnfparser.node_types
         self.nodes = bnfparser.nodes
+
+        self.nodes_changed = bnfparser.nodes_changed
 
         self.autosuggestion(grammar_name)
 
@@ -259,7 +267,7 @@ class Handler:
                     finalarr.append(f'<b style="color:{colour};">')
 
                 if node.parent:
-                    finalarr.append(f'{text}')
+                    finalarr.append(f'<span class="{node.type}">{text} </span>')
 
 
     def nodeAddTextEnd(self, node, finalarr):
