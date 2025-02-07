@@ -13,6 +13,11 @@ termination_clause:clause
 signatures:signatures
 amount:amount
 date:date
+day:day
+month:month
+year:year
 identifier:identifier
 string:string
+_character:_character
 num:num
+_numSingle:_numSingle

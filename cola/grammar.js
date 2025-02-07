@@ -11,58 +11,235 @@ module.exports = grammar({
   name: "cola",
 
   rules: {
-contract: $ => (seq('contract', repeat1($.string), '{', $.parties, $.obligations, optional($.conditions), optional($.termination), optional($.signatures), '}')
-),
-
-parties: $ => (seq('parties', '{', repeat1($.party), '}')
-),
-
-party: $ => (seq($.identifier, ":", repeat1($.string), ",")
-),
-
-obligations: $ => (seq('obligations', '{', repeat1((alias($.obligation, $.clause)
-)), '}')
-),
-
-obligation: $ => (alias($.obligate, $.statement)
-),
-
-obligate: $ => choice(
-	seq($.identifier, 'delivers', repeat1($.string), 'by', $.date, ",")
-	,seq($.identifier, 'pays', $.identifier, $.amount, 'upon', repeat1($.string), ",")
-),
-
-conditions: $ => (seq('conditions', '{', repeat1(alias($.condition_check, $.clause)), '}')
-),
-
-condition_check: $ => (seq('if', $.condition, 'then', $.statement, ',')
-),
-
-condition: $ => (seq(repeat1($.string), optional($.date))
-),
-
-statement: $ => (seq(repeat1($.string), optional($.amount))
-),
-
-termination: $ => (seq('termination', '{', repeat1(alias($.termination_clause, $.clause)), '}')
-),
-
-termination_clause: $ => choice(
-	seq('contract', 'expires', 'on', $.date, ',')
-	,seq('if', $.condition, 'then', $.statement, ',')
-),
-
-signatures: $ => (seq('signatures', 'required', 'from', $.identifier, repeat((seq(',', $.identifier)
+contract: $ => (seq(alias($.component, $.clause), repeat((seq('C-AND', alias($.component, $.clause))
 )))
 ),
 
-amount: $ => (seq('$', $.num, repeat($.string))
+component: $ => choice(
+	$.component_definition
+	,$.conditional_definition
+	,$.component_statement
+	,$.conditional_statement
 ),
 
-date: $ => (seq($.num, "-", $.num, "-", $.num)
+component_definition: $ => (seq($.definition, repeat((seq('AND', $.definition)
+)))
 ),
 
-identifier: $ => (/[a-zA-Z_][a-zA-Z0-9_]*/
+definition: $ => choice(
+	seq($.ID, $.subject, 'IS', $.subject)
+	,seq($.ID, $.subject, 'EQUALS', $.numerical_expression)
+),
+
+numerical_expression: $ => prec.left(choice(
+	$.num
+	,$.numerical_object
+	,seq($.numerical_expression, $.operator, $.numerical_expression)
+)),
+
+operator: $ => choice(
+	'PLUS'
+	,'MINUS'
+	,'TIMES'
+	,'DIVIDE'
+),
+
+conditional_definition: $ => choice(
+	seq($.component_definition, 'IF', $.component_condition)
+	,seq('IF', $.component_condition, 'THEN', $.component_definition)
+	,seq($.component_definition, 'IF', $.component_condition, $.else, $.component_definition)
+	,seq('IF', $.component_condition, 'THEN', $.component_definition, $.else, $.component_definition)
+),
+
+component_statement: $ => (seq($.statement, repeat((seq('AND', $.statement)
+)), repeat((seq('OR', $.statement)
+)))
+),
+
+conditional_statement: $ => choice(
+	seq($.component_statement, 'IF', $.condition)
+	,seq('IF', $.component_condition, 'THEN', $.component_statement)
+	,seq($.component_statement, 'IF', $.component_condition, $.else, $.component_statement)
+	,seq('IF', $.component_condition, 'THEN', $.component_statement, $.else, $.component_statement)
+),
+
+else: $ => (choice(
+	'ELSE'
+	,'OTHERWISE'
+)
+),
+
+statement: $ => prec.right(choice(
+	seq($.ID, optional($.holds), $.subject, $.modal_verb, $.verb, $.object, $.receiver, $.date)
+	,seq($.ID, optional($.holds), $.subject, $.date, $.modal_verb, $.verb, $.object, $.receiver)
+	,seq($.ID, optional($.holds), $.date, $.subject, $.modal_verb, $.verb, $.object, $.receiver)
+	,seq($.ID, optional($.holds), $.subject, $.verb_status, $.object, $.receiver, $.date)
+)),
+
+component_condition: $ => prec.right(choice(
+	seq($.condition, repeat((seq($.or, $.condition)
+)))
+	,seq($.condition, repeat((seq($.and, $.condition)
+)))
+)),
+
+and: $ => ('AND'
+),
+
+or: $ => ('OR'
+),
+
+condition: $ => prec.right(choice(
+	seq($.ID, optional($.holds), $.subject, $.verb_status, $.object, $.receiver, $.date)
+	,seq($.ID, optional($.holds), $.subject, $.date, $.verb_status, $.object, $.receiver)
+	,seq($.ID, optional($.holds), $.date, $.subject, $.verb_status, $.object, $.receiver)
+	,seq($.ID, optional($.holds), $.subject, $.modal_verb, $.verb, $.object, $.receiver, $.date)
+	,seq($.ID, optional($.holds), $.boolean_expression)
+)),
+
+boolean_expression: $ => (seq($.subject, $.verb_status, $.comparison, $.subject)
+),
+
+ID: $ => prec.right(choice(
+	seq('[', $.num, ']')
+	,seq('[', $.num, ($.num
+), ']')
+)),
+
+holds: $ => choice(
+	seq('it', 'is', 'the', 'case', 'that')
+	,seq('it', 'is', 'not', 'the', 'case', 'that')
+),
+
+subject: $ => ($.string
+),
+
+verb: $ => choice(
+	'deliver'
+	,'pay'
+	,'charge'
+	,'refund'
+),
+
+verb_status: $ => choice(
+	'delivered'
+	,'paid'
+	,'charged'
+	,'refunded'
+),
+
+comparison: $ => choice(
+	seq('less', 'than')
+	,$.equal
+	,$.more_than
+),
+
+equal: $ => choice(
+	'equals'
+	,seq('equal', 'to')
+),
+
+more_than: $ => choice(
+	seq('more', 'than')
+	,seq('greater', 'than')
+),
+
+modal_verb: $ => choice(
+	$.obligation
+	,'may'
+	,seq('is', 'forbidden', 'to')
+),
+
+obligation: $ => choice(
+	'shall'
+	,'must'
+),
+
+date: $ => choice(
+	$.specific_date
+	,seq('on', 'ANYDATE')
+	,seq('on', 'SOMEDATE', $.subject)
+	,seq('on', 'THEDATE', $.subject)
+	,seq($.temporal_quantifier, $.num, $.month, $.num)
+	,seq($.temporal_quantifier, 'SOMEDATE', $.subject)
+	,seq($.temporal_quantifier, 'THEDATE', $.subject)
+	,seq($.temporal_offset, $.temporal_quantifier, 'SOMEDATE', $.subject)
+	,seq($.temporal_offset, $.temporal_quantifier, 'THEDATE', $.subject)
+	,seq($.temporal_quantifier, $.temporal_offset, $.temporal_quantifier, 'SOMEDATE', $.subject)
+	,seq($.temporal_quantifier, $.temporal_offset, $.temporal_quantifier, 'THEDATE', $.subject)
+),
+
+temporal_quantifier: $ => choice(
+	'before'
+	,'after'
+),
+
+specific_date: $ => choice(
+	seq('on', 'the', $.num, $.month, $.num)
+	,seq('on', $.num, $.month, $.num)
+),
+
+temporal_offset: $ => choice(
+	seq($.num, 'day')
+	,seq($.num, 'week')
+	,seq($.num, 'year')
+	,seq($.num, 'days')
+	,seq($.num, 'weeks')
+	,seq($.num, 'years')
+),
+
+month: $ => choice(
+	'January'
+	,'February'
+	,'March'
+	,'April'
+	,'May'
+	,'June'
+	,'July'
+	,'August'
+	,'September'
+	,'October'
+	,'November'
+	,'December'
+),
+
+object: $ => choice(
+	$.numerical_object
+	,$.nonnumerical_object
+),
+
+numerical_object: $ => choice(
+	seq($.pounds, $.num)
+	,seq($.dollars, $.num)
+	,seq($.euros, $.num)
+	,seq('AMOUNT', $.subject)
+),
+
+nonnumerical_object: $ => choice(
+	seq('SOMECURRENCY', $.string)
+	,seq('REPORT', $.string)
+	,seq('NAMEDOBJECT', $.string)
+	,seq('OTHEROBJECT', $.string)
+),
+
+pounds: $ => choice(
+	'GBP'
+	,'POUNDS'
+	,'quid'
+),
+
+dollars: $ => choice(
+	'USD'
+	,'DOLLARS'
+	,'buck'
+),
+
+euros: $ => choice(
+	'EUR'
+	,'EUROS'
+),
+
+receiver: $ => (seq('to', $.subject)
 ),
 
 string: $ => (/[a-zA-Z]+/

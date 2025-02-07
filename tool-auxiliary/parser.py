@@ -7,6 +7,8 @@ from grammarParserLexer import grammarParserLexer
 from grammarParserParser import grammarParserParser
 from grammarParserVisitor import grammarParserVisitor
 
+from antlr4.error.ErrorListener import *
+
 import os
 import re
 
@@ -20,7 +22,33 @@ class Component:
     def __repr__(self):
         return self.name
 
+
 # Need to add left recursive, add a flag, maybe L::=
+
+# https://stackoverflow.com/questions/62301218/antlr4-python-in-unittest-how-to-abort-on-any-error
+
+# https://stackoverflow.com/questions/32224980/python-2-7-antlr4-make-antlr-throw-exceptions-on-invalid-input
+
+class ANTLRParsingError(Exception):
+    """Custom exception for ANTLR parsing errors."""
+    def __init__(self, message, line=None, column=None):
+        self.message = message
+        self.line = line
+        self.column = column
+        super().__init__(self.__str__())
+
+    def __str__(self):
+        if self.line is not None and self.column is not None:
+            return f"ANTLR Parsing Error at line {self.line}, column {self.column}: {self.message}"
+        return f"ANTLR Parsing Error: {self.message}"
+
+class MyErrorListener(ErrorListener):
+
+    def __init__(self):
+        super(MyErrorListener, self).__init__()
+
+    def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
+        raise ANTLRParsingError(msg, line, column)
 
 
 class BNFParser:
@@ -57,57 +85,8 @@ class BNFParser:
 
         self.nodes_changed = {}
 
-    def buildGrammar(self, rulesArr, replaceArr):
-        """
-        Building a grammar recursively.
-        Constructs the complete grammar structure from an array of rules.
-
-        Args:
-            rulesArr (list): List of tuples containing symbol, recursiveness, and rules.
-
-        Returns:
-            str: The constructed grammar structure.
-        """
-        retStr = ""
-        for rule in rulesArr:
-            retStr += rule + "\n\n"
-
-        for symbol, replacement in replaceArr:
-            # Few different ways to do this.
-                # 1. Use an alias, shows up as though it is that node type
-                # 2. Replace the symbol name with our desired name
-            # Using negative lookahead, to make sure we only match symbol instead of matching anything else.    
-            pattern = f"\$\.{symbol}(?!\w)"
-            replace_str = f"alias($.{symbol}, $.{replacement})"
-            # retStr = retStr.replace(f"$.{symbol}", f"alias($.{symbol}, $.{replacement})")
-            retStr = re.sub(pattern, replace_str, retStr)
-
-            if symbol in self.node_types:
-                self.node_types[symbol] = replacement
-        
-        return retStr
-
-    def main(self):
-        # input_stream = FileStream("bnf.txt")
-        input_stream = FileStream(self.fileName)
-        lexer = grammarParserLexer(input_stream)
-        stream = CommonTokenStream(lexer)
-        parser = grammarParserParser(stream)
-        tree = parser.gram()
-        if parser.getNumberOfSyntaxErrors() > 0:
-            print("syntax errors")
-        else:
-            vinterp = grammarParserVisitor()
-            arr = vinterp.visit(tree)
-
-            self.node_types = {t:t for t in vinterp.node_types}
-
-            self.node_children = vinterp.node_children
-            self.nodes = vinterp.nodes
-
-            self.node_replace = vinterp.node_replace
-
-            # For the head and the tail, we have a predefined structure, so we are just filling it in.
+    def outputTextFiles(self, arr):
+        # For the head and the tail, we have a predefined structure, so we are just filling it in.
             with open(self.head, 'r') as head:
                 text = head.read()
             with open(self.output, 'w') as file:
@@ -146,6 +125,67 @@ class BNFParser:
                 for types, mapped in self.node_types.items():
                     # print(types, mapped)
                     file.write(f"{types}:{mapped}\n")
+
+    def buildGrammar(self, rulesArr, replaceArr):
+        """
+        Building a grammar recursively.
+        Constructs the complete grammar structure from an array of rules.
+
+        Args:
+            rulesArr (list): List of tuples containing symbol, recursiveness, and rules.
+
+        Returns:
+            str: The constructed grammar structure.
+        """
+        retStr = ""
+        for rule in rulesArr:
+            retStr += rule + "\n\n"
+
+        for symbol, replacement in replaceArr:
+            # Few different ways to do this.
+                # 1. Use an alias, shows up as though it is that node type
+                # 2. Replace the symbol name with our desired name
+            # Using negative lookahead, to make sure we only match symbol instead of matching anything else.    
+            pattern = f"\$\.{symbol}(?!\w)"
+            replace_str = f"alias($.{symbol}, $.{replacement})"
+            # retStr = retStr.replace(f"$.{symbol}", f"alias($.{symbol}, $.{replacement})")
+            retStr = re.sub(pattern, replace_str, retStr)
+
+            if symbol in self.node_types:
+                self.node_types[symbol] = replacement
+        
+        return retStr
+
+    def main(self):
+        # input_stream = FileStream("bnf.txt")
+        input_stream = FileStream(self.fileName)
+
+        lexer = grammarParserLexer(input_stream)
+        lexer.removeErrorListeners()
+        lexer.addErrorListener(MyErrorListener())
+
+        stream = CommonTokenStream(lexer)
+
+        parser = grammarParserParser(stream)
+        parser.removeErrorListeners()
+        parser.addErrorListener(MyErrorListener())
+
+        tree = parser.gram()
+
+        if parser.getNumberOfSyntaxErrors() > 0:
+            print("syntax errors")
+        else:
+            vinterp = grammarParserVisitor()
+            arr = vinterp.visit(tree)
+
+            self.node_types = {t:t for t in vinterp.node_types}
+
+            self.node_children = vinterp.node_children
+            self.nodes = vinterp.nodes
+
+            self.node_replace = vinterp.node_replace
+
+            self.outputTextFiles(arr)
 
             print("PARSED")
 

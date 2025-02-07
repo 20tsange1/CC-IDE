@@ -262,7 +262,8 @@ class grammarParserVisitor(ParseTreeVisitor):
     # Visit a parse tree produced by grammarParserParser#strings.
     def visitStrings(self, ctx:grammarParserParser.StringsContext):
         """
-        strings: QUOTE WORD* QUOTE
+        strings: QUOTE (WORD | othersymbol)* QUOTE
+            | SINGLEQUOTE (WORD | othersymbol)* SINGLEQUOTE
             | WORD
             ;
         """
@@ -276,6 +277,24 @@ class grammarParserVisitor(ParseTreeVisitor):
             return text
         else:
             return f"'{text}'"
+
+    # Visit a parse tree produced by grammarParserParser#othersymbol.
+    def visitOthersymbol(self, ctx:grammarParserParser.OthersymbolContext):
+        """
+        othersymbol: OPENBRACKET
+            | CLOSEBRACKET
+            | SPLITTER
+            | CHEVRON
+            | ICHEVRON
+            | QUESTION
+            | PLUS
+            | STAR
+            | SEMICOLON
+            | COLON
+            | SLASH
+            ;
+        """
+        return ctx.getText()
 
 
 

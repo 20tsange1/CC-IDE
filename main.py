@@ -123,7 +123,10 @@ class Handler:
             tail="text-files/tail.txt", 
             ontologies=ontology
             )
-        bnfparser.main()
+        try:
+            bnfparser.main()
+        except Exception as e:
+            raise e
 
         # self.edit used as an iterator for version number
         if os.path.isfile(f"build/my-language{self.edit}.so"):
@@ -131,15 +134,25 @@ class Handler:
 
         # Runs subprocess to execute tree-sitter commands in shell. Need to throw correct error
         
-        commands = "cd cola; tree-sitter generate; tree-sitter build -o cola; cd .."
-        process = subprocess.Popen(commands, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        commands_gen = "cd cola; tree-sitter generate"
+        process = subprocess.Popen(commands_gen, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         (out, err) = process.communicate()
         # Error handling in the case that we have issues
         # Need to redo this, be a lil more specific.
         if err:
-            raise Exception("""Issue generating grammar. Please ensure you have followed the syntax for defining a grammar. If defining recursiveness of your rules:
-            'L::=' - Left Recursive
-            'R::=' - Right Recursive""") 
+            # Right now imperfect but works, throws the tree-sitter error back.
+            raise Exception(err.decode("utf-8"))
+            
+            # raise Exception("""Issue generating grammar. Please ensure you have followed the syntax for defining a grammar. If defining recursiveness of your rules:
+            # 'L::=' - Left Recursive
+            # 'R::=' - Right Recursive""") 
+
+        commands_build = "cd cola; tree-sitter build -o cola"
+        process = subprocess.Popen(commands_build, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        (out, err) = process.communicate()
+        if err:
+            raise Exception(err.decode("utf-8"))
+            
 
         self.edit += 1
 

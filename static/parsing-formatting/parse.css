@@ -1,18 +1,40 @@
 .contract {   }
-.parties { color: #52807f; font-weight: bold; display: block; margin: 2rem; }
-.party { color: #010101; font-weight: bold; display: block; margin: 1rem; }
-.obligations { color: #a25757; font-weight: bold; display: block; margin: 2rem; }
-.clause { color: #030303; font-weight: bold; display: block; margin: 1rem; }
-.conditions { color: #6eaa8b; font-weight: bold; display: block; margin: 2rem; }
-.condition { color: #050505; font-weight: bold; display: block; margin: 1rem; }
-.termination { color: #ce5d55; font-weight: bold; display: block; margin: 2rem; }
-.clause { color: #050505; font-weight: bold; display: block; margin: 1rem; }
-.signatures {   }
-.amount {   }
+.clause {  display: block; margin: 2rem; }
+.component_definition {   }
+.definition {  display: block; margin: 2rem; }
+.numerical_expression {   }
+.operator {   }
+.conditional_definition {  display: block; margin: 2rem; }
+.component_statement {   }
+.conditional_statement {  display: block; margin: 2rem; }
+.else {   }
+.statement {  display: block; margin: 2rem; }
+.component_condition {   }
+.condition {  display: block; margin: 2rem; }
+.boolean_expression {   }
+.ID {   }
+.holds {   }
+.subject {   }
+.verb {   }
+.verb_status {   }
+.comparison {   }
+.equal {   }
+.more_than {   }
+.modal_verb {   }
+.obligation {   }
 .date {   }
-.identifier {   }
+.temporal_quantifier {   }
+.specific_date {   }
+.temporal_offset {   }
+.month {   }
+.object {   }
+.numerical_object {   }
+.nonnumerical_object {   }
+.pounds {   }
+.dollars {   }
+.euros {   }
+.receiver {   }
 .string {   }
 .num {   }
-.statement {  }
-.clause {  }
-.statement {  }
+.and {  }
+.or {  }

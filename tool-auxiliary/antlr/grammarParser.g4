@@ -44,8 +44,22 @@ otter: OTTER
     | WORD? OTTER
     ;
     
-strings: (QUOTE | SINGLEQUOTE) (.*?) (QUOTE | SINGLEQUOTE)
+strings: QUOTE (WORD | othersymbol)* QUOTE
+    | SINGLEQUOTE (WORD | othersymbol)* SINGLEQUOTE
     | WORD
+    ;
+    
+othersymbol: OPENBRACKET
+    | CLOSEBRACKET
+    | SPLITTER
+    | CHEVRON
+    | ICHEVRON
+    | QUESTION
+    | PLUS
+    | STAR
+    | SEMICOLON
+    | COLON
+    | SLASH
     ;
 
 regex: SLASH WORD SLASH

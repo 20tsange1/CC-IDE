@@ -1,10 +1,13 @@
 <contract> ::= <start>+
 ;
 
-<start> CC::= (<user> has <discount>.)
+<start> CC::= ((<user> | <name>) has <discount>.)
 ;
 
-<user> ::= <string>
+<user> P7::= <string>
+;
+
+<name> ::= <string>
 ;
 
 <negation> N::= (it is not true that)

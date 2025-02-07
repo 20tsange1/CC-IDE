@@ -97,28 +97,38 @@ applyBtn.addEventListener('click', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ filename, content, path: pathname })
     })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message) {
-                // Parse the file content
-                fetch('/parse-bnf', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ filename, path: pathname, ont: 'text-files' })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                            alert(data.message || 'Error parsing file');
-                            getNodeTypesColour();
-                            getNodeTypesFormat();
-                        })
-                            .catch(error => console.error('Error parsing file:', error));
-                    } else {
-                        alert('Error saving file');
-                    }
-        })
-        .catch(error => console.error('Error saving file:', error));
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert(`Error saving file: ${data.error}`);
+            return;
+        }
+
+        // If saving was successful, proceed to parse the file
+        return fetch('/parse-bnf', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ filename, path: pathname, ont: 'text-files' })
+        });
+    })
+    .then(response => response ? response.json() : null)
+    .then(data => {
+        if (data) {
+            if (data.error) {
+                alert(`Error parsing file: ${data.error}`);
+            } else {
+                alert(data.message);
+            }
+            getNodeTypesColour();
+            getNodeTypesFormat();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert(`An error occurred: ${error.message}`);
+    });
 });
+
 
 // Delete a file from the server
 deleteBtn.addEventListener('click', () => {
