@@ -1,0 +1,80 @@
+start~~~~~~~~
+_action_only~~~~~~~~
+playbook~~~~~~~~
+play~~~~~~display: block; margin: 2rem;~~
+returns~~~~~~~~
+_action_holder~~~~~~~~
+offensive_action~~~~~~display: block; margin: 1rem;~~
+defensive_action~~~~~~display: block; margin: 1rem;~~
+special_action~~~~~~display: block; margin: 1rem;~~
+shoot~~~~~~~~
+shoot_type~~~~~~~~
+pass~~~~~~~~
+pass_type~~~~~~~~
+screen~~~~~~~~
+dribble~~~~~~~~
+dribble_move~~~~~~~~
+cut~~~~~~~~
+cut_type~~~~~~~~
+post_up~~~~~~~~
+block~~~~~~~~
+steal~~~~~~~~
+contest~~~~~~~~
+switch~~~~~~~~
+double_team~~~~~~~~
+foul~~~~~~~~
+timeout~~~~~~~~
+location~~~~~~~~
+_frontcourt~~~~~~~~
+_backcourt~~~~~~~~
+_wing~~~~~~~~
+_corner~~~~~~~~
+_paint~~~~~~~~
+_post~~~~~~~~
+player_def~~~~~~display: block; margin: 1rem;~~
+player_name~~~~~~~~
+player_personals~~~~~~display: block; margin: 1rem;~~
+player_attributes~~~~~~display: block; margin: 1rem;~~
+attribute_category~~~~~~display: block; margin: 1rem;~~
+attribute~~~~~~display: block; margin: 1rem;~~
+calculate~~~~~~display: block; margin: 1rem;~~
+calculation_holder~~~~~~display: block; margin: 1rem;~~
+calculation_variable~~~~~~display: block; margin: 1rem;~~
+calculation_expression~~~~~~~~
+_calculation_line~~~~~~~~
+_calculate_higher_precedence~~~~~~~~
+_calculate_lower_precedence~~~~~~~~
+calculation_bracket~~~~~~~~
+_calculation_values~~~~~~~~
+attribute_access~~~~~~~~
+evaluate~~~~~~display: block; margin: 1rem;~~
+evaluation_holder~~~~~~~~
+evaluation_function~~~~~~display: block; margin: 1rem;~~
+function_chain~~~~~~display: block; margin: 1rem;~~
+team~~~~~~display: block; margin: 1rem;~~
+team_holder~~~~~~display: block; margin: 1rem;~~
+conditional~~~~~~display: block; margin: 1rem;~~
+condition~~~~~~~~
+negate_condition~~~~~~~~
+sub_condition~~~~~~~~
+compare~~~~~~~~
+comparator~~~~~~~~
+_comparison_values~~~~~~~~
+player_location~~~~~~display: block; margin: 1rem;~~
+setup~~~~~~display: block; margin: 1rem;~~
+setup_holder~~~~~~~~
+ball_holder~~~~~~~~
+player~~~~~~~~
+name~~~~~~~~
+player_identifier~~~~~~~~
+opponent_identifier~~~~~~~~
+identifier~~~~~~~~
+array_access~~~~~~~~
+string~~~~~~~~
+_string_first_capitalised~~~~~~~~
+string_capitalised~~~~~~~~
+float~~~~~~~~
+bool~~~~~~~~
+_num~~~~~~~~
+num~~~~~~~~
+_digit~~~~~~~~

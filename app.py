@@ -5,6 +5,7 @@ sys.path.append("tool-visualisations/")
 sys.path.append("tool-analysis/")
 sys.path.append("tool-auxiliary/")
 sys.path.append("tool-auxiliary/antlr/")
+sys.path.append("tool-auxiliary/time/")
 
 # For building webapp and making sure content is safe.
 from flask import Flask, render_template, request, jsonify, render_template_string
@@ -18,6 +19,11 @@ from visualiser import Visualiser
 from ontology import Ontology
 from metadata import MetaData
 
+# For Testing and Validation
+from time_test import TimeTest
+from time_override import TimeOverride
+from datetime import datetime
+
 # Necessary
 import os
 
@@ -28,9 +34,11 @@ dynamic_analyser = DynamicAnalysis()
 static_analyser = StaticAnalysis()
 visualiser = Visualiser()
 metadata = MetaData()
+time_tester = TimeTest()
 
 CONTRACT_FILES_DIR = "contracts"  # Directory to store contracts
 TEXT_FILES_DIR = "text-files"  # Directory to store text files
+AUXILIARY_FILES_DIR = "tool-auxiliary"
 BNF_DIR = "bnfs"
 
 # ------------
@@ -276,7 +284,7 @@ def submit_format_options():
 
     outputCSS(handler.highlights, handler.pref_suf_format)
 
-    with open(f"text-files/{handler.grammar_name}/nodeformats.txt", "w") as file:
+    with open(f"{TEXT_FILES_DIR}/{handler.grammar_name}/nodeformats.txt", "w") as file:
         formats = ""
         for node, formatting in formatting_options.items():
             prefix = formatting["prefix"]
@@ -318,6 +326,29 @@ def get_node_types_format():
     # print(node_types)
     return jsonify(node_types)
 
+@app.route("/submit-file-upload", methods=["POST"])
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part"}), 400
+    
+    file = request.files['file']
+    
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+
+    if file:
+        file_path = os.path.join(AUXILIARY_FILES_DIR, "time", "time_override.py")
+        file.save(file_path)
+
+        t = TimeOverride()
+
+        if not time_tester.test_suite(t):
+            return jsonify({"error": "Override failed"}), 400
+        else:
+            print("PASSED TEST")
+
+        return jsonify({"message": "File uploaded successfully", "filename": "time.py"}), 200
+
 
 # ------------
 # Visualisation Page
@@ -346,7 +377,7 @@ def file_draw():
 
 
 # ------------
-# Home Page
+# Display Page
 # ------------
 
 

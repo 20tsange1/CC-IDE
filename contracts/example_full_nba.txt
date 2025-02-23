@@ -1,0 +1,117 @@
+// First Player
+PERSON Lebron James @ {
+
+    INFORMATION
+        Height: 2.06m
+        Weight: 113.0kg
+        Wingspan: 2.14m
+        Age: 40years
+
+    ATTRIBUTES
+        HANDLING
+        (
+            ball_handling: 0.95%
+            passing: 0.78%
+        )
+
+        SHOOTING
+        (
+            layup: 0.672%
+            three_point_shot: 0.350%
+        )
+}
+
+// Second Player
+PERSON Luka Doncic @ {
+
+    INFORMATION
+        Height: 2.01m
+        Weight: 104.3kg
+        Wingspan: 2.14m
+        Age: 25 years
+
+    ATTRIBUTES
+        HANDLING
+        (
+            ball_handling: 0.95
+            passing: 0.90
+        )
+
+        SHOOTING
+        (
+            layup: 0.672
+            three_point_shot: 0.347
+        )
+}
+
+// Third Player
+PERSON Austin Reaves @ {
+
+    INFORMATION
+        Height: 1.96m
+        Weight: 89.8kg
+        Wingspan: 2.03m
+        Age: 26 years
+
+    ATTRIBUTES
+        HANDLING
+        (
+            ball_handling: 0.85
+            passing: 0.75
+        )
+
+        SHOOTING
+        (
+            layup: 0.60
+            three_point_shot: 0.366
+        )
+}
+
+// Team Declaration
+TEAM la_lakers (Lebron James @, Luka Doncic @, Austin Reaves @)
+
+// Play Declaration
+PLAY pass_shoot with On Ball, Off Ball {
+	On Ball pass (chest) to Off Ball
+	Off Ball shoot (layup)
+}
+
+// Play Declaration
+PLAY pass_pass with Point Guard, Small Forward, Center {
+	Point Guard pass (chest) to Small Forward
+	Small Forward pass (bounce) to Center
+	BALL Center
+}
+
+// Pass Calculation
+CALCULATE PASS with On Ball, Off Ball {
+	on_ball = On Ball.passing * 0.37;
+	receiver = Off Ball.ball_handling * 0.85;
+	RETURN on_ball * receiver;
+}
+
+// Shot Calculation
+CALCULATE SHOOT with On Ball {
+    RETURN On Ball.layup;
+}
+
+// Overriding Play Calculation
+CALCULATE pass_pass {
+    RETURN 1.0;
+}
+
+//Setting up the court
+SETUP with la_lakers {
+la_lakers[0] at Top of Key
+la_lakers[1] at Elbow Left
+la_lakers[2] at Elbow Right
+BALL Lebron James @
+}
+
+// Evaluation of play
+EVAL with Lebron James @, la_lakers {
+    pass_shoot(
+        pass_pass(la_lakers), 
+        Lebron James @
+        )
+}

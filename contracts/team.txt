@@ -1,0 +1,9 @@
+TEAM lebron (Lebron James @)
+
+TEAM la_lakers (Lebron James @, Luca Doncic @, Austin Reaves @)
+
+TEAM la_lakers_bench (Dalton Knecht @, Cam Reddish @, Maxi Kleber@)
+
+TEAM bucks (!Giannis @, !Dame @)
+
+TEAM lakers_bucks_matchup (Lebron @, !Giannis @)

@@ -29,13 +29,13 @@
             <h2>Edit File</h2>
             <textarea id="fileContent" placeholder="File content will appear here..." rows="20" cols="100"></textarea>
             <div>
-                <button id="saveBtn">Save</button>
-                <button id="applyBtn">Save & Apply</button>
-                <button id="deleteBtn">Delete</button>
+                <button class="saveBtn" id="saveBtn">Save</button>
+                <button class="applyBtn" id="applyBtn">Save & Apply</button>
+                <button class="deleteBtn" id="deleteBtn">Delete</button>
             </div>
             <div>
                 <input type="text" id="createName"></input>
-                <button id="createBtn">Create</button>
+                <button class="createBtn" id="createBtn">Create</button>
             </div>
         </div>
     </div>
@@ -63,6 +63,17 @@
                 <!-- Dynamic formatting entries will be added here -->
             </div>
             <button type="button" id="saveFormatsBtn" style="display: none">Save Format</button>
+        </div>
+    </div>
+
+
+    <h1 id="center">Time Override</h1>
+    <div id="container">
+        <div id="timeOverride">
+            <input type="file" id="fileInput">
+            <button onclick="uploadFile()" class="applyBtn">Upload</button>
+
+            <p id="status"></p>
         </div>
     </div>
 

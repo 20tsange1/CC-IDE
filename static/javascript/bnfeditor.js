@@ -355,3 +355,32 @@ saveFormatsBtn.addEventListener('click', () => {
         })
         .catch(error => console.error('Error saving formats:', error));
 });
+
+
+
+// Upload the time file
+function uploadFile() {
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+
+    if (!file) {
+        document.getElementById('status').innerText = "No file selected!";
+        return;
+    }
+
+    let formData = new FormData();
+    formData.append('file', file);
+
+    fetch('/submit-file-upload', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('status').innerText = data.message || data.error;
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        document.getElementById('status').innerText = "Upload failed!";
+    });
+}

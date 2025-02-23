@@ -267,16 +267,23 @@ class grammarParserVisitor(ParseTreeVisitor):
             | WORD
             ;
         """
-        text = ctx.getText()
+        text = [i.getText() for i in ctx.children]
 
-        # NODEMAP
-        self.node_children[-1][-1].append(text)
+        
 
         # Adding quotations to the text, so it is considered a string
         if text[0] == text[-1] == "'" or text[0] == text[-1] == '"':
-            return text
+            
+            # NODEMAP
+            self.node_children[-1][-1].append(' '.join(text[1:-1]))
+            
+            return '"' + ' '.join(text[1:-1]) + '"'
         else:
-            return f"'{text}'"
+            
+            # NODEMAP
+            self.node_children[-1][-1].append(' '.join(text))
+
+            return f"'{' '.join(text)}'"
 
     # Visit a parse tree produced by grammarParserParser#othersymbol.
     def visitOthersymbol(self, ctx:grammarParserParser.OthersymbolContext):

@@ -1,0 +1,106 @@
+PERSON Lebron James @ {
+
+INFORMATION
+Height: 2.06m
+Weight: 113.0kg
+Wingspan: 2.14m
+Age: 40years
+
+ATTRIBUTES
+HANDLING
+(
+ball_handling: 0.95%
+passing: 0.85%
+dribbling: 0.85%
+)
+
+
+SHOOTING
+(
+layup: 0.672%
+paint: 0.672%
+mid_range: 0.411%
+three_point_shot: 0.350%
+free_throw: 0.736%
+)
+
+
+
+DEFENSE
+(
+steal: 0.30%
+block: 0.20%
+)
+
+
+
+REBOUND
+(
+offensive_rebounding: 0.75%
+defensive_rebounding: 0.75%
+box_out: 0.95%
+)
+
+CHARACTERISTICS (
+lefthandedness: true
+)
+
+}
+
+
+PERSON Lebron James @ {
+
+INFORMATION
+Height: 2.06m
+Weight: 113.0kg
+Wingspan: 2.14m
+Age: 40years
+
+ATTRIBUTES
+}
+
+
+
+PERSON Lebron James @ {
+
+INFORMATION
+Height: 2.06m
+Weight: 113.0kg
+Wingspan: 2.14m
+Age: 40years
+
+ATTRIBUTES
+HANDLING
+(
+ball_Handling: 0.95%
+passing: 0.85%
+dribbling: 0.85%
+)
+}
+
+PERSON Lebron James @ {
+
+INFORMATION
+    Height: 2.06
+    Weight: 113.0
+    Wingspan: 2.14
+    Age: 40
+
+ATTRIBUTES
+HANDLING
+(
+left_handed: true
+)
+}
+
+
+PERSON Lebron James @ {
+
+INFORMATION
+    Height: 2.06
+    Weight: 113.0
+    Wingspan: 2.14
+    Age: 40
+
+ATTRIBUTES
+}

@@ -1,4 +1,11 @@
+<report> ::= ("["(<trade_report> | <player_report> | <game_report>)"]")+
+;
+
+<trade_report> ::= <num>"-way trade" <trade> (and <trade>)*
+;
+
 <trade> ::= <team_name> <trade_keyword> <trade_content> "to" <team_name>
+| <team_name> <receives_keyword> <trade_content> "from" <team_name>
 ;
 
 <trade_content> ::= <player_name> | <object>
@@ -9,6 +16,53 @@
 
 <receives_keyword> ::= "receive" | "gain" | "acquire" | "get"
 ;
+
+
+<player_report> ::= <player_name> "of the" <team_name> <player_stats>? <player_particulars>?
+;
+
+<player_stats> ::= "Stats:" <player_ppg>"," <player_rpg>"," <player_apg>
+;
+
+<player_particulars> ::= "Particulars:" <player_height>"," <player_weight>"," <player_birth_date>"," <player_age>"," <player_draft_year>
+;
+
+<player_ppg> ::= <num>"."<num>
+;
+
+<player_rpg> ::= <num>"."<num>
+;
+
+<player_apg> ::= <num>"."<num>
+;
+
+<player_height> ::= <num>"."<num>"m"
+;
+
+<player_weight> ::= <num>"."<num>"kg"
+;
+
+<player_birth_date> ::= <date>
+;
+
+<player_age> ::= <num>
+;
+
+<player_draft_year> ::= <year> <draft_pick_round>?
+;
+
+<game_report> ::= <team_name> "vs" <team_name> <score> <attendance>?
+;
+
+<score> R5::= "Score:" <num> "-" <num> (<score_breakdown>+)?
+;
+
+<score_breakdown> R4::= "Q1:" <num> "-" <num> | "Q2:" <num> "-" <num> | "Q3:" <num> "-" <num> | "Q4:" <num> "-" <num>
+;
+
+<attendance> ::= "Attendance:" <num>
+;
+
 
 <team_name> ::= <team_conference>
 ;
@@ -22,42 +76,42 @@
 <western_conference> ::= <northwest> | <pacific> | <southwest>
 ;
 
-<atlantic> ::= ("Boston" "Celtics"?) | ("Boston"? "Celtics")  
+<atlantic> R5::= ("Boston" "Celtics"?) | ("Boston"? "Celtics")  
             | ("Brooklyn" "Nets"?) | ("Brooklyn"? "Nets")  
             | ("New York" "Knicks"?) | ("New York"? "Knicks")  
             | ("Philadelphia" "76ers"?) | ("Philadelphia"? "76ers")  
             | ("Toronto" "Raptors"?) | ("Toronto"? "Raptors")  
 ;  
 
-<central> ::= ("Chicago" "Bulls"?) | ("Chicago"? "Bulls")  
+<central> R5::= ("Chicago" "Bulls"?) | ("Chicago"? "Bulls")  
             | ("Cleveland" "Cavaliers"?) | ("Cleveland"? "Cavaliers")  
             | ("Detroit" "Pistons"?) | ("Detroit"? "Pistons")  
             | ("Indiana" "Pacers"?) | ("Indiana"? "Pacers")  
             | ("Milwaukee" "Bucks"?) | ("Milwaukee"? "Bucks")  
 ;  
 
-<southeast> ::= ("Atlanta" "Hawks"?) | ("Atlanta"? "Hawks")  
+<southeast> R5::= ("Atlanta" "Hawks"?) | ("Atlanta"? "Hawks")  
               | ("Charlotte" "Hornets"?) | ("Charlotte"? "Hornets")  
               | ("Miami" "Heat"?) | ("Miami"? "Heat")  
               | ("Orlando" "Magic"?) | ("Orlando"? "Magic")  
               | ("Washington" "Wizards"?) | ("Washington"? "Wizards")  
 ;  
 
-<northwest> ::= ("Denver" "Nuggets"?) | ("Denver"? "Nuggets")  
+<northwest> R5::= ("Denver" "Nuggets"?) | ("Denver"? "Nuggets")  
               | ("Minnesota" "Timberwolves"?) | ("Minnesota"? "Timberwolves")  
               | ("Oklahoma City" "Thunder"?) | ("Oklahoma City"? "Thunder")  
               | ("Portland" "Trail Blazers"?) | ("Portland"? "Trail Blazers")  
               | ("Utah" "Jazz"?) | ("Utah"? "Jazz")  
 ;  
 
-<pacific> ::= ("Golden State" "Warriors"?) | ("Golden State"? "Warriors")  
+<pacific> R5::= ("Golden State" "Warriors"?) | ("Golden State"? "Warriors")  
             | ("LA" "Clippers"?) | ("LA"? "Clippers")  
             | ("Los Angeles" "Lakers"?) | ("Los Angeles"? "Lakers")  
             | ("Phoenix" "Suns"?) | ("Phoenix"? "Suns")  
             | ("Sacramento" "Kings"?) | ("Sacramento"? "Kings")  
 ;  
 
-<southwest> ::= ("Dallas" "Mavericks"?) | ("Dallas"? "Mavericks")  
+<southwest> R5::= ("Dallas" "Mavericks"?) | ("Dallas"? "Mavericks")  
               | ("Houston" "Rockets"?) | ("Houston"? "Rockets")  
               | ("Memphis" "Grizzlies"?) | ("Memphis"? "Grizzlies")  
               | ("New Orleans" "Pelicans"?) | ("New Orleans"? "Pelicans")  
@@ -67,8 +121,30 @@
 <player_name> ::= <string> <string>?
 ;
 
-<object> ::= "Cash"
+<object> ::= <draft_pick> | <pick_swap> | <cash> | <cap_space>
 ;
+
+<draft_pick> ::= <draft_pick_protect>? <draft_pick_round> "Pick"
+;
+
+<draft_pick_protect> ::= "Protected" | "Unprotected" | "Lottery Protected"
+;
+
+<draft_pick_round> ::= "First Round" | "Second Round"
+;
+
+<pick_swap> ::= <pick_swap_condition> "Swap"
+;
+
+<pick_swap_condition> ::= "Conditional" | "Unconditional"
+;
+
+<cash> P5::= "$"<num>.<_numSingle><_numSingle>
+;
+
+<cap_space> P4::= "$"<num>.<_numSingle><_numSingle> "Cap-space"?
+;
+
 
 <date> ::= <day>"-"<month>"-"<year>
 | <year>"-"<month>"-"<day>
@@ -92,7 +168,7 @@
 <_character> ::= /[a-zA-Z]/
 ;
 
-<num> R::= <_numSingle>+
+<num> R3::= <_numSingle>+
  ;
 
 <_numSingle> ::= /[0-9]/

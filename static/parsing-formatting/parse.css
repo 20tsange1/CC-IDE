@@ -1,40 +1,24 @@
 .contract {   }
 .clause {  display: block; margin: 2rem; }
-.component_definition {   }
-.definition {  display: block; margin: 2rem; }
-.numerical_expression {   }
-.operator {   }
-.conditional_definition {  display: block; margin: 2rem; }
-.component_statement {   }
-.conditional_statement {  display: block; margin: 2rem; }
-.else {   }
-.statement {  display: block; margin: 2rem; }
-.component_condition {   }
-.condition {  display: block; margin: 2rem; }
-.boolean_expression {   }
-.ID {   }
-.holds {   }
-.subject {   }
-.verb {   }
-.verb_status {   }
-.comparison {   }
-.equal {   }
-.more_than {   }
-.modal_verb {   }
-.obligation {   }
-.date {   }
-.temporal_quantifier {   }
-.specific_date {   }
-.temporal_offset {   }
-.month {   }
-.object {   }
-.numerical_object {   }
-.nonnumerical_object {   }
-.pounds {   }
-.dollars {   }
-.euros {   }
-.receiver {   }
+.user { color: #208497; font-weight: bold;  }
+.negation { color: #d67171; font-weight: bold;  }
+.statement { color: #384cad; font-weight: bold;  }
+.bracket {  display: block; margin: 2rem; }
+.bracketopen {  display: none; }
+.bracketclose {  display: none; }
+.conditional {   }
+.conditional_and { color: #187b1a; font-weight: bold;  }
+.and {   }
+.conditional_or { color: #919d53; font-weight: bold;  }
+.or {   }
+.condition { color: #050505; font-weight: bold; display: block; margin: 1rem; }
 .string {   }
 .num {   }
-.and {  }
-.or {  }
+.name {  }
+.time_holder {  }
+._pre_time {  }
+.time {  }
+.day {  }
+.month {  }
+.year {  }
+._numSingle {  }

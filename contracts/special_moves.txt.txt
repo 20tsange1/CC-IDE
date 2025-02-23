@@ -1,0 +1,11 @@
+Point Guard fouls ! Point Guard
+
+Point Guard intentionally fouls ! Point Guard
+
+Point Guard calls timeout
+
+Paul George @ fouls ! Kawhi Leonard @
+
+Paul George @ intentionally fouls ! Kawhi Leonard @
+
+Paul George @ calls timeout

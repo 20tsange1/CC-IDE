@@ -266,6 +266,7 @@ class Handler:
 
     
     def nodeAddText(self, node, finalarr):
+        # print(len(node.children), node)
         if node:
             # In the case of no children, this means that the node a terminal (leaf) node.
             if node.children:
@@ -280,7 +281,12 @@ class Handler:
                     finalarr.append(f'<b style="color:{colour};">')
 
                 if node.parent:
-                    finalarr.append(f'<span class="{node.type}">{text} </span>')
+                    if node.type in self.node_types and node.type != text:
+                        finalarr.append(f'<span class="{node.type}">{text} </span>')
+                    else:
+                        finalarr.append(f'{text} ')
+                else:
+                    finalarr.append(f'{text} ')
 
 
     def nodeAddTextEnd(self, node, finalarr):

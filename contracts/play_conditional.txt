@@ -1,0 +1,65 @@
+IF [true AND true] {
+}
+
+IF [true OR false] {
+}
+
+IF true {
+}
+
+IF NOT true {
+}
+
+IF NOT [true] {
+}
+
+IF [[true AND true] OR [true]] {
+}
+
+IF true {
+}
+OTHERWISE {
+}
+
+IF 0.5 == 0.7 {
+}
+
+IF 0.5 == On Ball.three_point_shot {
+}
+
+IF 0.5 == wind_speed {
+}
+
+IF 0.5 == 5 {
+}
+
+
+IF 0.5 >= 0.7 {
+}
+
+IF 0.5 <= 0.7 {
+}
+
+IF 0.5 = 0.7 {
+}
+
+IF 0.5 < 0.7 {
+}
+
+IF 0.5 > 0.7 {
+}
+
+IF Point Guard at Top of Key {
+}
+
+IF [true] {
+Luka Doncic @ pass to Lebron James@
+Lebron James @ shoot
+}
+
+IF [true] {
+Lebron James @ shoot
+}
+OTHERWISE {
+Luka Doncic @ shoot
+}

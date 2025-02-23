@@ -1,7 +1,7 @@
 <contract> ::= <start>+
 ;
 
-<start> CC::= ((<user> | <name>) has <discount>.)
+<start> CC::= ((<user> | <name>) has <discount> <time_holder>?.)
 ;
 
 <user> P7::= <string>
@@ -48,8 +48,30 @@ or
 <condition_n> C::= <negation>? (<string>)+
 ;
 
+<time_holder> ::= <_pre_time> <time>
+;
+
+<_pre_time> ::= "on" "the"?
+;
+
+<time> ::= <day>"-"<month>"-"<year>
+| <year>"-"<month>"-"<day>
+;
+
+<day> ::= "1st" | "2nd" | "3rd" | "4th" | "5th" | "6th" | "7th" | "8th" | "9th" | "10th" | "11th" | "12th" | "13th" | "14th" | "15th" | "16th" | "17th" | "18th" | "19th" | "20th" | "21st" | "22nd" | "23rd" | "24th" | "25th" | "26th" | "27th" | "28th" | "29th" | "30th" | "31st" | <_numSingle><_numSingle>
+;
+
+<month> ::= "January" | "February" | "March" | "April" | "May" | "June" | "July" | "August" | "September" | "October" | "November" | "December" | <_numSingle><_numSingle>
+;
+
+<year> ::= <_numSingle><_numSingle><_numSingle><_numSingle>
+;
+
 <string> ::= /[a-zA-Z]+/
  ;
 
 <num> ::= /[0-9]+/
+ ;
+
+<_numSingle> ::= /[0-9]/
  ;

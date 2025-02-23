@@ -20,8 +20,10 @@ A definition is a declaration, or shortening of some known value. Often used as 
 
 e.g "Party 1" is "Bob's Fishing Company", "Party 2" is "Bob's Shelling Company"
 
+Could put types.
+
 ### Condition
-Elements or actions that must be fulfilled / made true (or false) in order for the contract to be valid, or in some cases, require an action to be carried out. Often, this will be a prerequisite / precedent for a clause to be triggered. 
+Elements or actions that must be fulfilled / made true (or false) in order for the clause to be valid, or in some cases, require an action to be carried out. Often, this will be a prerequisite / precedent for a clause to be triggered. 
 
 e.g "If Alice paid Bob $200 Then ..."
 
@@ -29,6 +31,15 @@ e.g "If Alice paid Bob $200 Then ..."
 An event has to do with the actions that end up happening, and is what is considered for the fulfilment / triggering of a clause.
 
 "Bob paid Alice $200" -> Triggers the delivery clause.
+
+Something observable. In some cases, you may not observe the action, but may observe the consequence.
+
+"Company A registered in England" "Company B then registers in Scotland" Registration is the action, but the observation is that they are registered elsewhere.
+
+### Representation + Warranty
+Representation about past up to point of signing, warranty is for future.
+
+"Party B warrants that they will always be registered in Wales" -> We need to check for "Party B is not registered in England or Scotland" (Huge problem)
 
 ### Logical Operators
 Logical operators are used within contracts to signify the combination and dependency of conditions.
@@ -47,11 +58,15 @@ The group or person that is on each respective side of a contract. Often, one pa
 
 e.g "Party A is Alice", "Party B is Bob" -> "Party A is engaging with Party B in the delivery of 20 pallets of water"
 
+"Deed" for contract with one party. One party promising to do something and being legally bound to do it.
+
 ### Responsibility
 Definition of what each party is required to do in order to carry out the contract / under the agreement. Outlines expectations, deadlines and deliverables. What action items have to be carried out. Usually signified through the use of modal verbs.
 
 ### Modality (Modal Verbs)
 For representing that something must be, shouldn't be, or may be done.
+
+Diontic Logic
 
 #### Obligation
 An action that must be done.
@@ -94,6 +109,15 @@ Regards how a contract can be ended and how this can be achieved. Usually a type
 ### Time
 Time has to be universal or translatable to some known computable time. This allows us to add in dynamic elements or events within the program, driving forward a time based implementation of simulation.
 
-This is attuned towards having a way to translate a grammars format of time into a standard time system, such as DD/MM/YYYY.
+This is attuned towards having a way to translate a grammar's format of time into a standard time system, such as DD/MM/YYYY.
 
 e.g 6th January 2025 -> 06/01/2025, the latter of which is processable by the program.
+
+The idea behind time is to make a class that developers will have to override, similar to that in Java. By doing so, we ensure that there is an equivalent time representation that can be understood by the program.
+
+We would have a symbol <time> and the text under that non-terminal will be evaluated as a whole string (or as a subtree of an AST).
+
+We also need a two way conversion, from and to the universal time to the developer's time.
+
+
+What happens when we want to add a month? 28 days? 31 days? Leap year?

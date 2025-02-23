@@ -1,4 +1,5 @@
 from tree_sitter import Language, Parser
+from time_override import TimeOverride
 
 class DynamicAnalysis:
     """
@@ -25,6 +26,7 @@ class DynamicAnalysis:
     """
 
     def __init__(self):
+        self.t = TimeOverride()
         pass
 
     def error_analyser(self, parse_tree):
@@ -51,6 +53,10 @@ class DynamicAnalysis:
                     count += 1
                 
                 total += 1
+            
+                if node and node.type == "time":
+                    print(self.t.evaluate_time_str(node.text.decode("utf-8")))
+                    print(self.t.evaluate_time_tree(node))
 
         return int((1 - (count / (total))) * 100) if total > 0 else 0
 

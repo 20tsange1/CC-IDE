@@ -1,0 +1,310 @@
+<start> ::= (<playbook> | <_action_only> | <player_def> | <calculate> | <evaluate> | <team> | <conditional> | <setup>)*
+;
+
+<_action_only> ::= <offensive_action> | <defensive_action> | <special_action>
+;
+
+<playbook> R::= (<play>)+
+;
+
+<play> ::= "PLAY" <identifier> ("with" <player_identifier> ("," <player_identifier>)*)? <_action_holder>
+;
+
+<returns> ::= "BALL" <player_identifier>
+;
+
+<_action_holder> ::= "{" (<conditional> | <offensive_action> | <defensive_action> | <special_action> )* <returns>? "}"
+;
+
+<offensive_action> ::= (<shoot> | <pass> | <screen> | <dribble> | <cut> | <post_up>)
+;
+
+<defensive_action> ::= (<block> | <steal> | <contest> | <switch> | <double_team>)
+;
+
+<special_action> ::= (<foul> | <timeout>)
+;
+
+
+
+
+
+<shoot> ::= (<player> | <player_identifier>) "shoot" <shoot_type>?
+;
+
+<shoot_type> ::= "(" ("layup" | "dunk" | "jumper" | "step-back" | "floater" | "fadeaway" | "pull-up" | "bank-shot" ) ")"
+;
+
+<pass> ::= <player> "pass" <pass_type>? "to" <player>
+| <player_identifier> "pass" <pass_type>? "to" <player_identifier>
+;
+
+<pass_type> ::= "(" ("bounce" | "lob" | "chest" | "behind-the-back" | "no-look" | "through") ")"
+;
+
+<screen> ::= <player> "set screen" "for" <player> ("at" <location>)?
+| <player_identifier> "set screen" "for" <player_identifier> ("at" <location>)?
+;
+
+
+<dribble> ::= <player> "dribble" <dribble_move>? "to" <location>
+| <player_identifier> "dribble" <dribble_move>? "to" <location>
+;
+
+<dribble_move> ::= "(" ("crossover" | "hesitation" | "spin-move" | "behind-the-back" | "in-and-out") ")"
+;
+
+<cut> ::= <player> "cut" <cut_type>? "to" <location>
+| <player_identifier> "cut" <cut_type>? "to" <location>
+;
+
+<cut_type> ::= "(" ("backdoor" | "flare" | "curl" | "fade") ")"
+;
+
+<post_up> ::= <player> "post up" "at" <location>
+| <player_identifier> "post up" "at" <location>
+;
+
+
+
+
+
+
+
+<block> ::= <player> "block" "shot" "by" <player>
+| <player_identifier> "block" "shot" "by" <player_identifier>
+;
+
+<steal> ::= <player> "steal" "from" <player>
+| <player_identifier> "steal" "from" <player_identifier>
+;
+
+<contest> ::= <player> "contest" "shot" "by" <player>
+| <player_identifier> "contest" "shot" "by" <player_identifier>
+;
+
+<switch> ::= <player> "switch" "onto" <player>
+| <player_identifier> "switch" "onto" <player_identifier>
+;
+
+<double_team> ::= <player> "double team" "on" <player> ("with" <player>)?
+| <player_identifier> "double team" "on" <player_identifier> ("with" <player_identifier>)?
+;
+
+
+
+
+<foul> P2::= <player> "intentionally"? "fouls" <player>
+| <player_identifier> "intentionally"? "fouls" <player_identifier>
+;
+
+<timeout> ::= <player> "calls timeout"
+| <player_identifier> "calls timeout"
+;
+
+
+
+
+
+
+
+
+<location> ::= <_frontcourt> | <_backcourt> | <_wing> | <_corner> | <_paint> | <_post>
+;
+
+<_frontcourt> ::= "Top of Key" | "Free Throw Line" | "Elbow Left" | "Elbow Right"
+;
+
+<_backcourt> ::= "Half Court" | "Backcourt" | "Logo"
+;
+
+<_wing> ::= "Left Wing" | "Right Wing"
+;
+
+<_corner> ::= "Left Corner" | "Right Corner"
+;
+
+<_paint> ::= "Restricted Area" | "Paint" | "Low Block"
+;
+
+<_post> ::= "Low Post" | "High Post"
+;
+
+
+
+
+<player_def> ::= "PERSON" <player_name> "{" <player_personals> <player_attributes>? "}"
+;
+
+<player_name> ::= <player>
+;
+
+<player_personals> ::= "INFORMATION"
+"Height" ":"? (<float> | <num>) "m"?
+"Weight" ":"? (<float> | <num>)"kg"?
+"Wingspan" ":"? (<float> | <num>) "m"?
+"Age" ":"? <num> "years"?
+;
+
+<player_attributes> ::= "ATTRIBUTES" <attribute_category>* 
+;
+
+<attribute_category> ::= <string_capitalised>
+"(" <attribute>+ ")"
+;
+
+<attribute> ::= (<identifier> ":"? (<float> | <bool>) "%"?)
+;
+
+
+
+<calculate> ::= CALCULATE (<string_capitalised> | <identifier>) ("with" <player_identifier> ("," <player_identifier>)*)? <calculation_holder>
+;
+
+<calculation_holder> ::= "{"
+<calculation_variable>*
+"RETURN" (<calculation_expression>) ";"
+"}"
+;
+
+<calculation_variable> ::= <identifier> ("+" | "-" | "/" | "*")? "=" <calculation_expression> ";"
+;
+
+<calculation_expression> ::= <_calculation_values> | <calculation_bracket> | <_calculation_line>
+;
+
+<_calculation_line> ::=  (<_calculate_higher_precedence> |  <_calculate_lower_precedence>)
+;
+
+<_calculate_higher_precedence> L2::= <calculation_expression> ("*" | "/" | "%" | "//" | "**") <calculation_expression>
+;
+
+<_calculate_lower_precedence> L1::= <calculation_expression> ("+" | "-") <calculation_expression>
+;
+
+<calculation_bracket> P3::= "(" <calculation_expression> ")"
+;
+
+<_calculation_values> P3::= ( <attribute_access> | <float> | <num> | <identifier> )
+;
+
+<attribute_access> P1::= <player_identifier>"."<identifier>
+;
+
+
+
+
+
+<evaluate> ::= EVAL ("with" (<player> | <identifier> <array_access>?) ("," (<player> | <identifier> <array_access>?))*)? <evaluation_holder>
+;
+
+<evaluation_holder> ::= "{" <evaluation_function>* "}"
+;
+
+<evaluation_function> ::=  <function_chain> | <_action_only>
+;
+
+<function_chain> ::= (<identifier> "(" (((<player> | <identifier> <array_access>?) | <function_chain>) ("," (<player> | <function_chain>))*)? ")")
+;
+
+
+
+<team> ::= TEAM <identifier> "(" <team_holder> ")"
+;
+
+<team_holder> ::= <player> ("," <player>)*
+;
+
+
+
+<conditional> ::= 
+"IF" <condition> "{" 
+(<_action_only> | <conditional> )*
+"}" 
+("OTHERWISE" 
+"{" 
+(<_action_only> | <conditional> )*
+"}")?
+;
+
+<condition> ::=  <negate_condition>
+| <sub_condition>
+| <compare>
+;
+
+<negate_condition> ::= "NOT" <condition>
+;
+
+<sub_condition> ::= "[" <condition> ("AND" <condition>)* "]" 
+| "[" <condition> ("OR" <condition>)* "]"
+;
+
+<compare> ::= <_comparison_values> (<comparator> <_comparison_values>)*
+;
+
+<comparator> ::= (">" | "<" | "=")"="?
+;
+
+<_comparison_values> ::= ( <_calculation_values> | <bool> | <player_location>)
+;
+
+<player_location> ::= <player> "at" <location>
+| <player_identifier> "at" <location>
+| <identifier> <array_access>? "at" <location>
+;
+
+
+
+
+<setup> ::= "SETUP" ("with" (<player> | <identifier> <array_access>?) ("," (<player> | <identifier> <array_access>?))*)? <setup_holder>
+;
+
+<setup_holder> ::= "{" <player_location>* <ball_holder> "}"
+;
+
+<ball_holder> ::= "BALL" (<player> | <identifier> <array_access>?)
+;
+
+
+<player> P4::= <opponent_identifier>? <name> @
+;
+
+<name> ::=  <_string_first_capitalised>+
+;
+
+
+<player_identifier> P6::= <opponent_identifier>? ("Point Guard" | "Shooting Guard" | "Small Forward" | "Power Forward" | "Center" | "Ball Handler" | "On Ball" | "Off Ball") 
+;
+
+<opponent_identifier> ::= "!"
+;
+
+
+
+
+<identifier> ::= /[a-z_][a-zA-Z0-9_]*/
+;
+
+<array_access> ::= "[" ( <num> | (("-"? <num>)? (":" ("-"? <num>)?)? ) ) "]"
+;
+
+<string> ::= /[a-zA-Z_]+/
+;
+
+<_string_first_capitalised> ::= /[A-Z_][a-zA-Z_]*/
+;
+
+<string_capitalised> ::= /[A-Z_][A-Z_]*/
+;
+
+<float> ::= <num>"."<num>
+;
+
+<bool> ::= "true" | "false"
+;
+
+<_num> R::= /[0-9]+/
+;
+
+<num> R::= /[0-9]+/
+;

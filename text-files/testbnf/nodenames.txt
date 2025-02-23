@@ -13,5 +13,12 @@ and_connect:and
 conditional_or:conditional_or
 or_connect:or
 condition_n:condition
+time_holder:time_holder
+_pre_time:_pre_time
+time:time
+day:day
+month:month
+year:year
 string:string
 num:num
+_numSingle:_numSingle

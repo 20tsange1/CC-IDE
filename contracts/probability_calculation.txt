@@ -1,0 +1,34 @@
+CALCULATE PASS {
+    RETURN Point Guard.passing;
+}
+
+CALCULATE PASS {
+    RETURN predefined;
+}
+
+
+CALCULATE PASS {
+    RETURN 0;
+}
+
+
+CALCULATE PASS {
+    RETURN 0.0;
+}
+
+
+CALCULATE SHOOT with Point Guard {
+point_guard = Point Guard.shooting * 0.37;
+RETURN 0.0;
+}
+
+CALCULATE SHOOT with Point Guard {
+point_guard = (2.0) + (Point Guard.shooting + 2.0 * 2.0) * 1.0;
+RETURN point_guard;
+}
+
+CALCULATE PASS with Point Guard, Shooting Guard{
+point_guard = Point Guard.passing * 0.37;
+shooting_guard = Shooting Guard.ball_handling * 0.85;
+RETURN 0.0;
+}

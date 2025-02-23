@@ -1,0 +1,47 @@
+EVAL {
+pass_shoot()
+}
+
+EVAL {
+pass_shoot(pass_pass())
+}
+
+
+EVAL {
+pass_shoot(Luca Doncic @, pass_pass())
+}
+
+EVAL {
+pass_shoot(pass_pass(), Luca Doncic @)
+}
+
+EVAL {
+pass_shoot(Luca Doncic @, luca_magic(Luca Doncic @))
+}
+
+EVAL with Lebron James @{
+    pass_shoot(Lebron James @)
+}
+
+EVAL{
+    Lebron James @ shoot
+}
+
+
+EVAL with Lebron James @{
+    Lebron James @ shoot
+}
+
+EVAL with la_lakers{
+    pass_shoot(la_lakers)
+}
+
+EVAL {
+Luca Doncic @ pass to Lebron James @
+Lebron James @ shoot
+}
+
+EVAL {
+pass_pass()
+pass_shoot()
+}
