@@ -1,7 +1,7 @@
 <contract> ::= <start>+
 ;
 
-<start> CC::= ((<user> | <name>) has <discount> <time_holder>?.)
+<start> CC::= ((<user> | <name>) has <discount>.)
 ;
 
 <user> P7::= <string>
@@ -13,7 +13,7 @@
 <negation> N::= (it is not true that)
 ;
 
-<discount> S::= <num>% (discount | off)? if <conditional>
+<discount> S::= <num>% (discount | off)? if <conditional> 
 ;
 
 <conditional_upper> B::= <bracketopen> <conditional> <bracketclose>
@@ -45,7 +45,7 @@ and
 or
 ;
 
-<condition_n> C::= <negation>? (<string>)+
+<condition_n> C::= <negation>? (<string>)+ <time_holder>?
 ;
 
 <time_holder> ::= <_pre_time> <time>

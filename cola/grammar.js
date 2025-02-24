@@ -22,7 +22,7 @@ contract: $ => (repeat1(alias($.start, $.clause))
 start: $ => ((seq(choice(
 	$.user
 	,$.name
-), 'has', alias($.discount, $.statement), optional($.time_holder), '.')
+), 'has', alias($.discount, $.statement), '.')
 )
 ),
 
@@ -85,7 +85,7 @@ or_connect: $ => ('or'
 ),
 
 condition_n: $ => (seq(optional($.negation), repeat1(($.string
-)))
+)), optional($.time_holder))
 ),
 
 time_holder: $ => (seq($._pre_time, $.time)

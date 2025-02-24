@@ -12,3 +12,8 @@ class StaticAnalysis:
     
     def simulate(self, parse_tree):
         self.event_simulator.event_simulation(parse_tree)
+
+        # print(self.event_simulator.conditions)
+        for c in self.event_simulator.conditions.values():
+            print(c.time_cond)
+        print(self.event_simulator.state_def)

@@ -8,7 +8,6 @@ from metadata import MetaData
 from tree_sitter import Language, Parser, LookaheadIterator
 
 import os
-import time
 import glob
 import subprocess
 

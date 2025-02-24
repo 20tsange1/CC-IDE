@@ -1,9 +1,13 @@
+from time_override import TimeOverride
+
+
 class Condition:
-    def __init__(self, identifier, sentence, negation):
+    def __init__(self, identifier, sentence, negation, time_cond=None):
         self.identifier = identifier
         self.sentence = sentence
         self.flag = False
         self.negation = negation
+        self.time_cond = time_cond
 
     def __repr__(self):
         return self.identifier + " --- " + str(self.flag)
@@ -48,8 +52,12 @@ class Statement:
 
 class EventSim:
     def __init__(self):
+        # Global dictionary of conditions
         self.conditions = {}
+        # Global dictionary of statements and definitions
         self.state_def = {}
+
+        # Mapping for functions, based on node types
         self.mapper = {
             "statement": self.s_d_function,
             "definition": self.s_d_function,
@@ -59,11 +67,17 @@ class EventSim:
             "and": self.a_function,
             "or": self.o_function,
             "negation": self.n_function,
+            "time": self.t_function,
         }
 
         self.and_or = True
         self.negation = False
 
+        # For extracting time
+        self.time = None
+        self.time_convert = TimeOverride()
+
+        # For unique identifier
         self.global_count = 1
 
     def find_clauses(self, tree, clause_arr):
@@ -77,8 +91,11 @@ class EventSim:
     def explore_clauses(self, node, clause_arr):
         for c in node.children:
             if c.type == "clause":
+                # Start with two arrays, first is for conditions, second for THEN, add third for ELSE
                 clause_arr.append([[], []])
+                # Default is AND, then flips if necessary
                 self.and_or = True
+                # Completely recursive.
                 self.explore(c, clause_arr)
             else:
                 self.explore_clauses(c, clause_arr)
@@ -114,15 +131,19 @@ class EventSim:
     # CONDITION Function
     def c_function(self, c, clause_arr):
         self.negation = False
+        self.time = None
         self.explore(c, clause_arr)
         cond = Condition(
             # str(c.id), 
             str(self.global_count),
             c.text.decode("utf8"), 
-            self.negation
+            self.negation,
+            self.time,
             )
         self.global_count += 1
+        # Adding to array of conditions for that clause
         clause_arr[-1][0].append(cond)
+        # Adding to dictionary, easier to access
         self.conditions[cond.identifier] = cond
 
     # STATEMENT DEFINITION Function
@@ -150,6 +171,13 @@ class EventSim:
     """
     def n_function(self, c, clause_arr):
         self.negation = True
+
+    # TIME Function
+    """
+    For extracting time from condition (Should be made to condition & statement level)
+    """
+    def t_function(self, c, clause_arr):
+        self.time = self.time_convert.evaluate_time_tree(c)
 
     def explore(self, node, clause_arr):
         for c in node.children:

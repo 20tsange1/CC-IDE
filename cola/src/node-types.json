@@ -39,10 +39,6 @@
           "named": true
         },
         {
-          "type": "time_holder",
-          "named": true
-        },
-        {
           "type": "user",
           "named": true
         }
@@ -63,6 +59,10 @@
         },
         {
           "type": "string",
+          "named": true
+        },
+        {
+          "type": "time_holder",
           "named": true
         }
       ]

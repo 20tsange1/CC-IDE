@@ -44,18 +44,6 @@
           "value": "statement"
         },
         {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "time_holder"
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        },
-        {
           "type": "STRING",
           "value": "."
         }
@@ -361,6 +349,18 @@
             "type": "SYMBOL",
             "name": "string"
           }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "time_holder"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         }
       ]
     },
