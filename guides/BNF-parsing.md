@@ -5,3 +5,12 @@ In order to enable any grammar to be written in this BNF form, a secondary parse
 ^ Need to dive deeper into what I did. Important part of making it work, taking out the hard work basically.
 
 The next step is then feeding it into Tree-Sitter, utilising the Tree-Sitter CLI to generate the appropriate tree-sitter grammar. Then using it in our application to parse contracts.
+
+## Reparsing BNF-parsing Grammar via ANTLR
+For parsing Antlr, remember to save (Keep somewhere else) the Visitor file
+
+Then run the command:
+
+```
+java -jar antlr-4.13.1-complete.jar grammarParser.g4 -visitor -no-listener -Dlanguage=Python3
+```

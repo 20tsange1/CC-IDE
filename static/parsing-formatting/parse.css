@@ -1,40 +1,26 @@
-.contract::after { content: "\A\A"; white-space: pre; }
-.contract { color: #29b359; font-weight: bold; display: block; }
-.component { color: #000000;  display: block; margin: 2rem; }
-.definition { color: #52c9f4; font-weight: bold;  }
-.simple_definition { color: #50c9f4; font-weight: bold;  }
-.numerical_expression { color: #000000;   }
-.operator { color: #000000;   }
-.conditional_definition { color: #50c9f4; font-weight: bold;  }
-.statement::after { content: "\A\A"; white-space: pre; }
-.statement { color: #52c9f4; font-weight: bold;  }
-.conditional_statement { color: #52c9e0; font-weight: bold;  }
-.simple_statement { color: #52c9e0; font-weight: bold;  }
-.condition::after { content: "\A\A"; white-space: pre; }
-.condition { color: #52c9e0; font-weight: bold;  }
-.simple_condition { color: #52c9e0; font-weight: bold;  }
-.boolean_expression { color: #000000;   }
-.ID { color: #2da216; font-weight: bold;  }
-.holds { color: #000000;   }
-.subject { color: #2b7aab; font-weight: bold;  }
-.verb { color: #8e5015; font-weight: bold;  }
-.verb_status { color: #b87a23; font-weight: bold;  }
-.comparison { color: #000000;   }
-.equal { color: #000000;   }
-.more_than { color: #000000;   }
-.modal_verb { color: #000000;   }
-.obligation { color: #000000;   }
-.date { color: #3c8e90; font-weight: bold;  }
-.temporal_quantifier { color: #000000;   }
-.specific_date { color: #000000;   }
-.temporal_offset { color: #000000;   }
-.month { color: #000000;   }
-.object { color: #000000;   }
-.numerical_object { color: #000000;   }
-.nonnumerical_object { color: #000000;   }
-.pounds { color: #000000;   }
-.dollars { color: #000000;   }
-.euros { color: #000000;   }
-.receiver { color: #000000;   }
-.string { color: #000000;   }
-.num { color: #000000;   }
+.contract {   }
+.clause {  display: block; margin: 2rem; }
+.user { color: #208497; font-weight: bold;  }
+.negation { color: #d67171; font-weight: bold;  }
+.discount { color: #384cad; font-weight: bold;  }
+.bracket {  display: block; margin: 2rem; }
+.bracketopen {  display: none; }
+.bracketclose {  display: none; }
+.conditional {   }
+.conditional_and { color: #187b1a; font-weight: bold;  }
+.and {   }
+.conditional_or { color: #919d53; font-weight: bold;  }
+.or {   }
+.condition { color: #050505; font-weight: bold; display: block; margin: 1rem; }
+.string {   }
+.num {   }
+.name {  }
+.statement {  }
+.else {  }
+.time_holder {  }
+._pre_time {  }
+.time {  }
+.day {  }
+.month {  }
+.year {  }
+._numSingle {  }

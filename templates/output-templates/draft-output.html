@@ -5,7 +5,12 @@
         line-height: 1.6;
     }
 
-    h1, h2, h3 {
+    .title {
+        font-weight: bold;
+        font-size: 25px;
+    }
+
+    .header {
         text-align: center;
         margin-bottom: 20px;
     }
@@ -63,14 +68,15 @@
     }
 
 </style>
-</head>
+
 <body class="contractbody">
-<h1>Contract Agreement</h1>
-<h2>THIS AGREEMENT is made and entered into on this [Date], by and between:</h2>
+<div class="title header">Contract Agreement</div>
 
 <!-- Parties Section -->
 <div id="content-container">
 </div>
+
+<div class="header">THIS AGREEMENT is made and entered into on this [Date], by and between:</div>
 
 <!-- Signatures Section -->
 <div class="signature-section">
@@ -99,5 +105,3 @@
 <script type="text/javascript" src="{{ url_for('static', filename='javascript/output-js/draft-ouput.js') }}"></script>
 
 </body>
-
-</html>

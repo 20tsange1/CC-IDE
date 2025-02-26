@@ -34,6 +34,9 @@ class grammarParserVisitor(ParseTreeVisitor):
         # NODETYPES
         self.node_types = []
 
+        # NODEINDIRECTION
+        self.node_replace = []
+
 
 
     # Visit a parse tree produced by grammarParserParser#gram.
@@ -62,7 +65,7 @@ class grammarParserVisitor(ParseTreeVisitor):
         # NODEMAP
         self.node_children.append([])
 
-        otter_type = self.visit(ctx.getChild(1))
+        otter_type = self.visitOtter(ctx.getChild(1), symbol)
 
         arg_arr = self.visit(ctx.getChild(2))
 
@@ -207,7 +210,7 @@ class grammarParserVisitor(ParseTreeVisitor):
 
 
     # Visit a parse tree produced by grammarParserParser#otter.
-    def visitOtter(self, ctx:grammarParserParser.OtterContext):
+    def visitOtter(self, ctx:grammarParserParser.OtterContext, node_type):
         """
         otter: OTTER
             | WORD? OTTER
@@ -233,12 +236,26 @@ class grammarParserVisitor(ParseTreeVisitor):
             "T": "token", 
             "TI": "token.immediate",
         }
+
+        otter_map_replace = {
+            "C": "condition",
+            "S": "statement",
+            "SS": "statement_specific",
+            "D": "definition",
+            "CC": "clause",
+            "B": "bracket",
+            "A": "and",
+            "O": "or",
+        }
         
         
         if text in otter_map_num:
             return f"{otter_map_num[text]}({num}," if len(num) > 0 else f"{otter_map_num[text]}("
         elif text in otter_map_no_num:
             return f"{otter_map_num[text]}("
+        elif text in otter_map_replace:
+            self.node_replace.append((node_type, otter_map_replace[text]))
+            return ""
         else:
             return ""
 
@@ -246,20 +263,46 @@ class grammarParserVisitor(ParseTreeVisitor):
     # Visit a parse tree produced by grammarParserParser#strings.
     def visitStrings(self, ctx:grammarParserParser.StringsContext):
         """
-        strings: QUOTE WORD* QUOTE
+        strings: QUOTE (WORD | othersymbol)* QUOTE
+            | SINGLEQUOTE (WORD | othersymbol)* SINGLEQUOTE
             | WORD
             ;
         """
-        text = ctx.getText()
+        text = [i.getText() for i in ctx.children]
 
-        # NODEMAP
-        self.node_children[-1][-1].append(text)
+        
 
         # Adding quotations to the text, so it is considered a string
-        if text[0] == text[-1] == "'":
-            return text
+        if text[0] == text[-1] == "'" or text[0] == text[-1] == '"':
+            
+            # NODEMAP
+            self.node_children[-1][-1].append(' '.join(text[1:-1]))
+            
+            return '"' + ' '.join(text[1:-1]) + '"'
         else:
-            return f"'{text}'"
+            
+            # NODEMAP
+            self.node_children[-1][-1].append(' '.join(text))
+
+            return f"'{' '.join(text)}'"
+
+    # Visit a parse tree produced by grammarParserParser#othersymbol.
+    def visitOthersymbol(self, ctx:grammarParserParser.OthersymbolContext):
+        """
+        othersymbol: OPENBRACKET
+            | CLOSEBRACKET
+            | SPLITTER
+            | CHEVRON
+            | ICHEVRON
+            | QUESTION
+            | PLUS
+            | STAR
+            | SEMICOLON
+            | COLON
+            | SLASH
+            ;
+        """
+        return ctx.getText()
 
 
 

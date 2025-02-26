@@ -1,151 +1,235 @@
+try:
+    from time_override import TimeOverride
+except ImportError:
+    from time_base import TimeOverride
+
+
 class Condition:
-    def __init__(self, identifier, sentence):
+    def __init__(self, identifier, sentence, negation, time_cond=None):
         self.identifier = identifier
         self.sentence = sentence
         self.flag = False
+        self.negation = negation
+        self.time_cond = time_cond
 
     def __repr__(self):
         return self.identifier + " --- " + str(self.flag)
 
+    def evaluate(self):
+        if self.negation:
+            return not self.flag
+        else:
+            return self.flag
+
+
 class Statement:
-    def __init__(self, identifier, sentence, ifelse):
+    def __init__(self, identifier, sentence, if_else, and_or):
         self.identifier = identifier
-        self.sentence = sentence # The actual phrase behind it.
+        self.sentence = sentence
         self.conditions = []
-        self.ifelse = ifelse # True = Else, False = Not Else
+        self.if_else = if_else
+        self.and_or = and_or  # AND = TRUE, OR = FALSE
 
     def __repr__(self):
         return self.identifier + " --- " + str(self.evaluate())
-        # return self.identifier + " --- " + str(self.evaluate()) + "---" + str(self.conditions)
-    
-    def evaluate(self):
-        flag = True
-        for e in self.conditions:
-            flag = flag and e.flag
 
-        if self.ifelse: # True when not ALL ANDs. 
+    def evaluate(self):
+        flag = False
+
+        if self.and_or:
+            # When it is an AND
+            flag = True
+            for c in self.conditions:
+                flag = flag and c.evaluate()
+        else:
+            # When it is an OR
+            flag = False
+            for c in self.conditions:
+                flag = flag or c.evaluate()
+
+        if self.if_else:
             return not flag
         else:
             return flag
 
+
 class EventSim:
     def __init__(self):
+        # Global dictionary of conditions
         self.conditions = {}
+        # Global dictionary of statements and definitions
         self.state_def = {}
 
-    def explore(self, node, flag, mapper, argarr):
-        """
-        Recursive exploration of the nodes.
+        # Mapping for functions, based on node types
+        self.mapper = {
+            "statement": self.s_d_function,
+            "statement_specific": self.ss_function,
+            "definition": self.s_d_function,
+            "condition": self.c_function,
+            "else": self.e_function,
+            "bracket": self.b_function,
+            "and": self.a_function,
+            "or": self.o_function,
+            "negation": self.n_function,
+            "time": self.t_function,
+        }
 
-        Checks each node to see if it is a condition, statement or definition.
+        self.and_or = True
+        self.negation = False
 
-        If it is, then it tracks the child nodes, placing it into an array.
+        # For extracting time
+        self.time = None
+        self.time_convert = TimeOverride()
 
-        Splits our contracts into different conditions, statements and definitions.
-        """
-        if node:
-            if node.type in mapper:
-                # Begin tracking children
-                argarr[-1].append([mapper[node.type]])
-                for c in node.children:
-                    self.explore(c, True, mapper, argarr)
-            elif flag:
-                # If a child
-                if not node.children:
-                    argarr[-1][-1].append(node.text.decode("utf-8"))
-                else:
-                    for c in node.children:
-                        self.explore(c, flag, mapper, argarr)
+        # For unique identifier
+        self.global_count = 1
+
+    def find_clauses(self, tree, clause_arr):
+        # cursor = tree.walk()
+        # First find the clauses. BFS first
+        
+        root = tree.root_node
+        
+        self.explore_clauses(root, clause_arr)
+        
+    def explore_clauses(self, node, clause_arr):
+        for c in node.children:
+            if c.type == "clause":
+                # Start with two arrays, first is for conditions, second for THEN, add third for ELSE
+                clause_arr.append([[], []])
+                # Default is AND, then flips if necessary
+                self.and_or = True
+                # Completely recursive.
+                self.explore(c, clause_arr)
+
+
+                # Have to the ands and ors at the clause level because it's not nested within the statement
+                
+                # First set of statements
+                for child in clause_arr[-1][1]:
+                    child.and_or = self.and_or
+
+                # Second set of statements (ELSE)
+                if len(clause_arr[-1]) > 2:
+                    for child in clause_arr[-1][2]:
+                        child.and_or = not self.and_or
             else:
-                # Else look for whether we start a new contract
-                if not node.children:
-                    node_type = node.text.decode("utf-8")
-                    if node_type == 'C-AND':
-                        argarr.append([])
-                    else:
-                        argarr[-1].append(node_type)
-                else:
-                    for c in node.children:
-                        self.explore(c, flag, mapper, argarr)
+                self.explore_clauses(c, clause_arr)
 
+    # AND Function
+    def a_function(self, c, clause_arr):
+        self.and_or = True
+
+    # OR Function
+    def o_function(self, c, clause_arr):
+        self.and_or = False
+
+    # BRACKET Function
+    def b_function(self, c, clause_arr):
+        
+        old_and_or = self.and_or
+
+        clause_arr.append([[], []])
+        self.explore(c, clause_arr)
+        state = Statement(
+            str(c.id),
+            # self.global_count,
+            c.text.decode("utf8"),
+            if_else=False,
+            and_or=self.and_or,
+        )
+        # self.global_count += 1
+        state.conditions = clause_arr.pop()[0]
+        clause_arr[-1][0].append(state)
+
+        self.and_or = old_and_or
+
+    # CONDITION Function
+    def c_function(self, c, clause_arr):
+        self.negation = False
+        self.time = None
+        self.explore(c, clause_arr)
+        cond = Condition(
+            # str(c.id), 
+            str(self.global_count),
+            c.text.decode("utf8"), 
+            self.negation,
+            self.time,
+            )
+        self.global_count += 1
+        # Adding to array of conditions for that clause
+        clause_arr[-1][0].append(cond)
+        # Adding to dictionary, easier to access
+        self.conditions[cond.identifier] = cond
+
+    # STATEMENT DEFINITION Function
+    def s_d_function(self, c, clause_arr):
+        # This is evaluated too early. - Now it is evaluated fine but the text is off.
+        self.explore(c, clause_arr)
+        """
+        Realistically, you should be using statement as a more general one, and not nest conditions under it. 
+        """
+        state = Statement(
+            # str(c.id),
+            str(self.global_count),
+            c.text.decode("utf8"),
+            len(clause_arr[-1]) == 3,
+            and_or=self.and_or,
+        )
+        self.global_count += 1
+        clause_arr[-1][-1].append(state)
+        state.conditions = clause_arr[-1][0]
+
+    # ELSE Function
+    def e_function(self, c, clause_arr):
+        clause_arr[-1].append([])
+
+    # NEGATION Function
+    """
+    Need to think about how to use negations, are all conditions starting off false or?
+    """
+    def n_function(self, c, clause_arr):
+        self.negation = True
+
+    # TIME Function
+    """
+    For extracting time from condition (Should be made to condition & statement level)
+    """
+    def t_function(self, c, clause_arr):
+        self.time = self.time_convert.evaluate_time_tree(c)
+
+    # STATEMENT_SPECIFIC Function
+    def ss_function(self, c, clause_arr):
+        return c.text.decode("utf8")
+
+    def explore(self, node, clause_arr):
+        print(clause_arr)
+        for c in node.children:
+            if c.type in self.mapper:
+                self.mapper[c.type](c, clause_arr)
+            else:
+                self.explore(c, clause_arr)
 
     def event_simulation(self, parse_tree):
+        self.conditions = {}
+        self.state_def = {}
+        self.global_count = 1
 
-        # Resets the conditions and states.
-        if len(self.conditions) > 0:
-            self.conditions = {}
-        if len(self.state_def) > 0:
-            self.state_def = {}
+        clause_arr = []
+        self.find_clauses(parse_tree, clause_arr)
+        for clause in clause_arr:
 
-        # Arguments based on the Contracts
-        argarr = [[]]
-        mapper = {"simple_definition": 'D', "simple_statement": 'S', "simple_condition": 'C'} 
+            for s in clause[1]:
+                self.state_def[s.identifier] = s
 
-        if parse_tree != None:
-            root = parse_tree.root_node
-        else:
-            return
+            if len(clause) > 2:
+                for e in clause[2]:
+                    self.state_def[e.identifier] = e
+        
+        print(self.conditions, self.state_def)
 
-        self.explore(root, False, mapper, argarr)
-
-        # Conditionals stores all the conditionals, statements and definitions.
-        # Follows [Conditions][Then][Else]
-        # Sentences stores corresponding text, in same indexes.
-        conditionals = []
-        sentences = []
-
-        for s in argarr:
-            conditionals.append([[], []])
-            sentences.append([[], []])
-            for c in s:
-                if isinstance(c, str):
-                    # If there is an Else, then we know that there are 3 categories.
-                    # Condition, Then, Else
-                    if c == "ELSE":
-                        conditionals[-1].append([])
-                        sentences[-1].append([])
-                else:
-                    # We have a guarantee that the use of a condition means that it comes in the IF segment.
-                    if c[0] == "C":
-                        conditionals[-1][0].append(c[0] + c[2])
-                        sentences[-1][0].append(' '.join(c[4:]))
-                    else:
-                        # Then always before Else, which is why this works. You don't have
-                        # the additional list until you reach the Else keyword.
-                        conditionals[-1][-1].append(c[0] + c[2])
-                        sentences[-1][-1].append(' '.join(c[4:]))
-
-
-        # Have to swap to enumerate to ensure that we get the equivalent position for the sentences.
-        for i, contract in enumerate(conditionals):
-
-            conditions_temp = []
-
-            # Creates condition objects, using the identifier as a key. 
-            for j, c in enumerate(contract[0]):
-                identity = c[1:]
-                if identity not in self.conditions:
-                    self.conditions[identity] = Condition(identity, sentences[i][0][j])
-                conditions_temp.append(self.conditions[identity])
-
-            # Adds those conditions as a prerequisite for the subsequent statments and definitions.
-            for j, c in enumerate(contract[1]):
-                identity = c[1:]
-                if identity not in self.state_def:
-                    self.state_def[identity] = Statement(identity, sentences[i][1][j], False)
-                # RIGHT NOW, due to the lack of OR, we are unable to do this correctly. Everything is treated as AND
-                self.state_def[identity].conditions.extend(conditions_temp)
-
-            if len(contract) > 2:
-                for j, c in enumerate(contract[2]):
-                    identity = c[1:]
-                    if identity not in self.state_def:
-                        self.state_def[identity] = Statement(identity, sentences[i][2][j], True)
-                    self.state_def[identity].conditions.extend(conditions_temp)
-
-    
     def toggle_condition(self, identity):
         self.conditions[identity].flag = not self.conditions[identity].flag
-    
+
     def evaluate_state_def(self, identity):
         return self.state_def[identity]

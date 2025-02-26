@@ -1,7 +1,1 @@
-Member has 7% discount if it is not true that they are a member. 
-
-Member has 8% off if they are female.
-
-Member has 8% discount if they are male.
-
-Member has 16% discount if they are a member.
+Member has 7% discount if [it is not true that they are a member and it is not true that they are male and [they are a member or they are male] and [they are female and it is not true that they are a member] and they are male].

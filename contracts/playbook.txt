@@ -1,0 +1,43 @@
+PLAY empty_play {
+}
+
+PLAY empty_play_players with Point Guard {
+}
+
+PLAY empty_play_return with Point Guard {
+BALL Point Guard
+}
+
+PLAY basic_play_1 with Point Guard, Small Forward {
+Point Guard pass (lob) to Small Forward
+}
+
+PLAY basic_play_2 with Point Guard, Small Forward {
+Point Guard pass (lob) to Small Forward
+BALL Small Forward
+}
+
+PLAY basic_shot with On Ball {
+On Ball shoot (layup)
+}
+
+
+PLAY dribble_play with On Ball {
+On Ball dribble (hesitation) to Top of Key 
+}
+
+PLAY dribble_play with On Ball, !Off Ball {
+IF !Off Ball at Top of Key {
+On Ball dribble (hesitation) to Left Wing
+}
+OTHERWISE {
+On Ball shoot (jumper)
+}
+
+IF NOT [[a AND b] OR NOT [c AND d] OR [c OR a]] {
+    IF {
+On Ball dribble (hesitation) to Left Wing
+    }
+}
+
+}

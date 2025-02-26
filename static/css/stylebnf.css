@@ -15,26 +15,27 @@ body {
 #container {
     display: flex;
     width: 80%;
-    margin: 5%;
+    padding:2rem;
+    margin: auto;
 }
 
 #fileList {
     width:20%;
 }
 
-#saveBtn {
+.saveBtn {
     background-color:#2196F3;
 }
 
-#applyBtn {
+.applyBtn {
     background-color:#0bbd02;
 }
 
-#deleteBtn {
+.deleteBtn {
     background-color:#f32121;
 }
 
-#createBtn {
+.createBtn {
     background-color:#2196F3;
 }
 
@@ -61,11 +62,12 @@ body {
 }
 
 /* Button styling */
-button {
+.button {
     padding: 0.5rem;
     border: none;
     cursor: pointer;
     border-radius: 3px;
+    margin: 0.25rem;
     color: #fff;
 }
 
@@ -163,4 +165,13 @@ button {
     padding: 5px;
     border: 1px solid #ddd;
     border-radius: 5px;
+}
+
+
+#timeOverride {
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 80%;
 }

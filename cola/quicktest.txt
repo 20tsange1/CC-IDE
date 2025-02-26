@@ -1,0 +1,1 @@
+Member has 7% discount if [it is not true that they are a member].

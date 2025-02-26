@@ -1,0 +1,1 @@
+Member has 7% discount if [they are in london on 6th-May-2024 and they are a member on the 5th-May-2024] or [they are in wales and it is not true that they are a member].

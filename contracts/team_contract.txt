@@ -1,0 +1,26 @@
+[1-way trade
+Boston Celtics send Kyrie Irving to Detroit Pistons
+]
+
+[
+2-way trade
+LA Clippers trade Paul George to Philadelphia 76ers
+and
+Philadelphia 76ers receive Paul George from LA Clippers
+]
+
+[
+Kyrie Irving of the Detroit Pistons
+Stats : 16.6, 10.2, 10.8
+Particulars : 1.85m, 78.5kg, 2022-January-20, 26, 2022
+]
+
+[
+LA Clippers vs Los Angeles Lakers
+Score : 105 - 106
+Q1 : 32 - 15
+Q2 : 20 - 24
+Q3 : 26 - 31
+Q4 : 27 - 36
+Attendance : 255000
+]

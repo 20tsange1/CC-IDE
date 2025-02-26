@@ -1,0 +1,40 @@
+SETUP {
+BALL Lebron James @
+}
+
+SETUP with Lebron James @ {
+BALL Lebron James @
+}
+
+
+SETUP with Lebron James @ {
+Lebron James @ at Top of Key
+BALL Lebron James @
+}
+
+SETUP with Lebron James @, Luka Doncic @ {
+Lebron James @ at Top of Key
+Luka Doncic @ at Elbow Left
+BALL Lebron James @
+}
+
+SETUP with attack_player {
+BALL attack_player
+}
+
+SETUP with attack_player {
+attack_player at Top of Key
+BALL attack_player
+}
+
+SETUP with la_lakers {
+BALL la_lakers[0]
+}
+
+SETUP with la_lakers[0:4] {
+BALL la_lakers[0]
+}
+
+SETUP with la_lakers[-1:] {
+BALL la_lakers[-1]
+}

@@ -5,12 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BNF Editor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/stylebnf.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styleheader.css') }}">
 </head>
 
 <body>
     {% include 'header.html' %}
+
+    <button onclick="hideExplanation()" class="explanation" id="explanation-button">-</button>
+    <p class="explanation" id="explanation">
+        This page is designed for development of grammars along with it's formatting. Now includes the ability to upload code to override translation functionality.
+    </p>
 
     <h1 id="center">BNF Editor</h1>
 
@@ -29,13 +35,13 @@
             <h2>Edit File</h2>
             <textarea id="fileContent" placeholder="File content will appear here..." rows="20" cols="100"></textarea>
             <div>
-                <button id="saveBtn">Save</button>
-                <button id="applyBtn">Save & Apply</button>
-                <button id="deleteBtn">Delete</button>
+                <button class="saveBtn button" id="saveBtn">Save</button>
+                <button class="applyBtn button" id="applyBtn">Save & Apply</button>
+                <button class="deleteBtn button" id="deleteBtn">Delete</button>
             </div>
             <div>
                 <input type="text" id="createName"></input>
-                <button id="createBtn">Create</button>
+                <button class="createBtn button" id="createBtn">Create</button>
             </div>
         </div>
     </div>
@@ -45,11 +51,11 @@
         <!-- Highlighter options -->
         <div id="highlighter">
             <h2>Highlight Options</h2>
-            <button type="button" id="toggleColorsBtn">Show Colors</button>
+            <button type="button" class="button" id="toggleColorsBtn">Show Colors</button>
             <div id="colorOptionsContainer" style="display: none">
                 <!-- Dynamic color entries will be added here -->
             </div>
-            <button type="button" id="saveColorsBtn" style="display: none">Save Colors</button>
+            <button type="button" class="button" id="saveColorsBtn" style="display: none">Save Colors</button>
         </div>
     </div>
 
@@ -58,15 +64,28 @@
         <!-- Highlighter options -->
         <div id="formatter">
             <h2>Formatting Options</h2>
-            <button type="button" id="toggleFormatsBtn">Show Nodes</button>
+            <button type="button" class="button" id="toggleFormatsBtn">Show Nodes</button>
             <div id="formatOptionsContainer" style="display: none">
                 <!-- Dynamic formatting entries will be added here -->
             </div>
-            <button type="button" id="saveFormatsBtn" style="display: none">Save Format</button>
+            <button type="button" class="button" id="saveFormatsBtn" style="display: none">Save Format</button>
+        </div>
+    </div>
+
+
+    <h1 id="center">Time Override</h1>
+    <div id="container">
+        <div id="timeOverride">
+            <input type="file" id="fileInput">
+            <button onclick="uploadFile()" class="applyBtn button">Upload</button>
+            <button onclick="validateFile()" class="saveBtn button">Validate</button>
+            <p id="status"></p>
         </div>
     </div>
 
     <script type="text/javascript" src="{{ url_for('static', filename='javascript/bnfeditor.js') }}"></script>
+
+    {% include 'footer.html' %}
     
 </body>
 

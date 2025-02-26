@@ -1,0 +1,15 @@
+contract:#000000
+parties:#52807f
+party:#010101
+obligations:#a25757
+obligation:#030303
+conditions:#6eaa8b
+condition:#050505
+termination:#ce5d55
+termination_clause:#050505
+signatures:#000000
+amount:#000000
+date:#000000
+identifier:#000000
+string:#000000
+num:#000000

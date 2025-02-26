@@ -10,4 +10,9 @@
 module.exports = grammar({
   name: "cola",
 
+  extras: ($) => [
+		$.comment,
+		/\s|\\\r?\n/,
+	],
+
   rules: {

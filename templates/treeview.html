@@ -12,7 +12,8 @@
 <body>
   {% include 'header.html' %}
 
-  <p class="explanation">
+  <button onclick="hideExplanation()" class="explanation" id="explanation-button">-</button>
+  <p class="explanation" id="explanation">
     This page is designed for the visualisation of contracts in various forms (Tree, File, ___ ...).
   </p>
 
@@ -27,7 +28,7 @@
 
   <script type="text/javascript" src="{{ url_for('static', filename='javascript/visualise.js') }}"></script>
 
-
+  {% include 'footer.html' %}
 </body>
 
 </html>

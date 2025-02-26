@@ -1,11 +1,16 @@
 contract~~~~~~~~
 start~~~~~~display: block; margin: 2rem;~~
 user~~~~~~~~
-negated~~~~~~~~
+negation~~~~~~~~
 discount~~~~~~~~
+conditional_upper~~~~~~display: block; margin: 2rem;~~
+bracketopen~~~~~~display: none;~~
+bracketclose~~~~~~display: none;~~
 conditional~~~~~~~~
-condition1~~~~~~~~
-condition2~~~~~~~~
-condition3~~~~~~~~
+conditional_and~~~~~~~~
+and_connect~~~~~~~~
+conditional_or~~~~~~~~
+or_connect~~~~~~~~
+condition_n~~~~~~display: block; margin: 1rem;~~
 string~~~~~~~~
 num~~~~~~~~

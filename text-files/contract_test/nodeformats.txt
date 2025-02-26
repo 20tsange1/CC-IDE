@@ -1,0 +1,15 @@
+contract~~~~~~~~
+parties~~~~~~display: block; margin: 2rem;~~
+party~~~~~~display: block; margin: 1rem;~~
+obligations~~~~~~display: block; margin: 2rem;~~
+obligation~~~~~~display: block; margin: 1rem;~~
+conditions~~~~~~display: block; margin: 2rem;~~
+condition~~~~~~display: block; margin: 1rem;~~
+termination~~~~~~display: block; margin: 2rem;~~
+termination_clause~~~~~~display: block; margin: 1rem;~~
+signatures~~~~~~~~
+amount~~~~~~~~
+date~~~~~~~~
+identifier~~~~~~~~
+string~~~~~~~~
+num~~~~~~~~

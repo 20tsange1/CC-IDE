@@ -8,7 +8,6 @@ from metadata import MetaData
 from tree_sitter import Language, Parser, LookaheadIterator
 
 import os
-import time
 import glob
 import subprocess
 
@@ -61,13 +60,19 @@ class Handler:
         node_formats_path = "nodeformats.txt"
 
         # For the different node types
-        self.node_types = []
+        # TYPE:MAPPING
+        self.node_types = {}
         if os.path.isfile(grammar_info_path + node_types_path):
             with open(grammar_info_path + node_types_path, "r") as file:
                 for lines in file.readlines():
-                    self.node_types.append(lines.strip())
+                    line = lines.split(":")
+                    if len(line) > 1:
+                        self.node_types[line[0]] = line[1].strip()
+                    else:
+                        self.node_types[line[0]] = line[0]
         
         # For mapping auto suggestions, based on previous node, parent node and current node/text
+        #(CHILD,CHILDPREV,CURRENT)
         self.mapper = {}
         if os.path.isfile(grammar_info_path + node_map_path):
             with open(grammar_info_path + node_map_path, "r") as file:
@@ -97,6 +102,9 @@ class Handler:
                     nodename, prefix, suffix, inline, _ = lines.split("~~")
                     if nodename in self.node_types:
                         self.pref_suf_format[nodename] = {"prefix": prefix, "suffix": suffix, "inline": inline}
+
+
+        self.checkid = set()
         
         
 
@@ -114,7 +122,10 @@ class Handler:
             tail="text-files/tail.txt", 
             ontologies=ontology
             )
-        bnfparser.main()
+        try:
+            bnfparser.main()
+        except Exception as e:
+            raise e
 
         # self.edit used as an iterator for version number
         if os.path.isfile(f"build/my-language{self.edit}.so"):
@@ -122,20 +133,32 @@ class Handler:
 
         # Runs subprocess to execute tree-sitter commands in shell. Need to throw correct error
         
-        commands = "cd cola; tree-sitter generate; tree-sitter build -o cola; cd .."
-        process = subprocess.Popen(commands, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        commands_gen = "cd cola; tree-sitter generate"
+        process = subprocess.Popen(commands_gen, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         (out, err) = process.communicate()
         # Error handling in the case that we have issues
         # Need to redo this, be a lil more specific.
         if err:
-            raise Exception("""Issue generating grammar. Please ensure you have followed the syntax for defining a grammar. If defining recursiveness of your rules:
-            'L::=' - Left Recursive
-            'R::=' - Right Recursive""") 
+            # Right now imperfect but works, throws the tree-sitter error back.
+            raise Exception(err.decode("utf-8"))
+            
+            # raise Exception("""Issue generating grammar. Please ensure you have followed the syntax for defining a grammar. If defining recursiveness of your rules:
+            # 'L::=' - Left Recursive
+            # 'R::=' - Right Recursive""") 
+
+        commands_build = "cd cola; tree-sitter build -o cola"
+        process = subprocess.Popen(commands_build, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        (out, err) = process.communicate()
+        if err:
+            raise Exception(err.decode("utf-8"))
+            
 
         self.edit += 1
 
         self.node_types = bnfparser.node_types
         self.nodes = bnfparser.nodes
+
+        self.nodes_changed = bnfparser.nodes_changed
 
         self.autosuggestion(grammar_name)
 
@@ -242,16 +265,36 @@ class Handler:
 
     
     def nodeAddText(self, node, finalarr):
-        # In the case of no children, this means that the node a terminal (leaf) node.
-        if node.child_count == 0:
-            text = node.text.decode("utf8")
-            
-            if node.parent and node.parent.type == "ERROR":
-                colour = "#f76f6f"
-                finalarr.append(f'<b style="color:{colour};">')
+        # print(len(node.children), node)
+        if node:
+            # In the case of no children, this means that the node a terminal (leaf) node.
+            if node.children:
+                # Sets up the css structure + Hover text
+                finalarr.append(f'<span title="{node.type}" class="{node.type}">')
+            else:
+                text = node.text.decode("utf8")
+                
+                # Attribute describing if node is an error node
+                if node.is_error:
+                    colour = "#f76f6f"
+                    finalarr.append(f'<b style="color:{colour};">')
 
-            if node.parent and len(node.children) == 0:
-                finalarr.append(f'{text}')
+                if node.parent:
+                    if node.type in self.node_types and node.type != text:
+                        finalarr.append(f'<span class="{node.type}">{text} </span>')
+                    else:
+                        finalarr.append(f'{text} ')
+                else:
+                    finalarr.append(f'{text} ')
+
+
+    def nodeAddTextEnd(self, node, finalarr):
+        if node.children:
+            if node:
+                finalarr.append(f'</span>')
+        else:
+            if node.is_error:
+                finalarr.append('</b>')
             
 
 
@@ -287,17 +330,19 @@ class Handler:
 
         flag = True
 
-        if str(node.id) == str(checkid):
-            reached = 1
+        # if str(node.id) == str(checkid):
+        if str(node.id) in checkid:
+            reached = 0
 
+        # Checks if it is in chosen range
         if reached:
-            # if cursor.depth < 3:
-            #     finalarr.append(f'<span style="color:{"red"}" onclick="nodeFold(\'{node.id}\')">^</span>')
+            # if 1 <= cursor.depth <= 2:
+            #     finalarr.append(f'<span style="color: #{hex(2-cursor.depth)[2:]*3}" onclick="nodeFold(\'{node.id}\')">-</span>')
                 
             self.nodeAddText(node, finalarr)
-
-            if node and node.children:
-                finalarr.append(f'<span class="{node.type}">')
+        # else:
+        #     if 1 <= cursor.depth <= 2:
+        #         finalarr.append(f'<span style="color: #{hex(2-cursor.depth)[2:]*3}" onclick="nodeFold(\'{node.id}\')">+</span>')
 
         if cursor.goto_first_child():
             while flag:
@@ -306,11 +351,8 @@ class Handler:
             cursor.goto_parent()
 
         if reached:
-            if node and node.children:
-                finalarr.append(f'</span>')
-
-            if node.child_count == 0 and node.parent and node.parent.type == "ERROR":
-                finalarr.append('</b>')
+            
+            self.nodeAddTextEnd(node, finalarr)
 
             self.nodeAutoSuggestion(node, finalarr)
         
@@ -340,21 +382,23 @@ class Handler:
 
         finalarr = []
 
-        self.exploreNodes(cursor, finalarr, "", 1)
+        # self.exploreNodes(cursor, finalarr, "", 1)
+        self.exploreNodes(cursor, finalarr, self.checkid, 1)
 
         self.prevString = string
 
-        return ''.join([((i + ' ') if i[-1] != '>' else i) for i in finalarr])
-        # return ' '.join(finalarr)
+        # This prevents it from adding an extra space for the span, which messes with the desired output.
+        return ''.join([((i + ' ') if i and i[-1] != '>' else i) for i in finalarr])
 
 
     def bnfSubStructure(self, nodeID=""):
         if self.parse_tree:
             cursor = self.parse_tree.walk()
             finalarr = []
-            reached = 1 if nodeID == "" else 0
-            self.exploreNodes(cursor, finalarr, nodeID, reached)
-            return ' '.join(finalarr)
+            if nodeID == "":
+                self.checkid = set()
+            self.exploreNodes(cursor, finalarr, self.checkid, 1)
+            return ''.join([((i + ' ') if i and i[-1] != '>' else i) for i in finalarr])
         else:
             return ''
 

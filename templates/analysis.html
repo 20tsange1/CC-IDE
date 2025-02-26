@@ -13,23 +13,28 @@
 <body>
   {% include 'header.html' %}
 
-  Event Simulation (WIP)
+  <button onclick="hideExplanation()" class="explanation" id="explanation-button">-</button>
+  <p class="explanation" id="explanation">
+    This page is designed for the evaluation of contracts given that the grammar is written with respect to the pre-defined syntax.
+  </p>
+
+  <h1>Event Simulation (WIP)</h1>
 
   <div class="clause-container">
 
     <div class="column">
 
-      Conditions
+      <h2 class="columntitle">Conditions</h2>
       
-      <ul id="conditions"></ul>
+      <ul class="eval_block" id="conditions"></ul>
 
     </div>
 
     <div class="column">
 
-      States
+      <h2 class="columntitle">States</h2>
 
-      <ul id="states"></ul>
+      <ul class="eval_block" id="states"></ul>
       
     </div>
 
@@ -37,7 +42,7 @@
 
   <script type="text/javascript" src="{{ url_for('static', filename='javascript/static_analysis.js') }}"></script>
 
-
+  {% include 'footer.html' %}
 </body>
 
 </html>

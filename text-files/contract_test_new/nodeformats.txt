@@ -1,0 +1,49 @@
+report~~~~~~~~
+trade_report~~~~~~display: block; margin: 1rem;~~
+trade~~~~~~display: block; margin: 1rem;~~
+trade_content~~~~~~~~
+trade_keyword~~~~~~~~
+receives_keyword~~~~~~~~
+player_report~~~~~~display: block; margin: 1rem;~~
+player_stats~~~~~~display: block; margin: 1rem;~~
+player_particulars~~~~~~display: block; margin: 1rem;~~
+player_ppg~~~~~~~~
+player_rpg~~~~~~~~
+player_apg~~~~~~~~
+player_height~~~~~~~~
+player_weight~~~~~~~~
+player_birth_date~~~~~~~~
+player_age~~~~~~~~
+player_draft_year~~~~~~~~
+game_report~~~~~~display: block; margin: 1rem;~~
+score~~~~~~display: block; margin: 1rem;~~
+score_breakdown~~~~~~display: block; margin: 1rem;~~
+attendance~~~~~~display: block; margin: 1rem;~~
+team_name~~~~~~~~
+team_conference~~~~~~~~
+eastern_conference~~~~~~~~
+western_conference~~~~~~~~
+atlantic~~~~~~~~
+central~~~~~~~~
+southeast~~~~~~~~
+northwest~~~~~~~~
+pacific~~~~~~~~
+southwest~~~~~~~~
+player_name~~~~~~~~
+object~~~~~~~~
+draft_pick~~~~~~~~
+draft_pick_protect~~~~~~~~
+draft_pick_round~~~~~~~~
+pick_swap~~~~~~~~
+pick_swap_condition~~~~~~~~
+cash~~~~~~~~
+cap_space~~~~~~~~
+date~~~~~~~~
+day~~~~~~~~
+month~~~~~~~~
+year~~~~~~~~
+identifier~~~~~~~~
+string~~~~~~~~
+_character~~~~~~~~
+num~~~~~~~~
+_numSingle~~~~~~~~

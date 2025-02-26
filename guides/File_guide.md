@@ -2,6 +2,8 @@
 
 - **bnfs**
     | For storing the Backus Naur Form (BNF) of the legal langauge grammars.
+    - **meta**
+        | Storing grammars metadata
     
 - **build**
     | For building the grammar currently in use - Necessary for tree-sitter.
@@ -11,12 +13,19 @@
 
 - **contracts**
     | For storing the contract text files.
+    - **meta**
+        | Storing contract metadata
 
 - **development-playground**
     | For testing purposes.
 
 - **guides**
     | For storing guidance on how to use the IDE. (WIP)
+    - **plans**
+    | For storing future plans and ideas
+
+- **pages**
+    | For storing sub-pages to the main application, Flask Blueprints.
 
 - **static**
     | Static files for the webpages in the IDE.
@@ -39,6 +48,8 @@
 
 - **text-files**
     | Auxiliary text-files
+    - **{grammar name}**
+        | For storing node colours, node formats and additional information. 
 
 - **tool-analysis**
     | For storing analysis classes.
@@ -50,23 +61,3 @@
         
 - **tool-visualisations**
     | For storing visualisation classes.
-
-
-
-
-
-
-Reminders to Self:
-For parsing Antlr, remember to save (Keep somewhere else) the Visitor file
-java -jar antlr-4.13.1-complete.jar grammarParser.g4 -visitor -no-listener -Dlanguage=Python3
-
-
-In order to install tree-sitter and begin using the IDE with Docker, follow the steps below:
-
-1. Open Terminal
-2. Run `npm install tree-sitter-cli`
-3. Make sure Docker is installed (https://www.docker.com/)
-4. Run `docker build -t gp-app .`
-5. Run `docker run -p 8080:8080 gp-app`
-6. Open up `http://localhost:8080/` in a web browser.
-
