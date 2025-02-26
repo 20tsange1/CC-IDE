@@ -12,3 +12,7 @@ class TimeBase:
         day = time_datetime.day
         year = time_datetime.year
         return f"{day}-{month}-{year}"
+
+class TimeOverride(TimeBase):
+    def __init__(self):
+        pass

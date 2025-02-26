@@ -27,9 +27,9 @@ def parse_bnf():
     current_app.config["ont"].breakdown(ontdirectory + "/ontologies.txt")
 
     try:
-        current_app.config["handler"].reparseBNF(f"{directory}/{filename}", filename, ont.ontologies)
-        metadata.bnf_meta(directory, filename)
-        metadata.grammar_meta(directory, filename)
+        current_app.config["handler"].reparseBNF(f"{directory}/{filename}", filename, current_app.config["ont"].ontologies)
+        current_app.config["metadata"].bnf_meta(directory, filename)
+        current_app.config["metadata"].grammar_meta(directory, filename)
         current_app.config["handler"].reset()
 
         outputCSS(current_app.config["handler"].highlights, current_app.config["handler"].pref_suf_format)
@@ -142,6 +142,7 @@ def get_node_types_format():
     # print(node_types)
     return jsonify(node_types)
 
+
 @page_developer.route("/submit-file-upload", methods=["POST"])
 def upload_file():
     if 'file' not in request.files:
@@ -156,11 +157,19 @@ def upload_file():
         file_path = os.path.join(AUXILIARY_FILES_DIR, "time", "time_override.py")
         file.save(file_path)
 
-        t = TimeOverride()
-
-        if not current_app.config["time_tester"].test_suite(t):
-            return jsonify({"error": "Override failed"}), 400
-        else:
-            print("PASSED TEST")
-
         return jsonify({"message": "File uploaded successfully", "filename": "time.py"}), 200
+
+@page_developer.route("/submit-file-validation", methods=["POST"])
+def validate_file():
+    try:
+        from time_override import TimeOverride
+        t = TimeOverride()
+    except Exception as e:
+        return jsonify({"error": "File Content Invalid"}), 400
+
+    if not current_app.config["time_tester"].test_suite(t):
+        return jsonify({"error": "Override failed"}), 400
+    else:
+        print("PASSED TEST")
+    
+    return jsonify({"message": "File Content Valid", "filename": "time.py"}), 200

@@ -1,4 +1,7 @@
-from time_override import TimeOverride
+try:
+    from time_override import TimeOverride
+except ImportError:
+    from time_base import TimeOverride
 
 
 class Condition:
@@ -60,6 +63,7 @@ class EventSim:
         # Mapping for functions, based on node types
         self.mapper = {
             "statement": self.s_d_function,
+            "statement_specific": self.ss_function,
             "definition": self.s_d_function,
             "condition": self.c_function,
             "else": self.e_function,
@@ -97,6 +101,18 @@ class EventSim:
                 self.and_or = True
                 # Completely recursive.
                 self.explore(c, clause_arr)
+
+
+                # Have to the ands and ors at the clause level because it's not nested within the statement
+                
+                # First set of statements
+                for child in clause_arr[-1][1]:
+                    child.and_or = self.and_or
+
+                # Second set of statements (ELSE)
+                if len(clause_arr[-1]) > 2:
+                    for child in clause_arr[-1][2]:
+                        child.and_or = not self.and_or
             else:
                 self.explore_clauses(c, clause_arr)
 
@@ -150,6 +166,9 @@ class EventSim:
     def s_d_function(self, c, clause_arr):
         # This is evaluated too early. - Now it is evaluated fine but the text is off.
         self.explore(c, clause_arr)
+        """
+        Realistically, you should be using statement as a more general one, and not nest conditions under it. 
+        """
         state = Statement(
             # str(c.id),
             str(self.global_count),
@@ -179,7 +198,12 @@ class EventSim:
     def t_function(self, c, clause_arr):
         self.time = self.time_convert.evaluate_time_tree(c)
 
+    # STATEMENT_SPECIFIC Function
+    def ss_function(self, c, clause_arr):
+        return c.text.decode("utf8")
+
     def explore(self, node, clause_arr):
+        print(clause_arr)
         for c in node.children:
             if c.type in self.mapper:
                 self.mapper[c.type](c, clause_arr)
@@ -201,6 +225,8 @@ class EventSim:
             if len(clause) > 2:
                 for e in clause[2]:
                     self.state_def[e.identifier] = e
+        
+        print(self.conditions, self.state_def)
 
     def toggle_condition(self, identity):
         self.conditions[identity].flag = not self.conditions[identity].flag

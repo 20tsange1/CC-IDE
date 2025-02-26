@@ -62,11 +62,12 @@ body {
 }
 
 /* Button styling */
-button {
+.button {
     padding: 0.5rem;
     border: none;
     cursor: pointer;
     border-radius: 3px;
+    margin: 0.25rem;
     color: #fff;
 }
 

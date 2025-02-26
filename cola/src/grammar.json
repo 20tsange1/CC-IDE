@@ -35,13 +35,8 @@
           "value": "has"
         },
         {
-          "type": "ALIAS",
-          "content": {
-            "type": "SYMBOL",
-            "name": "discount"
-          },
-          "named": true,
-          "value": "statement"
+          "type": "SYMBOL",
+          "name": "discount"
         },
         {
           "type": "STRING",
@@ -90,6 +85,96 @@
       "type": "SEQ",
       "members": [
         {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "discount_specific"
+          },
+          "named": true,
+          "value": "statement"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "and"
+              },
+              {
+                "type": "ALIAS",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "discount_specific"
+                },
+                "named": true,
+                "value": "statement"
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "if"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "conditional"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "else"
+                },
+                {
+                  "type": "ALIAS",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "discount_specific"
+                  },
+                  "named": true,
+                  "value": "statement"
+                },
+                {
+                  "type": "REPEAT",
+                  "content": {
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "STRING",
+                        "value": "and"
+                      },
+                      {
+                        "type": "ALIAS",
+                        "content": {
+                          "type": "SYMBOL",
+                          "name": "discount_specific"
+                        },
+                        "named": true,
+                        "value": "statement"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "discount_specific": {
+      "type": "SEQ",
+      "members": [
+        {
           "type": "SYMBOL",
           "name": "num"
         },
@@ -117,16 +202,12 @@
               "type": "BLANK"
             }
           ]
-        },
-        {
-          "type": "STRING",
-          "value": "if"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "conditional"
         }
       ]
+    },
+    "else": {
+      "type": "STRING",
+      "value": "else"
     },
     "conditional_upper": {
       "type": "SEQ",

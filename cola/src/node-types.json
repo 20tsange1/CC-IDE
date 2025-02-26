@@ -1,5 +1,10 @@
 [
   {
+    "type": "and",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "bracket",
     "named": true,
     "fields": {},
@@ -31,11 +36,11 @@
       "required": true,
       "types": [
         {
-          "type": "name",
+          "type": "discount",
           "named": true
         },
         {
-          "type": "statement",
+          "type": "name",
           "named": true
         },
         {
@@ -163,6 +168,29 @@
     "fields": {}
   },
   {
+    "type": "discount",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "conditional",
+          "named": true
+        },
+        {
+          "type": "else",
+          "named": true
+        },
+        {
+          "type": "statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "month",
     "named": true,
     "fields": {}
@@ -192,13 +220,9 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": true,
+      "multiple": false,
       "required": true,
       "types": [
-        {
-          "type": "conditional",
-          "named": true
-        },
         {
           "type": "num",
           "named": true
@@ -450,7 +474,7 @@
   },
   {
     "type": "and",
-    "named": true
+    "named": false
   },
   {
     "type": "bracketclose",
@@ -467,6 +491,10 @@
   {
     "type": "discount",
     "named": false
+  },
+  {
+    "type": "else",
+    "named": true
   },
   {
     "type": "has",

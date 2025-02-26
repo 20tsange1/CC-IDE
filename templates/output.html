@@ -13,7 +13,12 @@
 <body>
     {% include 'header.html' %}
 
-    <h1 id="center">PDF Output</h1>
+    <button onclick="hideExplanation()" class="explanation" id="explanation-button">-</button>
+    <p class="explanation" id="explanation">
+        This page is designed for outputting contracts in a desired format by lawyers, a common usecase is when signing of contracts is involved.
+    </p>
+
+    <h1>PDF Output (WIP)</h1>
 
     <div id="container">
         <!-- File selection area -->
@@ -31,6 +36,7 @@
 
     <script type="text/javascript" src="{{ url_for('static', filename='javascript/output.js') }}"></script>
     
+    {% include 'footer.html' %}
 </body>
 
 </html>

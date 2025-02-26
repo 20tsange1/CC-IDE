@@ -2,7 +2,7 @@
 .clause {  display: block; margin: 2rem; }
 .user { color: #208497; font-weight: bold;  }
 .negation { color: #d67171; font-weight: bold;  }
-.statement { color: #384cad; font-weight: bold;  }
+.discount { color: #384cad; font-weight: bold;  }
 .bracket {  display: block; margin: 2rem; }
 .bracketopen {  display: none; }
 .bracketclose {  display: none; }
@@ -15,6 +15,8 @@
 .string {   }
 .num {   }
 .name {  }
+.statement {  }
+.else {  }
 .time_holder {  }
 ._pre_time {  }
 .time {  }

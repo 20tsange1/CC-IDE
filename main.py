@@ -336,10 +336,13 @@ class Handler:
 
         # Checks if it is in chosen range
         if reached:
-            # if 1 <= cursor.depth <= 3:
-            #     finalarr.append(f'<span style="color: #{hex(2-cursor.depth)[2:]*3}" onclick="nodeFold(\'{node.id}\')">></span>')
+            # if 1 <= cursor.depth <= 2:
+            #     finalarr.append(f'<span style="color: #{hex(2-cursor.depth)[2:]*3}" onclick="nodeFold(\'{node.id}\')">-</span>')
                 
             self.nodeAddText(node, finalarr)
+        # else:
+        #     if 1 <= cursor.depth <= 2:
+        #         finalarr.append(f'<span style="color: #{hex(2-cursor.depth)[2:]*3}" onclick="nodeFold(\'{node.id}\')">+</span>')
 
         if cursor.goto_first_child():
             while flag:

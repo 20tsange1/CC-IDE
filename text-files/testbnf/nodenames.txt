@@ -3,7 +3,9 @@ start:clause
 user:user
 name:name
 negation:negation
-discount:statement
+discount:discount
+discount_specific:statement
+else:else
 conditional_upper:bracket
 bracketopen:bracketopen
 bracketclose:bracketclose

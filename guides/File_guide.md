@@ -21,6 +21,11 @@
 
 - **guides**
     | For storing guidance on how to use the IDE. (WIP)
+    - **plans**
+    | For storing future plans and ideas
+
+- **pages**
+    | For storing sub-pages to the main application, Flask Blueprints.
 
 - **static**
     | Static files for the webpages in the IDE.

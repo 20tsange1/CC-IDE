@@ -22,7 +22,7 @@ contract: $ => (repeat1(alias($.start, $.clause))
 start: $ => ((seq(choice(
 	$.user
 	,$.name
-), 'has', alias($.discount, $.statement), '.')
+), 'has', $.discount, '.')
 )
 ),
 
@@ -36,10 +36,19 @@ negation: $ => ((seq('it', 'is', 'not', 'true', 'that')
 )
 ),
 
-discount: $ => (seq($.num, '%', optional(choice(
+discount: $ => (seq(alias($.discount_specific, $.statement), repeat((seq("and", alias($.discount_specific, $.statement))
+)), 'if', $.conditional, optional((seq($.else, alias($.discount_specific, $.statement), repeat((seq("and", alias($.discount_specific, $.statement))
+)))
+)))
+),
+
+discount_specific: $ => (seq($.num, '%', optional(choice(
 	'discount'
 	,'off'
-)), 'if', $.conditional)
+)))
+),
+
+else: $ => ("else"
 ),
 
 conditional_upper: $ => (seq($.bracketopen, $.conditional, $.bracketclose)

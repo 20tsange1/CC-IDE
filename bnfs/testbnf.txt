@@ -13,7 +13,13 @@
 <negation> N::= (it is not true that)
 ;
 
-<discount> S::= <num>% (discount | off)? if <conditional> 
+<discount> ::= <discount_specific> ("and" <discount_specific>)* if <conditional> (<else> <discount_specific> ("and" <discount_specific>)*)?
+;
+
+<discount_specific> S::= <num>% (discount | off)?
+;
+
+<else> ::= "else"
 ;
 
 <conditional_upper> B::= <bracketopen> <conditional> <bracketclose>

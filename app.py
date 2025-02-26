@@ -22,7 +22,12 @@ from metadata import MetaData
 
 # For Testing and Validation
 from time_test import TimeTest
-from time_override import TimeOverride
+
+try:
+    from time_override import TimeOverride
+except ImportError:
+    from time_base import TimeOverride
+
 from datetime import datetime
 
 # Necessary

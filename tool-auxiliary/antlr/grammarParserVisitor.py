@@ -240,6 +240,7 @@ class grammarParserVisitor(ParseTreeVisitor):
         otter_map_replace = {
             "C": "condition",
             "S": "statement",
+            "SS": "statement_specific",
             "D": "definition",
             "CC": "clause",
             "B": "bracket",

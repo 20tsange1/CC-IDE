@@ -384,3 +384,17 @@ function uploadFile() {
         document.getElementById('status').innerText = "Upload failed!";
     });
 }
+
+function validateFile() {
+    fetch('/submit-file-validation', {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('status').innerText = data.message || data.error;
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        document.getElementById('status').innerText = "Upload failed!";
+    });
+}
