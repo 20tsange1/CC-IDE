@@ -172,34 +172,56 @@
       ]
     },
     "discount_specific": {
-      "type": "SEQ",
+      "type": "CHOICE",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "num"
-        },
-        {
-          "type": "STRING",
-          "value": "%"
-        },
-        {
-          "type": "CHOICE",
+          "type": "SEQ",
           "members": [
+            {
+              "type": "SYMBOL",
+              "name": "num"
+            },
+            {
+              "type": "STRING",
+              "value": "%"
+            },
             {
               "type": "CHOICE",
               "members": [
                 {
-                  "type": "STRING",
-                  "value": "discount"
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "STRING",
+                      "value": "discount"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "off"
+                    }
+                  ]
                 },
                 {
-                  "type": "STRING",
-                  "value": "off"
+                  "type": "BLANK"
                 }
               ]
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "$"
             },
             {
-              "type": "BLANK"
+              "type": "SYMBOL",
+              "name": "num"
+            },
+            {
+              "type": "STRING",
+              "value": "off"
             }
           ]
         }

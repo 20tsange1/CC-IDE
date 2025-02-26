@@ -17,6 +17,7 @@
 ;
 
 <discount_specific> S::= <num>% (discount | off)?
+| $<num> off
 ;
 
 <else> ::= "else"

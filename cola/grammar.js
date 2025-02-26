@@ -42,10 +42,12 @@ discount: $ => (seq(alias($.discount_specific, $.statement), repeat((seq("and", 
 )))
 ),
 
-discount_specific: $ => (seq($.num, '%', optional(choice(
+discount_specific: $ => choice(
+	seq($.num, '%', optional(choice(
 	'discount'
 	,'off'
 )))
+	,seq('$', $.num, 'off')
 ),
 
 else: $ => ("else"
