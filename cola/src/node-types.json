@@ -1,6 +1,6 @@
 [
   {
-    "type": "and",
+    "type": "and_expression",
     "named": true,
     "fields": {}
   },
@@ -109,7 +109,7 @@
       "required": true,
       "types": [
         {
-          "type": "and",
+          "type": "and_expression",
           "named": true
         },
         {
@@ -140,7 +140,7 @@
           "named": true
         },
         {
-          "type": "or",
+          "type": "or_expression",
           "named": true
         }
       ]
@@ -533,7 +533,7 @@
     "named": false
   },
   {
-    "type": "or",
+    "type": "or_expression",
     "named": true
   },
   {

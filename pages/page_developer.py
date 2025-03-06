@@ -4,7 +4,7 @@ import os
 page_developer = Blueprint("page_developer", __name__)
 
 TEXT_FILES_DIR = "text-files"  # Directory to store text files
-AUXILIARY_FILES_DIR = "tool-auxiliary"
+AUXILIARY_FILES_DIR = "tools/tool-auxiliary"
 
 # ------------
 # Developer Page

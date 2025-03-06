@@ -325,7 +325,7 @@
                   "name": "and_connect"
                 },
                 "named": true,
-                "value": "and"
+                "value": "and_expression"
               },
               {
                 "type": "CHOICE",
@@ -397,7 +397,7 @@
                   "name": "or_connect"
                 },
                 "named": true,
-                "value": "or"
+                "value": "or_expression"
               },
               {
                 "type": "CHOICE",

@@ -8,9 +8,9 @@
 .bracketclose {  display: none; }
 .conditional {   }
 .conditional_and { color: #187b1a; font-weight: bold;  }
-.and {   }
+.and_expression {   }
 .conditional_or { color: #919d53; font-weight: bold;  }
-.or {   }
+.or_expression {   }
 .condition { color: #050505; font-weight: bold; display: block; margin: 1rem; }
 .string {   }
 .num {   }
