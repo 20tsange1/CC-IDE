@@ -68,8 +68,8 @@ class EventSim:
             "condition": self.c_function,
             "else": self.e_function,
             "bracket": self.b_function,
-            "and": self.a_function,
-            "or": self.o_function,
+            "and_expression": self.a_function,
+            "or_expression": self.o_function,
             "negation": self.n_function,
             "time": self.t_function,
         }
@@ -104,7 +104,7 @@ class EventSim:
 
 
                 # Have to the ands and ors at the clause level because it's not nested within the statement
-                
+
                 # First set of statements
                 for child in clause_arr[-1][1]:
                     child.and_or = self.and_or
@@ -112,7 +112,8 @@ class EventSim:
                 # Second set of statements (ELSE)
                 if len(clause_arr[-1]) > 2:
                     for child in clause_arr[-1][2]:
-                        child.and_or = not self.and_or
+                        child.and_or = self.and_or
+                        child.if_else = True
             else:
                 self.explore_clauses(c, clause_arr)
 
@@ -127,6 +128,7 @@ class EventSim:
     # BRACKET Function
     def b_function(self, c, clause_arr):
         
+        # Storing previous level operator
         old_and_or = self.and_or
 
         clause_arr.append([[], []])
@@ -142,6 +144,7 @@ class EventSim:
         state.conditions = clause_arr.pop()[0]
         clause_arr[-1][0].append(state)
 
+        # Restoring previous level operator
         self.and_or = old_and_or
 
     # CONDITION Function
@@ -203,7 +206,6 @@ class EventSim:
         return c.text.decode("utf8")
 
     def explore(self, node, clause_arr):
-        print(clause_arr)
         for c in node.children:
             if c.type in self.mapper:
                 self.mapper[c.type](c, clause_arr)
@@ -226,7 +228,7 @@ class EventSim:
                 for e in clause[2]:
                     self.state_def[e.identifier] = e
         
-        print(self.conditions, self.state_def)
+        # print(self.conditions, self.state_def)
 
     def toggle_condition(self, identity):
         self.conditions[identity].flag = not self.conditions[identity].flag

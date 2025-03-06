@@ -1,5 +1,5 @@
 import sys
-sys.path.append('tool-auxiliary/')
+sys.path.append('tools/tool-auxiliary/')
 
 from parser import BNFParser
 from ontology import Ontology
@@ -329,8 +329,7 @@ class Handler:
         node = cursor.node
 
         flag = True
-
-        # if str(node.id) == str(checkid):
+        
         if str(node.id) in checkid:
             reached = 0
 

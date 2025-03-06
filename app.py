@@ -1,11 +1,11 @@
 import sys
 
 sys.path
-sys.path.append("tool-visualisations/")
-sys.path.append("tool-analysis/")
-sys.path.append("tool-auxiliary/")
-sys.path.append("tool-auxiliary/antlr/")
-sys.path.append("tool-auxiliary/time/")
+sys.path.append("tools/tool-visualisations/")
+sys.path.append("tools/tool-analysis/")
+sys.path.append("tools/tool-auxiliary/")
+sys.path.append("tools/tool-auxiliary/antlr/")
+sys.path.append("tools/tool-auxiliary/time/")
 sys.path.append("pages/")
 
 # For building webapp and making sure content is safe.

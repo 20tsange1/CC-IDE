@@ -244,8 +244,8 @@ class grammarParserVisitor(ParseTreeVisitor):
             "D": "definition",
             "CC": "clause",
             "B": "bracket",
-            "A": "and",
-            "O": "or",
+            "A": "and_expression",
+            "O": "or_expression",
         }
         
         

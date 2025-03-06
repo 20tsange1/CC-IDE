@@ -72,7 +72,7 @@ conditional: $ => choice(
 conditional_and: $ => (seq(choice(
 	alias($.conditional_upper, $.bracket)
 	,alias($.condition_n, $.condition)
-), repeat1((seq(alias($.and_connect, $.and), choice(
+), repeat1((seq(alias($.and_connect, $.and_expression), choice(
 	alias($.conditional_upper, $.bracket)
 	,alias($.condition_n, $.condition)
 ))
@@ -85,7 +85,7 @@ and_connect: $ => ('and'
 conditional_or: $ => (seq(choice(
 	alias($.conditional_upper, $.bracket)
 	,alias($.condition_n, $.condition)
-), repeat1((seq(alias($.or_connect, $.or), choice(
+), repeat1((seq(alias($.or_connect, $.or_expression), choice(
 	alias($.conditional_upper, $.bracket)
 	,alias($.condition_n, $.condition)
 ))

@@ -11,9 +11,9 @@ bracketopen:bracketopen
 bracketclose:bracketclose
 conditional:conditional
 conditional_and:conditional_and
-and_connect:and
+and_connect:and_expression
 conditional_or:conditional_or
-or_connect:or
+or_connect:or_expression
 condition_n:condition
 time_holder:time_holder
 _pre_time:_pre_time
