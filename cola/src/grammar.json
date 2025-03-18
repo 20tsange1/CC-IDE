@@ -464,15 +464,67 @@
               "type": "BLANK"
             }
           ]
+        },
+        {
+          "type": "STRING",
+          "value": ";"
         }
       ]
     },
     "time_holder": {
-      "type": "SEQ",
+      "type": "CHOICE",
       "members": [
         {
           "type": "SYMBOL",
           "name": "_pre_time"
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_pre_time"
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "time_and"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "time_or"
+                }
+              ]
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_pre_time"
+            }
+          ]
+        }
+      ]
+    },
+    "_pre_time": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "time_before"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "time_after"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "time_on"
+            }
+          ]
         },
         {
           "type": "SYMBOL",
@@ -480,7 +532,57 @@
         }
       ]
     },
-    "_pre_time": {
+    "time_and": {
+      "type": "STRING",
+      "value": "and"
+    },
+    "time_or": {
+      "type": "STRING",
+      "value": "or"
+    },
+    "time_before": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "before"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "the"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "time_after": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "after"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "the"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "time_on": {
       "type": "SEQ",
       "members": [
         {

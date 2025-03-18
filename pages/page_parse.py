@@ -22,10 +22,7 @@ def parse_text():
 @page_parse.route("/parse-node", methods=["POST"])
 def parse_node_text():
     # Get the text from the request
-    nodeID = request.json.get("nodeID")
-    # Basic parsing - you can replace this with custom parsing logic
-    current_app.config["handler"].checkid.add(str(nodeID))
-    parsed_text = current_app.config["handler"].bnfSubStructure(nodeID)  # Example: Convert text to uppercase
+    parsed_text = current_app.config["handler"].bnfIDStructure()  # Example: Convert text to uppercase
     return jsonify({"parsed_text": parsed_text})
 
 
@@ -127,14 +124,14 @@ def create_file():
 @page_parse.route("/dynamic-analysis", methods=["POST"])
 def dynamic_analysis():
     percentage = current_app.config["dynamic_analyser"].error_analyser(current_app.config["handler"].parse_tree)
-    problematicIDs = current_app.config["dynamic_analyser"].id_analyser(current_app.config["handler"].parse_tree)
+    timeConflicts = current_app.config["dynamic_analyser"].time_analyser(current_app.config["handler"].parse_tree, current_app.config["handler"].internal_id)
 
     return (
         jsonify(
             {
                 "message": "Contract Analysed Successfully",
                 "percentage": percentage,
-                "problematic_ids": problematicIDs,
+                "problematic_ids": timeConflicts,
             }
         ),
         200,

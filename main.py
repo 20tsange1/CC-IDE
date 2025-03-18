@@ -104,7 +104,10 @@ class Handler:
                         self.pref_suf_format[nodename] = {"prefix": prefix, "suffix": suffix, "inline": inline}
 
 
-        self.checkid = set()
+        self.internal_id = {}
+
+        # For IDs of Conditions
+        self.global_count_arr = [0]
         
         
 
@@ -267,6 +270,7 @@ class Handler:
     def nodeAddText(self, node, finalarr):
         # print(len(node.children), node)
         if node:
+
             # In the case of no children, this means that the node a terminal (leaf) node.
             if node.children:
                 # Sets up the css structure + Hover text
@@ -295,7 +299,27 @@ class Handler:
         else:
             if node.is_error:
                 finalarr.append('</b>')
-            
+    
+    def nodeEvalIDStart(self, node, finalarr):
+        if node.type == "clause":
+            self.global_count_arr[0] += 1
+            self.global_count_arr.append(0)
+        elif node.type == "bracket":
+            self.global_count_arr[-1] += 1
+            self.global_count_arr.append(0)
+        elif node.type == "condition":
+            self.global_count_arr[-1] += 1
+            # Add it to front of condition
+            identity = '.'.join([str(i) for i in self.global_count_arr])
+            self.internal_id[node.id] = identity
+            return identity
+        return ""
+
+    def nodeEvalIDEnd(self, node, finalarr):
+        if node.type == "clause":
+            self.global_count_arr.pop()
+        elif node.type == "bracket":
+            self.global_count_arr.pop()
 
 
     def nodeAutoSuggestion(self, node, finalarr):
@@ -324,36 +348,31 @@ class Handler:
             finalarr.append(f'<span class="popup" style="color:{"grey"}" onclick="popupFunction(\'{hashed}\')">...<span class="popuptext" id="{hashed}">{self.mapper[key]}</span></span>')
 
     
-    def exploreNodes(self, cursor, finalarr, checkid, reached):
+    def exploreNodes(self, cursor, finalarr, reached):
 
         node = cursor.node
 
         flag = True
-        
-        if str(node.id) in checkid:
-            reached = 0
 
-        # Checks if it is in chosen range
-        if reached:
-            # if 1 <= cursor.depth <= 2:
-            #     finalarr.append(f'<span style="color: #{hex(2-cursor.depth)[2:]*3}" onclick="nodeFold(\'{node.id}\')">-</span>')
-                
-            self.nodeAddText(node, finalarr)
-        # else:
-        #     if 1 <= cursor.depth <= 2:
-        #         finalarr.append(f'<span style="color: #{hex(2-cursor.depth)[2:]*3}" onclick="nodeFold(\'{node.id}\')">+</span>')
+        self.nodeAddText(node, finalarr)
+
+        identity = self.nodeEvalIDStart(node, finalarr)
+
+        # Checks if IDs should be displayed
+        if reached and identity != "":
+            finalarr[-1] += "(" + identity + ") "
 
         if cursor.goto_first_child():
             while flag:
-                self.exploreNodes(cursor, finalarr, checkid, reached)
+                self.exploreNodes(cursor, finalarr, reached)
                 flag = cursor.goto_next_sibling()
             cursor.goto_parent()
 
-        if reached:
-            
-            self.nodeAddTextEnd(node, finalarr)
+        self.nodeEvalIDEnd(node, finalarr)
 
-            self.nodeAutoSuggestion(node, finalarr)
+        self.nodeAddTextEnd(node, finalarr)
+
+        self.nodeAutoSuggestion(node, finalarr)
         
         return cursor
 
@@ -381,8 +400,12 @@ class Handler:
 
         finalarr = []
 
-        # self.exploreNodes(cursor, finalarr, "", 1)
-        self.exploreNodes(cursor, finalarr, self.checkid, 1)
+        # For IDs of Conditions
+        self.global_count_arr = [0]
+        self.internal_id = {}
+        self.id_switch = 0
+
+        self.exploreNodes(cursor, finalarr, self.id_switch)
 
         self.prevString = string
 
@@ -390,13 +413,19 @@ class Handler:
         return ''.join([((i + ' ') if i and i[-1] != '>' else i) for i in finalarr])
 
 
-    def bnfSubStructure(self, nodeID=""):
+    def bnfIDStructure(self):
         if self.parse_tree:
             cursor = self.parse_tree.walk()
+            
             finalarr = []
-            if nodeID == "":
-                self.checkid = set()
-            self.exploreNodes(cursor, finalarr, self.checkid, 1)
+
+            # For IDs of Conditions
+            self.global_count_arr = [0]
+            self.internal_id = {}
+
+            self.id_switch += 1
+
+            self.exploreNodes(cursor, finalarr, self.id_switch % 2)
             return ''.join([((i + ' ') if i and i[-1] != '>' else i) for i in finalarr])
         else:
             return ''

@@ -17,6 +17,11 @@ or_connect:or_expression
 condition_n:condition
 time_holder:time_holder
 _pre_time:_pre_time
+time_and:time_and
+time_or:time_or
+time_before:time_before
+time_after:time_after
+time_on:time_on
 time:time
 day:day
 month:month

@@ -1,6 +1,7 @@
 from tree_sitter import Language, Parser
 from drawTree import DrawTree
 from drawFile import DrawFile
+from drawContract import DrawContract
 
 class Visualiser:
     def __init__(self):
@@ -8,6 +9,7 @@ class Visualiser:
 
         self.tree_drawer = DrawTree()
         self.file_drawer = DrawFile()
+        self.contract_drawer = DrawContract()
 
     """
     As an idea, why not use treecursor to draw subtrees, limiting the visual representation
@@ -34,3 +36,6 @@ class Visualiser:
 
     def drawFile(self, tree):
         return self.file_drawer.buildFileStructure(tree)
+
+    def drawContract(self, tree):
+        return self.contract_drawer.buildFileStructure(tree)

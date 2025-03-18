@@ -21,3 +21,10 @@ def file_draw():
     svg_content = current_app.config["visualiser"].drawFile(current_app.config["handler"].parse_tree)
     svg_content = Markup(svg_content)
     return jsonify(content=svg_content)
+
+@page_visualisation.route("/contract_draw")
+def contract_draw():
+    # Generate SVG for the contract structure
+    svg_content = current_app.config["visualiser"].drawContract(current_app.config["handler"].parse_tree)
+    svg_content = Markup(svg_content)
+    return jsonify(content=svg_content)

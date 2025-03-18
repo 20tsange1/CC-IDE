@@ -84,6 +84,12 @@ class EventSim:
         # For unique identifier
         self.global_count = 1
 
+        # For unique identifier
+        self.global_count_arr = [0]
+
+    def eval_count(self):
+        return '.'.join([str(i) for i in self.global_count_arr])
+
     def find_clauses(self, tree, clause_arr):
         # cursor = tree.walk()
         # First find the clauses. BFS first
@@ -99,9 +105,16 @@ class EventSim:
                 clause_arr.append([[], []])
                 # Default is AND, then flips if necessary
                 self.and_or = True
+
+                # Increment count
+                self.global_count_arr[0] += 1
+
+                self.global_count_arr.append(0)
+
                 # Completely recursive.
                 self.explore(c, clause_arr)
 
+                self.global_count_arr.pop()
 
                 # Have to the ands and ors at the clause level because it's not nested within the statement
 
@@ -131,18 +144,23 @@ class EventSim:
         # Storing previous level operator
         old_and_or = self.and_or
 
+        # Increment count
+        self.global_count_arr[-1] += 1
+        self.global_count_arr.append(0)
+
         clause_arr.append([[], []])
         self.explore(c, clause_arr)
         state = Statement(
             str(c.id),
-            # self.global_count,
             c.text.decode("utf8"),
             if_else=False,
             and_or=self.and_or,
         )
-        # self.global_count += 1
         state.conditions = clause_arr.pop()[0]
         clause_arr[-1][0].append(state)
+
+        # Pop count
+        self.global_count_arr.pop()
 
         # Restoring previous level operator
         self.and_or = old_and_or
@@ -151,15 +169,17 @@ class EventSim:
     def c_function(self, c, clause_arr):
         self.negation = False
         self.time = None
+
+        # Increment count
+        self.global_count_arr[-1] += 1
+
         self.explore(c, clause_arr)
         cond = Condition(
-            # str(c.id), 
-            str(self.global_count),
+            self.eval_count(),
             c.text.decode("utf8"), 
             self.negation,
             self.time,
             )
-        self.global_count += 1
         # Adding to array of conditions for that clause
         clause_arr[-1][0].append(cond)
         # Adding to dictionary, easier to access
@@ -173,7 +193,6 @@ class EventSim:
         Realistically, you should be using statement as a more general one, and not nest conditions under it. 
         """
         state = Statement(
-            # str(c.id),
             str(self.global_count),
             c.text.decode("utf8"),
             len(clause_arr[-1]) == 3,
@@ -216,6 +235,7 @@ class EventSim:
         self.conditions = {}
         self.state_def = {}
         self.global_count = 1
+        self.global_count_arr = [0]
 
         clause_arr = []
         self.find_clauses(parse_tree, clause_arr)

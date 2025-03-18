@@ -96,13 +96,37 @@ or_connect: $ => ('or'
 ),
 
 condition_n: $ => (seq(optional($.negation), repeat1(($.string
-)), optional($.time_holder))
+)), optional($.time_holder), ";")
 ),
 
-time_holder: $ => (seq($._pre_time, $.time)
+time_holder: $ => choice(
+	$._pre_time
+	,seq($._pre_time, choice(
+	$.time_and
+	,$.time_or
+), $._pre_time)
 ),
 
-_pre_time: $ => (seq("on", optional("the"))
+_pre_time: $ => (seq(choice(
+	$.time_before
+	,$.time_after
+	,$.time_on
+), $.time)
+),
+
+time_and: $ => ("and"
+),
+
+time_or: $ => ("or"
+),
+
+time_before: $ => (seq("before", optional("the"))
+),
+
+time_after: $ => (seq("after", optional("the"))
+),
+
+time_on: $ => (seq("on", optional("the"))
 ),
 
 time: $ => choice(

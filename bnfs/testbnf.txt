@@ -38,27 +38,43 @@
 | <condition_n>
 ;
 
-<conditional_and> ::= (<conditional_upper> | <condition_n>) (<and_connect> (<conditional_upper> | <condition_n>))+
+<conditional_and> ::= (<conditional_upper> | <condition_n>) ( <and_connect> (<conditional_upper> | <condition_n>))+
 ;
 
 <and_connect> A::=
 and
 ;
 
-<conditional_or> ::= (<conditional_upper> | <condition_n>) (<or_connect> (<conditional_upper> | <condition_n>))+
+<conditional_or> ::= (<conditional_upper> | <condition_n> ) ( <or_connect> (<conditional_upper> | <condition_n>))+
 ;
 
 <or_connect> O::=
 or
 ;
 
-<condition_n> C::= <negation>? (<string>)+ <time_holder>?
+<condition_n> C::= <negation>? (<string>)+ <time_holder>? ";"
 ;
 
-<time_holder> ::= <_pre_time> <time>
+<time_holder> ::= <_pre_time>
+| <_pre_time> (<time_and> | <time_or>) <_pre_time>
 ;
 
-<_pre_time> ::= "on" "the"?
+<_pre_time> ::= (<time_before> | <time_after> | <time_on>) <time>
+;
+
+<time_and> ::= "and"
+;
+
+<time_or> ::= "or"
+;
+
+<time_before> ::= "before" "the"? 
+;
+
+<time_after> ::= "after" "the"?
+;
+
+<time_on> ::= "on" "the"?
 ;
 
 <time> ::= <day>"-"<month>"-"<year>
