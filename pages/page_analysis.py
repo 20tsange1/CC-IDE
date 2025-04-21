@@ -20,11 +20,11 @@ def static_analysis():
 def event_sim_events():
     conditions = [
         [i.identifier, i.evaluate(), i.sentence]
-        for i in current_app.config["static_analyser"].event_simulator.conditions.values()
+        for i in current_app.config["static_analyser"].condition_simulator.conditions.values()
     ]
     states = [
         [i.identifier, i.evaluate(), i.sentence]
-        for i in current_app.config["static_analyser"].event_simulator.state_def.values()
+        for i in current_app.config["static_analyser"].condition_simulator.state_def.values()
     ]
     return (
         jsonify(
@@ -38,12 +38,12 @@ def event_sim_events():
     )
 
 @page_analysis.route("/event-toggle", methods=["POST"])
-def event_sim_toggle():
+def condition_sim_toggle():
     data = request.get_json()
     identifier = data.get("identifier")
-    event_sim = current_app.config["static_analyser"].event_simulator
-    if identifier in event_sim.conditions:
-        event_sim.toggle_condition(identifier)
+    condition_sim = current_app.config["static_analyser"].condition_simulator
+    if identifier in condition_sim.conditions:
+        condition_sim.toggle_condition(identifier)
         return jsonify({"message": "Successful toggle"}), 200
     else:
         return jsonify({"error": "Unsuccessful toggle"}), 404

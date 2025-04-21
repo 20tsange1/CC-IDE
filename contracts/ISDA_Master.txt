@@ -1,0 +1,30 @@
+IF [1] it is the case that PartyA shall pay AMOUNT A on ADATE 
+AND
+[2] it is the case that PartyB shall pay AMOUNT B on THEDATE 
+
+THEN [3] it is not the case that PartyA shall pay AMOUNT A
+on THEDATE
+
+AND
+
+[4] it is not the case that PartyB shall pay AMOUNT B on THEDATE
+
+C-AND
+
+[5] it is the case that ExcessParty shall pay AMOUNT ExcessAmount on THEDATE
+
+C-AND
+
+IF [6] it is the case that PartyA paid more than PartyB THEN [7] ExcessParty IS PartyA
+
+AND
+
+[8] ExcessAmount EQUALS AMOUNT A MINUS AMOUNT B C-AND
+
+IF [9] it is the case that PartyB paid more than PartyA 
+
+THEN [10] ExcessParty IS PartyB
+
+AND
+
+[11] ExcessAmount EQUALS AMOUNT B MINUS AMOUNT A.

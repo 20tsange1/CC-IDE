@@ -15,15 +15,24 @@ def parse_text():
     # Get the text from the request
     text = request.json.get("text")
     # Basic parsing - you can replace this with custom parsing logic
-    parsed_text = current_app.config["handler"].bnfStructure(text)  # Example: Convert text to uppercase
+    parsed_text = current_app.config["handler"].bnfStructure(text)
     return jsonify({"parsed_text": parsed_text})
 
 
-@page_parse.route("/parse-node", methods=["POST"])
-def parse_node_text():
+@page_parse.route("/display-id", methods=["POST"])
+def parse_display_id():
     # Get the text from the request
-    parsed_text = current_app.config["handler"].bnfIDStructure()  # Example: Convert text to uppercase
+    current_app.config["handler"].bnfIDStructure()
+    parsed_text = current_app.config["handler"].bnfStructure()
     return jsonify({"parsed_text": parsed_text})
+
+@page_parse.route("/display-def", methods=["POST"])
+def parse_display_definitions():
+    # Get the text from the request
+    current_app.config["handler"].bnfDefinitionStructure()
+    parsed_text = current_app.config["handler"].bnfStructure()
+    return jsonify({"parsed_text": parsed_text})
+
 
 
 def check_if_current_grammar(directory, filename, grammar_name):
@@ -123,8 +132,8 @@ def create_file():
 
 @page_parse.route("/dynamic-analysis", methods=["POST"])
 def dynamic_analysis():
-    percentage = current_app.config["dynamic_analyser"].error_analyser(current_app.config["handler"].parse_tree)
-    timeConflicts = current_app.config["dynamic_analyser"].time_analyser(current_app.config["handler"].parse_tree, current_app.config["handler"].internal_id)
+    percentage = current_app.config["interactive_analyser"].error_analyser(current_app.config["handler"].parse_tree)
+    timeConflicts = current_app.config["interactive_analyser"].time_analyser(current_app.config["handler"].parse_tree, current_app.config["handler"].internal_id)
 
     return (
         jsonify(

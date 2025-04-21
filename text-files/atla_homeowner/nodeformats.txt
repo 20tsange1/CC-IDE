@@ -1,0 +1,21 @@
+contract~~~~~~~~
+_choice~~~~~~~~
+start~~~~~~~~
+insurance~~~~~~display: block; margin: 2rem;~~
+negation~~~~~~~~
+discount~~~~~~display: block; margin: 2rem;~~
+discount_specific~~~~~~~~
+else~~~~~~~~
+conditional_upper~~~~~~~~
+bracketopen~~~~~~display: none;~~
+bracketclose~~~~~~display: none;~~
+conditional~~~~~~~~
+conditional_and~~~~~~display: block; margin: 2rem;~~
+and_connect~~~~~~display: none;~~
+conditional_or~~~~~~display: block; margin: 2rem;~~
+or_connect~~~~~~display: none;~~
+condition_n~~~~~~display: block; margin: 1rem;~~
+string~~~~~~~~
+num~~~~~~~~
+_numSingle~~~~~~~~
+semicolon~~~~~~~~

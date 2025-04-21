@@ -1,0 +1,27 @@
+contract~~~~~~~~
+component~~~~~~~~
+definition~~~~~~~~
+simple_definition~~~~~~display: block; margin: 2rem;~~
+numerical_expression~~~~~~~~
+operator~~~~~~~~
+conditional_definition~~~~~~~~
+statement~~~~~~~~
+conditional_statement~~~~~~~~
+simple_statement~~~~~~display: block; margin: 2rem;~~
+condition~~~~~~~~
+simple_condition~~~~~~display: block; margin: 2rem;~~
+boolean_expression~~~~~~~~
+identity~~~~~~~~
+holds~~~~~~~~
+subject~~~~~~~~
+verb~~~~~~~~
+verb_status~~~~~~~~
+comparison~~~~~~~~
+modal_verb~~~~~~~~
+date~~~~~~~~
+month~~~~~~~~
+object~~~~~~~~
+numerical_object~~~~~~~~
+nonnumerical_object~~~~~~~~
+string~~~~~~~~
+num~~~~~~~~

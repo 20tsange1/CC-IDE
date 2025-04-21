@@ -43,7 +43,6 @@
 <simple-statement> ::= <identity> <holds>? <subject> <modal-verb> <verb> <object> <date>
                      | <identity> <holds>? <subject> <date> <modal-verb> <verb> <object>
                      | <identity> <holds>? <date> <subject> <modal-verb> <verb> <object>
-                     | <identity> <holds>? <date> <subject> <verb-status> <object> <date>
  ;
 
 <condition> ::= <simple-condition>
@@ -61,69 +60,66 @@
 <boolean-expression> ::= <subject> <verb-status> <comparison> <subject>
  ;
 
-<identity> ::= [ <num> ]
-       | [ <num> ( <num> ) ]
+<identity> ::= "[" <num> "]"
+        | "[" <num> "(" <num> ")" "]"
  ;
 
-<holds> ::= it is the case that
-          | it is not the case that
+<holds> ::= "it is the case that"
+        | "it is not the case that"
  ;
 
 <subject> ::= <string>
  ;
 
-<verb> ::= DELIVER
-         | PAY
-         | CHARGE
-         | SEND
+<verb> ::= DELIVER | deliver
+         | PAY | pay
+         | CHARGE | charge
  ;
 
-<verb-status> ::= DELIVERED
-                | PAID
-                | CHARGED
-                | SENT
+<verb-status> ::= DELIVERED | delivered
+        | PAID | paid
+        | CHARGED | charged
  ;
 
-<comparison> ::= LESS THAN
-               | EQUAL TO
-               | MORE THAN
+<comparison> ::= LESS THAN | less than
+        | EQUAL TO | equals | equal to
+        | MORE THAN | more than | greater than
  ;
 
-<modal-verb> ::= OBLIGATION
-               | PERMISSION
-               | PROHIBITION
+<modal-verb> ::= OBLIGATION | shall | must
+        | PERMISSION | may
+        | PROHIBITION | is forbidden to
  ;
 
-<date> ::= on the <num> <month> <num>
-         | on ANYDATE
-         | on ADATE
-         | on THEDATE
+<date> ::= "on the" <num> <month> <num>
+         | "on" ANYDATE
+         | "on" ADATE
+         | "on" THEDATE
  ;
 
-<month> ::= January
-          | February
-          | March
-          | April
-          | May
-          | June
-          | July
-          | August
-          | September
-          | October
-          | November
-          | December
+<month> ::= "January"
+          | "February"
+          | "March"
+          | "April"
+          | "May"
+          | "June"
+          | "July"
+          | "August"
+          | "September"
+          | "October"
+          | "November"
+          | "December"
  ;
 
 <object> ::= <numerical-object>
-           | <nonnumerical-object>
+        | <nonnumerical-object>
  ;
 
-<numerical-object> ::= POUNDS <num>
-                     | DOLLARS <num>
-                     | EUROS <num>
-                     | FRANCS <num>
-                     | AMOUNT <subject>
- ;
+<numerical-object> ::= (POUNDS | GBP | pounds | quid) <num>
+        | (DOLLARS | USD | dollars | bucks) <num>
+        | (EUROS | EUR | euros) <num>
+        | AMOUNT <subject>
+;
 
 <nonnumerical-object> ::= SOMECURRENCY <string>
                         | REPORT <string>
@@ -131,7 +127,7 @@
                         | OTHEROBJECT <string>
  ;
 
-<string> ::= /[a-zA-Z]+/
+<string> ::= /[a-zA-Z\-.]+/
  ;
 
 <num> ::= /[0-9]+/

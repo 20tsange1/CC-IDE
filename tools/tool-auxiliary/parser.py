@@ -5,22 +5,12 @@ sys.path.append('antlr/')
 from antlr4 import *
 from grammarParserLexer import grammarParserLexer
 from grammarParserParser import grammarParserParser
-from grammarParserVisitor import grammarParserVisitor
+from grammarParserVisitor import grammarParserVisitor, Component
 
 from antlr4.error.ErrorListener import *
 
 import os
 import re
-
-class Component:
-    def __init__(self, name, children=[]):
-        self.name = name
-        self.children = children
-        self.next = {}
-        self.prev = {}
-
-    def __repr__(self):
-        return self.name
 
 
 # Need to add left recursive, add a flag, maybe L::=

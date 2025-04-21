@@ -7,6 +7,7 @@
   <title>BNF Editor</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styleheader.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/stylevisual.css') }}">
 </head>
 
 <body>
@@ -18,13 +19,23 @@
   </p>
 
   <div class="subheader">
-    <a class="" href="#" onclick="loadContent('tree', this)">Tree Struc</a>
-    <a class="" href="#" onclick="loadContent('file', this)">File Struc</a>
-    <a class="" href="#" onclick="loadContent('contract', this)">Contract Struc</a>
+    <a class="" href="#" onclick="loadContent('tree', this);toggleOptionsBoxOpen(false);">Tree Struc</a>
+    <a class="" href="#" onclick="loadContent('file', this);toggleOptionsBoxOpen(false);">File Struc</a>
+    <a class="" href="#" onclick="loadContent('contract', this);toggleOptionsBoxOpen(true);getNodeTypes();">Contract Struc</a>
+    <a class="" href="#" onclick="loadContent('boolean', this);toggleOptionsBoxOpen(false);">Boolean Struc</a>
   </div>
 
   <div id="content-container" style="overflow-y: scroll; overflow-x: scroll; max-height: 30rem;">
     <!-- Dynamic content will be injected here -->
+  </div>
+
+  <div id="options-container" style="display: none">
+    <div id="formatter">
+      <h2>Visualisation Options</h2>
+      <button type="button" class="button" id="toggleOptionsBtn">Options</button>
+      <div id="visualisationOptions" style="display: none"></div>
+      <button type="button" class="button" id="saveOptionsBtn" style="display: none">Save Options</button>
+    </div>
   </div>
 
   <script type="text/javascript" src="{{ url_for('static', filename='javascript/visualise.js') }}"></script>

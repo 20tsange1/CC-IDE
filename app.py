@@ -14,8 +14,8 @@ from markupsafe import Markup
 
 # For Auxiliary parsing and visualisation functions
 from main import Handler
-from dynamicanalysis import DynamicAnalysis
-from staticanalysis import StaticAnalysis
+from interactive_analysis import InteractiveAnalysis
+from static_analysis import StaticAnalysis
 from visualiser import Visualiser
 from ontology import Ontology
 from metadata import MetaData
@@ -38,7 +38,7 @@ app = Flask(__name__)
 # Global Objects
 handler = Handler()
 ont = Ontology()
-dynamic_analyser = DynamicAnalysis()
+interactive_analyser = InteractiveAnalysis()
 static_analyser = StaticAnalysis()
 visualiser = Visualiser()
 metadata = MetaData()
@@ -48,7 +48,7 @@ time_tester = TimeTest()
 # Global Objects - Into Config
 app.config["handler"] = handler
 app.config["ont"] = ont
-app.config["dynamic_analyser"] = dynamic_analyser
+app.config["interactive_analyser"] = interactive_analyser
 app.config["static_analyser"] = static_analyser
 app.config["visualiser"] = visualiser
 app.config["metadata"] = metadata

@@ -1,0 +1,68 @@
+<contract> ::= <_choice>+
+;
+
+<_choice> ::= <start>
+;
+
+<start> CC::= (<discount>.)
+;
+
+<insurance> ::= <string>+
+;
+
+<negation> N::= (it is not true that)
+;
+
+<discount> ::= <discount_specific> ("and" <discount_specific>)* (Some examples of title defects are":") (<conditional> (<else> <discount_specific> ("and" <discount_specific>)*)?)?
+;
+
+<discount_specific> S::= <string>+ "."
+;
+
+<else> ::= "else"
+;
+
+<conditional_upper> B::= <bracketopen> <conditional> <bracketclose>
+;
+
+<bracketopen> ::= [
+;
+
+<bracketclose> ::= ]
+;
+
+<conditional> ::= <conditional_upper>
+| <conditional_and>
+| <conditional_or>
+| <condition_n>
+;
+
+<conditional_and> ::= (<conditional_upper> | <condition_n>) ( <and_connect> (<conditional_upper> | <condition_n>))+
+;
+
+<and_connect> A::=
+and
+;
+
+<conditional_or> ::= (<conditional_upper> | <condition_n> ) ( <or_connect> (<conditional_upper> | <condition_n>))+
+;
+
+<or_connect> O::=
+or
+;
+
+<condition_n> C::= <negation>? (<string>)+ <semicolon>
+;
+
+
+<string> ::= /[a-zA-Z]+/ | "," | "(" | ")"
+ ;
+
+<num> ::= /[0-9]+/
+ ;
+
+<_numSingle> ::= /[0-9]/
+ ;
+
+<semicolon> ::= ";"
+;
