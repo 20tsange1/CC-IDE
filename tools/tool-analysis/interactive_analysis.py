@@ -121,12 +121,7 @@ class InteractiveAnalysis:
 
                 if node.type == "condition":
                     times.append([])
-                elif node.type in times_choices:
-                    times[-1].append(times_choices[node.type])
-                elif node.type in times_connector:
-                    times[-1].append(times_connector[node.type])
-                elif node.type == "time":
-                    times[-1].append(self.time_convert.evaluate_time_tree(node))
+                    times[-1].append(self.time_convert.time_analyser(node))
 
                 if node.id in identities:
                     times[-1].append(identities[node.id])
@@ -138,10 +133,11 @@ class InteractiveAnalysis:
         ret_arr = []
 
         for time_check in times:
-            if len(time_check) != 6:
+            if len(time_check[0]) != 5:
                 continue
 
-            key, val1, op1, condition, val2, op2 = time_check
+            val1, op1, condition, val2, op2 = time_check[0]
+            key = time_check[1]
 
             # Directly append if certain conditions are met
             if op1 == op2 or op1 == "o" or op2 == "o":

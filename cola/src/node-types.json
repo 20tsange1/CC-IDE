@@ -1,6 +1,11 @@
 [
   {
-    "type": "ID",
+    "type": "and_expression",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "bracket",
     "named": true,
     "fields": {},
     "children": {
@@ -8,14 +13,22 @@
       "required": true,
       "types": [
         {
-          "type": "num",
+          "type": "bracketclose",
+          "named": true
+        },
+        {
+          "type": "bracketopen",
+          "named": true
+        },
+        {
+          "type": "conditional",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "boolean_expression",
+    "type": "clause",
     "named": true,
     "fields": {},
     "children": {
@@ -23,61 +36,15 @@
       "required": true,
       "types": [
         {
-          "type": "comparison",
+          "type": "discount",
           "named": true
         },
         {
-          "type": "subject",
+          "type": "name",
           "named": true
         },
         {
-          "type": "verb_status",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "comparison",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "equal",
-          "named": true
-        },
-        {
-          "type": "more_than",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "component",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "conditional_definition",
-          "named": true
-        },
-        {
-          "type": "conditional_statement",
-          "named": true
-        },
-        {
-          "type": "definition",
-          "named": true
-        },
-        {
-          "type": "statement",
+          "type": "user",
           "named": true
         }
       ]
@@ -92,18 +59,53 @@
       "required": true,
       "types": [
         {
-          "type": "condition",
+          "type": "negation",
           "named": true
         },
         {
-          "type": "simple_condition",
+          "type": "semicolon",
+          "named": true
+        },
+        {
+          "type": "string",
+          "named": true
+        },
+        {
+          "type": "time_holder",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "conditional_definition",
+    "type": "conditional",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "bracket",
+          "named": true
+        },
+        {
+          "type": "condition",
+          "named": true
+        },
+        {
+          "type": "conditional_and",
+          "named": true
+        },
+        {
+          "type": "conditional_or",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "conditional_and",
     "named": true,
     "fields": {},
     "children": {
@@ -111,18 +113,22 @@
       "required": true,
       "types": [
         {
-          "type": "condition",
+          "type": "and_expression",
           "named": true
         },
         {
-          "type": "definition",
+          "type": "bracket",
+          "named": true
+        },
+        {
+          "type": "condition",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "conditional_statement",
+    "type": "conditional_or",
     "named": true,
     "fields": {},
     "children": {
@@ -130,11 +136,15 @@
       "required": true,
       "types": [
         {
+          "type": "bracket",
+          "named": true
+        },
+        {
           "type": "condition",
           "named": true
         },
         {
-          "type": "statement",
+          "type": "or_expression",
           "named": true
         }
       ]
@@ -150,50 +160,20 @@
       "required": true,
       "types": [
         {
-          "type": "component",
+          "type": "clause",
           "named": true
         },
         {
-          "type": "contract",
+          "type": "definition",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "date",
+    "type": "day",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "month",
-          "named": true
-        },
-        {
-          "type": "num",
-          "named": true
-        },
-        {
-          "type": "specific_date",
-          "named": true
-        },
-        {
-          "type": "subject",
-          "named": true
-        },
-        {
-          "type": "temporal_offset",
-          "named": true
-        },
-        {
-          "type": "temporal_quantifier",
-          "named": true
-        }
-      ]
-    }
+    "fields": {}
   },
   {
     "type": "definition",
@@ -204,46 +184,49 @@
       "required": true,
       "types": [
         {
-          "type": "definition",
+          "type": "definition_specific",
           "named": true
         },
         {
-          "type": "simple_definition",
+          "type": "name",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "dollars",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "equal",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "euros",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "holds",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "modal_verb",
+    "type": "definition_specific",
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
-      "required": false,
+      "multiple": true,
+      "required": true,
       "types": [
         {
-          "type": "obligation",
+          "type": "string",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "discount",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "conditional",
+          "named": true
+        },
+        {
+          "type": "else",
+          "named": true
+        },
+        {
+          "type": "statement",
           "named": true
         }
       ]
@@ -255,12 +238,7 @@
     "fields": {}
   },
   {
-    "type": "more_than",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "nonnumerical_object",
+    "type": "name",
     "named": true,
     "fields": {},
     "children": {
@@ -275,273 +253,115 @@
     }
   },
   {
-    "type": "numerical_expression",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "num",
-          "named": true
-        },
-        {
-          "type": "numerical_expression",
-          "named": true
-        },
-        {
-          "type": "numerical_object",
-          "named": true
-        },
-        {
-          "type": "operator",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "numerical_object",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "dollars",
-          "named": true
-        },
-        {
-          "type": "euros",
-          "named": true
-        },
-        {
-          "type": "num",
-          "named": true
-        },
-        {
-          "type": "pounds",
-          "named": true
-        },
-        {
-          "type": "subject",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "object",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "nonnumerical_object",
-          "named": true
-        },
-        {
-          "type": "numerical_object",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "obligation",
+    "type": "negation",
     "named": true,
     "fields": {}
   },
   {
-    "type": "operator",
+    "type": "or_expression",
     "named": true,
     "fields": {}
-  },
-  {
-    "type": "pounds",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "receiver",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "subject",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "simple_condition",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "ID",
-          "named": true
-        },
-        {
-          "type": "boolean_expression",
-          "named": true
-        },
-        {
-          "type": "date",
-          "named": true
-        },
-        {
-          "type": "holds",
-          "named": true
-        },
-        {
-          "type": "modal_verb",
-          "named": true
-        },
-        {
-          "type": "object",
-          "named": true
-        },
-        {
-          "type": "receiver",
-          "named": true
-        },
-        {
-          "type": "subject",
-          "named": true
-        },
-        {
-          "type": "verb",
-          "named": true
-        },
-        {
-          "type": "verb_status",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "simple_definition",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "ID",
-          "named": true
-        },
-        {
-          "type": "numerical_expression",
-          "named": true
-        },
-        {
-          "type": "subject",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "simple_statement",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "ID",
-          "named": true
-        },
-        {
-          "type": "date",
-          "named": true
-        },
-        {
-          "type": "holds",
-          "named": true
-        },
-        {
-          "type": "modal_verb",
-          "named": true
-        },
-        {
-          "type": "object",
-          "named": true
-        },
-        {
-          "type": "receiver",
-          "named": true
-        },
-        {
-          "type": "subject",
-          "named": true
-        },
-        {
-          "type": "verb",
-          "named": true
-        },
-        {
-          "type": "verb_status",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "specific_date",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "month",
-          "named": true
-        },
-        {
-          "type": "num",
-          "named": true
-        }
-      ]
-    }
   },
   {
     "type": "statement",
     "named": true,
     "fields": {},
     "children": {
-      "multiple": true,
+      "multiple": false,
       "required": true,
       "types": [
         {
-          "type": "simple_statement",
-          "named": true
-        },
-        {
-          "type": "statement",
+          "type": "num",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "subject",
+    "type": "time",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "day",
+          "named": true
+        },
+        {
+          "type": "month",
+          "named": true
+        },
+        {
+          "type": "year",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "time_after",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "time_and",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "time_before",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "time_holder",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "time",
+          "named": true
+        },
+        {
+          "type": "time_after",
+          "named": true
+        },
+        {
+          "type": "time_and",
+          "named": true
+        },
+        {
+          "type": "time_before",
+          "named": true
+        },
+        {
+          "type": "time_on",
+          "named": true
+        },
+        {
+          "type": "time_or",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "time_on",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "time_or",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "user",
     "named": true,
     "fields": {},
     "children": {
@@ -556,45 +376,148 @@
     }
   },
   {
-    "type": "temporal_offset",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "num",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "temporal_quantifier",
+    "type": "year",
     "named": true,
     "fields": {}
   },
   {
-    "type": "verb",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "verb_status",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "AMOUNT",
+    "type": "$",
     "named": false
   },
   {
-    "type": "AND",
+    "type": "%",
     "named": false
   },
   {
-    "type": "ANYDATE",
+    "type": "-",
+    "named": false
+  },
+  {
+    "type": ".",
+    "named": false
+  },
+  {
+    "type": "10th",
+    "named": false
+  },
+  {
+    "type": "11th",
+    "named": false
+  },
+  {
+    "type": "12th",
+    "named": false
+  },
+  {
+    "type": "13th",
+    "named": false
+  },
+  {
+    "type": "14th",
+    "named": false
+  },
+  {
+    "type": "15th",
+    "named": false
+  },
+  {
+    "type": "16th",
+    "named": false
+  },
+  {
+    "type": "17th",
+    "named": false
+  },
+  {
+    "type": "18th",
+    "named": false
+  },
+  {
+    "type": "19th",
+    "named": false
+  },
+  {
+    "type": "1st",
+    "named": false
+  },
+  {
+    "type": "20th",
+    "named": false
+  },
+  {
+    "type": "21st",
+    "named": false
+  },
+  {
+    "type": "22nd",
+    "named": false
+  },
+  {
+    "type": "23rd",
+    "named": false
+  },
+  {
+    "type": "24th",
+    "named": false
+  },
+  {
+    "type": "25th",
+    "named": false
+  },
+  {
+    "type": "26th",
+    "named": false
+  },
+  {
+    "type": "27th",
+    "named": false
+  },
+  {
+    "type": "28th",
+    "named": false
+  },
+  {
+    "type": "29th",
+    "named": false
+  },
+  {
+    "type": "2nd",
+    "named": false
+  },
+  {
+    "type": "30th",
+    "named": false
+  },
+  {
+    "type": "31st",
+    "named": false
+  },
+  {
+    "type": "3rd",
+    "named": false
+  },
+  {
+    "type": "4th",
+    "named": false
+  },
+  {
+    "type": "5th",
+    "named": false
+  },
+  {
+    "type": "6th",
+    "named": false
+  },
+  {
+    "type": "7th",
+    "named": false
+  },
+  {
+    "type": "8th",
+    "named": false
+  },
+  {
+    "type": "9th",
     "named": false
   },
   {
@@ -606,51 +529,11 @@
     "named": false
   },
   {
-    "type": "C-AND",
-    "named": false
-  },
-  {
-    "type": "DIVIDE",
-    "named": false
-  },
-  {
-    "type": "DOLLARS",
-    "named": false
-  },
-  {
     "type": "December",
     "named": false
   },
   {
-    "type": "ELSE",
-    "named": false
-  },
-  {
-    "type": "EQUALS",
-    "named": false
-  },
-  {
-    "type": "EUR",
-    "named": false
-  },
-  {
-    "type": "EUROS",
-    "named": false
-  },
-  {
     "type": "February",
-    "named": false
-  },
-  {
-    "type": "GBP",
-    "named": false
-  },
-  {
-    "type": "IF",
-    "named": false
-  },
-  {
-    "type": "IS",
     "named": false
   },
   {
@@ -666,10 +549,6 @@
     "named": false
   },
   {
-    "type": "MINUS",
-    "named": false
-  },
-  {
     "type": "March",
     "named": false
   },
@@ -678,19 +557,7 @@
     "named": false
   },
   {
-    "type": "NAMEDOBJECT",
-    "named": false
-  },
-  {
     "type": "November",
-    "named": false
-  },
-  {
-    "type": "OR",
-    "named": false
-  },
-  {
-    "type": "OTHEROBJECT",
     "named": false
   },
   {
@@ -698,51 +565,7 @@
     "named": false
   },
   {
-    "type": "PLUS",
-    "named": false
-  },
-  {
-    "type": "POUNDS",
-    "named": false
-  },
-  {
-    "type": "REPORT",
-    "named": false
-  },
-  {
-    "type": "SOMECURRENCY",
-    "named": false
-  },
-  {
-    "type": "SOMEDATE",
-    "named": false
-  },
-  {
     "type": "September",
-    "named": false
-  },
-  {
-    "type": "THEDATE",
-    "named": false
-  },
-  {
-    "type": "THEN",
-    "named": false
-  },
-  {
-    "type": "TIMES",
-    "named": false
-  },
-  {
-    "type": "USD",
-    "named": false
-  },
-  {
-    "type": "[",
-    "named": false
-  },
-  {
-    "type": "]",
     "named": false
   },
   {
@@ -750,59 +573,39 @@
     "named": false
   },
   {
+    "type": "and",
+    "named": false
+  },
+  {
     "type": "before",
     "named": false
   },
   {
-    "type": "buck",
-    "named": false
+    "type": "bracketclose",
+    "named": true
   },
   {
-    "type": "case",
-    "named": false
-  },
-  {
-    "type": "charge",
-    "named": false
-  },
-  {
-    "type": "charged",
-    "named": false
+    "type": "bracketopen",
+    "named": true
   },
   {
     "type": "comment",
     "named": true
   },
   {
-    "type": "day",
+    "type": "discount",
     "named": false
   },
   {
-    "type": "days",
+    "type": "else",
+    "named": true
+  },
+  {
+    "type": "has",
     "named": false
   },
   {
-    "type": "deliver",
-    "named": false
-  },
-  {
-    "type": "delivered",
-    "named": false
-  },
-  {
-    "type": "equal",
-    "named": false
-  },
-  {
-    "type": "equals",
-    "named": false
-  },
-  {
-    "type": "forbidden",
-    "named": false
-  },
-  {
-    "type": "greater",
+    "type": "if",
     "named": false
   },
   {
@@ -814,22 +617,6 @@
     "named": false
   },
   {
-    "type": "less",
-    "named": false
-  },
-  {
-    "type": "may",
-    "named": false
-  },
-  {
-    "type": "more",
-    "named": false
-  },
-  {
-    "type": "must",
-    "named": false
-  },
-  {
     "type": "not",
     "named": false
   },
@@ -838,40 +625,24 @@
     "named": true
   },
   {
+    "type": "off",
+    "named": false
+  },
+  {
     "type": "on",
     "named": false
   },
   {
-    "type": "paid",
+    "type": "or",
     "named": false
   },
   {
-    "type": "pay",
-    "named": false
-  },
-  {
-    "type": "quid",
-    "named": false
-  },
-  {
-    "type": "refund",
-    "named": false
-  },
-  {
-    "type": "refunded",
-    "named": false
-  },
-  {
-    "type": "shall",
-    "named": false
+    "type": "semicolon",
+    "named": true
   },
   {
     "type": "string",
     "named": true
-  },
-  {
-    "type": "than",
-    "named": false
   },
   {
     "type": "that",
@@ -882,23 +653,7 @@
     "named": false
   },
   {
-    "type": "to",
-    "named": false
-  },
-  {
-    "type": "week",
-    "named": false
-  },
-  {
-    "type": "weeks",
-    "named": false
-  },
-  {
-    "type": "year",
-    "named": false
-  },
-  {
-    "type": "years",
+    "type": "true",
     "named": false
   }
 ]

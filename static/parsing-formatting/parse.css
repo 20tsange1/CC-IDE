@@ -1,37 +1,35 @@
-.contract { color: #2f4a89; font-weight: bold;  }
-.component {  display: block; margin-top: 1rem; }
-.definition {   }
-.simple_definition { color: #328f8e; font-weight: bold; display: block; margin: 2rem; }
-.numerical_expression {   }
-.operator {   }
-.conditional_definition {   }
+.contract {   }
+.clause {  display: block; margin: 2rem; }
+.definition { color: #16641f; font-weight: bold; display: block; margin: 2rem; }
+.definition_specific {   }
+.user { color: #208497; font-weight: bold;  }
+.name {   }
+.negation { color: #d67171; font-weight: bold;  }
+.discount { color: #384cad; font-weight: bold;  }
 .statement {   }
-.conditional_statement {   }
-.simple_statement { color: #4071d4; font-weight: bold; display: block; margin: 2rem; }
-.condition {   }
-.simple_condition { color: #5871ad; font-weight: bold; display: block; margin: 2rem; }
-.boolean_expression {   }
-.ID {   }
-.holds {   }
-.subject { color: #8bab36; font-weight: bold;  }
-.verb {   }
-.verb_status {   }
-.comparison {   }
-.equal {   }
-.more_than {   }
-.modal_verb {   }
-.obligation {   }
-.date { color: #b9419f; font-weight: bold;  }
-.temporal_quantifier {   }
-.specific_date {   }
-.temporal_offset {   }
+.else {   }
+.bracket {  display: block; margin: 2rem; }
+.bracketopen {  display: none; }
+.bracketclose {  display: none; }
+.conditional {   }
+.conditional_and { color: #187b1a; font-weight: bold;  }
+.and_expression {   }
+.conditional_or { color: #919d53; font-weight: bold;  }
+.or_expression {   }
+.condition { color: #050505; font-weight: bold; display: block; margin: 1rem; }
+.time_holder {   }
+._pre_time {   }
+.time_and {   }
+.time_or {   }
+.time_before {   }
+.time_after {   }
+.time_on {   }
+.time { color: #7a5279; font-weight: bold;  }
+.day {   }
 .month {   }
-.object {   }
-.numerical_object {   }
-.nonnumerical_object {   }
-.pounds {   }
-.dollars {   }
-.euros {   }
-.receiver {   }
+.year {   }
 .string {   }
 .num {   }
+._numSingle {   }
+._choice {   }
+.semicolon {  display: none; }

@@ -1,5 +1,6 @@
 from tree_sitter import Language, Parser
 from condition_sim_aux import ConditionSim
+from event_sim_aux import EventSim
 
 class StaticAnalysis:
     """
@@ -9,11 +10,15 @@ class StaticAnalysis:
 
     def __init__(self):
         self.condition_simulator = ConditionSim()
+        self.event_simulator = EventSim()
     
-    def simulate(self, parse_tree):
-        self.condition_simulator.event_simulation(parse_tree)
+    def simulate_conditions(self, parse_tree):
+        self.condition_simulator.condition_simulation(parse_tree)
 
         # print(self.event_simulator.conditions)
-        for c in self.condition_simulator.conditions.values():
-            print(c.time_cond)
-        print(self.condition_simulator.state_def)
+        # for c in self.condition_simulator.conditions.values():
+        #     print(c.time_cond)
+        # print(self.condition_simulator.state_def)
+
+    def simulate_events(self, parse_tree):
+        self.event_simulator.event_simulation(parse_tree)

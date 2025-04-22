@@ -16,231 +16,200 @@ module.exports = grammar({
 	],
 
   rules: {
-contract: $ => choice(
-	$.component
-	,seq($.component, "C-AND", $.contract)
+contract: $ => (repeat1($._choice)
 ),
 
-component: $ => choice(
-	$.definition
-	,$.conditional_definition
-	,$.statement
-	,$.conditional_statement
+_choice: $ => choice(
+	alias($.start, $.clause)
+	,$.definition
 ),
 
-definition: $ => choice(
-	$.simple_definition
-	,seq($.simple_definition, "AND", $.definition)
+start: $ => ((seq(choice(
+	$.user
+	,$.name
+), 'has', $.discount, '.')
+)
 ),
 
-simple_definition: $ => choice(
-	seq($.ID, $.subject, "IS", $.subject)
-	,seq($.ID, $.subject, "EQUALS", $.numerical_expression)
+definition: $ => (seq($.name, 'is', $.definition_specific, '.')
 ),
 
-numerical_expression: $ => prec.left(choice(
-	$.num
-	,$.numerical_object
-	,seq($.numerical_expression, $.operator, $.numerical_expression)
+definition_specific: $ => (repeat1($.string)
+),
+
+user: $ => prec(7,($.string
 )),
 
-operator: $ => choice(
-	'PLUS'
-	,'MINUS'
-	,'TIMES'
-	,'DIVIDE'
+name: $ => ($.string
 ),
 
-conditional_definition: $ => choice(
-	seq($.definition, 'IF', $.condition)
-	,seq('IF', $.condition, 'THEN', $.definition)
-	,seq($.definition, 'IF', $.condition, 'ELSE', $.definition)
-	,seq('IF', $.condition, 'THEN', $.definition, 'ELSE', $.definition)
+negation: $ => ((seq('it', 'is', 'not', 'true', 'that')
+)
 ),
 
-statement: $ => choice(
-	$.simple_statement
-	,seq($.simple_statement, 'OR', $.statement)
-	,seq($.simple_statement, 'AND', $.statement)
+discount: $ => (seq(alias($.discount_specific, $.statement), repeat((seq("and", alias($.discount_specific, $.statement))
+)), optional((seq('if', $.conditional, optional((seq($.else, alias($.discount_specific, $.statement), repeat((seq("and", alias($.discount_specific, $.statement))
+)))
+)))
+)))
 ),
 
-conditional_statement: $ => choice(
-	seq($.statement, 'IF', $.condition)
-	,seq('IF', $.condition, 'THEN', $.statement)
-	,seq($.statement, 'IF', $.condition, 'ELSE', $.statement)
-	,seq('IF', $.condition, 'THEN', $.statement, 'ELSE', $.statement)
+discount_specific: $ => choice(
+	seq($.num, '%', optional(choice(
+	'discount'
+	,'off'
+)))
+	,seq('$', $.num, 'off')
 ),
 
-simple_statement: $ => choice(
-	seq($.ID, optional($.holds), $.subject, $.modal_verb, $.verb, $.object, $.receiver, $.date)
-	,seq($.ID, optional($.holds), $.subject, $.date, $.modal_verb, $.verb, $.object, $.receiver)
-	,seq($.ID, optional($.holds), $.date, $.subject, $.modal_verb, $.verb, $.object, $.receiver)
-	,seq($.ID, optional($.holds), $.subject, $.verb_status, $.object, $.receiver, $.date)
+else: $ => ("else"
 ),
 
-condition: $ => choice(
-	$.simple_condition
-	,seq($.simple_condition, 'OR', $.condition)
-	,seq($.simple_condition, 'AND', $.condition)
+conditional_upper: $ => (seq($.bracketopen, $.conditional, $.bracketclose)
 ),
 
-simple_condition: $ => choice(
-	seq($.ID, optional($.holds), $.subject, $.verb_status, $.object, $.receiver, $.date)
-	,seq($.ID, optional($.holds), $.subject, $.date, $.verb_status, $.object, $.receiver)
-	,seq($.ID, optional($.holds), $.date, $.subject, $.verb_status, $.object, $.receiver)
-	,seq($.ID, optional($.holds), $.subject, $.modal_verb, $.verb, $.object, $.receiver, $.date)
-	,seq($.ID, optional($.holds), $.boolean_expression)
+bracketopen: $ => ('['
 ),
 
-boolean_expression: $ => (seq($.subject, $.verb_status, $.comparison, $.subject)
+bracketclose: $ => (']'
 ),
 
-ID: $ => choice(
-	seq('[', $.num, ']')
-	,seq('[', $.num, ($.num
-), ']')
+conditional: $ => choice(
+	alias($.conditional_upper, $.bracket)
+	,$.conditional_and
+	,$.conditional_or
+	,alias($.condition_n, $.condition)
 ),
 
-holds: $ => choice(
-	seq('it', 'is', 'the', 'case', 'that')
-	,seq('it', 'is', 'not', 'the', 'case', 'that')
+conditional_and: $ => (seq(choice(
+	alias($.conditional_upper, $.bracket)
+	,alias($.condition_n, $.condition)
+), repeat1((seq(alias($.and_connect, $.and_expression), choice(
+	alias($.conditional_upper, $.bracket)
+	,alias($.condition_n, $.condition)
+))
+)))
 ),
 
-subject: $ => ($.string
+and_connect: $ => ('and'
 ),
 
-verb: $ => choice(
-	'deliver'
-	,'pay'
-	,'charge'
-	,'refund'
+conditional_or: $ => (seq(choice(
+	alias($.conditional_upper, $.bracket)
+	,alias($.condition_n, $.condition)
+), repeat1((seq(alias($.or_connect, $.or_expression), choice(
+	alias($.conditional_upper, $.bracket)
+	,alias($.condition_n, $.condition)
+))
+)))
 ),
 
-verb_status: $ => choice(
-	'delivered'
-	,'paid'
-	,'charged'
-	,'refunded'
+or_connect: $ => ('or'
 ),
 
-comparison: $ => choice(
-	seq('less', 'than')
-	,$.equal
-	,$.more_than
+condition_n: $ => (seq(optional($.negation), repeat1(($.string
+)), optional($.time_holder), $.semicolon)
 ),
 
-equal: $ => choice(
-	'equals'
-	,seq('equal', 'to')
+time_holder: $ => choice(
+	$._pre_time
+	,seq($._pre_time, choice(
+	$.time_and
+	,$.time_or
+), $._pre_time)
 ),
 
-more_than: $ => choice(
-	seq('more', 'than')
-	,seq('greater', 'than')
+_pre_time: $ => (seq(choice(
+	$.time_before
+	,$.time_after
+	,$.time_on
+), $.time)
 ),
 
-modal_verb: $ => choice(
-	$.obligation
-	,'may'
-	,seq('is', 'forbidden', 'to')
+time_and: $ => ("and"
 ),
 
-obligation: $ => choice(
-	'shall'
-	,'must'
+time_or: $ => ("or"
 ),
 
-date: $ => choice(
-	$.specific_date
-	,seq('on', 'ANYDATE')
-	,seq('on', 'SOMEDATE', $.subject)
-	,seq('on', 'THEDATE', $.subject)
-	,seq($.temporal_quantifier, $.num, $.month, $.num)
-	,seq($.temporal_quantifier, 'SOMEDATE', $.subject)
-	,seq($.temporal_quantifier, 'THEDATE', $.subject)
-	,seq($.temporal_offset, $.temporal_quantifier, 'SOMEDATE', $.subject)
-	,seq($.temporal_offset, $.temporal_quantifier, 'THEDATE', $.subject)
-	,seq($.temporal_quantifier, $.temporal_offset, $.temporal_quantifier, 'SOMEDATE', $.subject)
-	,seq($.temporal_quantifier, $.temporal_offset, $.temporal_quantifier, 'THEDATE', $.subject)
+time_before: $ => (seq("before", optional("the"))
 ),
 
-temporal_quantifier: $ => choice(
-	'before'
-	,'after'
+time_after: $ => (seq("after", optional("the"))
 ),
 
-specific_date: $ => choice(
-	seq('on', 'the', $.num, $.month, $.num)
-	,seq('on', $.num, $.month, $.num)
+time_on: $ => (seq("on", optional("the"))
 ),
 
-temporal_offset: $ => choice(
-	seq($.num, 'day')
-	,seq($.num, 'week')
-	,seq($.num, 'year')
-	,seq($.num, 'days')
-	,seq($.num, 'weeks')
-	,seq($.num, 'years')
+time: $ => choice(
+	seq($.day, "-", $.month, "-", $.year)
+	,seq($.year, "-", $.month, "-", $.day)
+),
+
+day: $ => choice(
+	"1st"
+	,"2nd"
+	,"3rd"
+	,"4th"
+	,"5th"
+	,"6th"
+	,"7th"
+	,"8th"
+	,"9th"
+	,"10th"
+	,"11th"
+	,"12th"
+	,"13th"
+	,"14th"
+	,"15th"
+	,"16th"
+	,"17th"
+	,"18th"
+	,"19th"
+	,"20th"
+	,"21st"
+	,"22nd"
+	,"23rd"
+	,"24th"
+	,"25th"
+	,"26th"
+	,"27th"
+	,"28th"
+	,"29th"
+	,"30th"
+	,"31st"
+	,seq($._numSingle, $._numSingle)
 ),
 
 month: $ => choice(
-	'January'
-	,'February'
-	,'March'
-	,'April'
-	,'May'
-	,'June'
-	,'July'
-	,'August'
-	,'September'
-	,'October'
-	,'November'
-	,'December'
+	"January"
+	,"February"
+	,"March"
+	,"April"
+	,"May"
+	,"June"
+	,"July"
+	,"August"
+	,"September"
+	,"October"
+	,"November"
+	,"December"
+	,seq($._numSingle, $._numSingle)
 ),
 
-object: $ => choice(
-	$.numerical_object
-	,$.nonnumerical_object
-),
-
-numerical_object: $ => choice(
-	seq($.pounds, $.num)
-	,seq($.dollars, $.num)
-	,seq($.euros, $.num)
-	,seq('AMOUNT', $.subject)
-),
-
-nonnumerical_object: $ => choice(
-	seq('SOMECURRENCY', $.string)
-	,seq('REPORT', $.string)
-	,seq('NAMEDOBJECT', $.string)
-	,seq('OTHEROBJECT', $.string)
-),
-
-pounds: $ => choice(
-	'GBP'
-	,'POUNDS'
-	,'quid'
-),
-
-dollars: $ => choice(
-	'USD'
-	,'DOLLARS'
-	,'buck'
-),
-
-euros: $ => choice(
-	'EUR'
-	,'EUROS'
-),
-
-receiver: $ => (seq('to', $.subject)
+year: $ => (seq($._numSingle, $._numSingle, $._numSingle, $._numSingle)
 ),
 
 string: $ => (/[a-zA-Z]+/
 ),
 
 num: $ => (/[0-9]+/
+),
+
+_numSingle: $ => (/[0-9]/
+),
+
+semicolon: $ => (";"
 ),
 
     comment: (_$) =>

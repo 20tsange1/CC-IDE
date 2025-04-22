@@ -9,23 +9,24 @@ class DrawBoolean:
             # [Clause Text, [[CONDITIONS], [STATEMENTS], [ALTERNATIVES]]]
             self.clauses.append((node.text.decode('utf8'), [[[]], []]))
 
-        elif node.type == "statement":
-            self.clauses[-1][1][-1].append('<b style="color:#01422f;">' + node.text.decode('utf8') + '</b>')
-        elif node.type == "else":
-            self.clauses[-1][1].append([])
+        elif len(self.clauses) > 0:
+            if node.type == "statement":
+                self.clauses[-1][1][-1].append('<b style="color:#01422f;">' + node.text.decode('utf8') + '</b>')
+            elif node.type == "else":
+                self.clauses[-1][1].append([])
 
-        elif node.type == "condition":
-            text = node.text.decode("utf8")
-            self.clauses[-1][1][0][-1].append(self.identities[node.id] + f" {text}")
+            elif node.type == "condition":
+                text = node.text.decode("utf8")
+                self.clauses[-1][1][0][-1].append(self.identities[node.id] + f" {text}")
 
-        elif node.type == "bracket":
-            self.clauses[-1][1][0].append([])
+            elif node.type == "bracket":
+                self.clauses[-1][1][0].append([])
 
-        elif node.type == "and_expression":
-            self.clauses[-1][1][0][-1].append("AND")
+            elif node.type == "and_expression":
+                self.clauses[-1][1][0][-1].append("AND")
 
-        elif node.type == "or_expression":
-            self.clauses[-1][1][0][-1].append("OR")
+            elif node.type == "or_expression":
+                self.clauses[-1][1][0][-1].append("OR")
         
             
         if node.children:
