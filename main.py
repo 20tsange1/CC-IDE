@@ -10,6 +10,7 @@ from tree_sitter import Language, Parser, LookaheadIterator
 import os
 import glob
 import subprocess
+import re
 
 
 class Handler:
@@ -104,7 +105,14 @@ class Handler:
                         self.pref_suf_format[nodename] = {"prefix": prefix, "suffix": suffix, "inline": inline}
 
 
-        self.checkid = set()
+        # For IDs of Conditions
+        self.global_count_arr = [0]
+        self.internal_id = {}
+        self.id_switch = 0
+
+        # For Definitions
+        self.definitions = {}
+        self.definition_switch = 0
         
         
 
@@ -280,7 +288,8 @@ class Handler:
                     finalarr.append(f'<b style="color:{colour};">')
 
                 if node.parent:
-                    if node.type in self.node_types and node.type != text:
+
+                    if node.type in self.node_types or node.type in self.node_types.values() and node.type != text:
                         finalarr.append(f'<span class="{node.type}">{text} </span>')
                     else:
                         finalarr.append(f'{text} ')
@@ -295,7 +304,40 @@ class Handler:
         else:
             if node.is_error:
                 finalarr.append('</b>')
-            
+    
+    def nodeEvalIDStart(self, node, finalarr):
+        if node.type == "clause":
+            self.global_count_arr[0] += 1
+            self.global_count_arr.append(0)
+        elif node.type == "bracket":
+            self.global_count_arr[-1] += 1
+            self.global_count_arr.append(0)
+        elif node.type == "condition":
+            self.global_count_arr[-1] += 1
+            # Add it to front of condition
+            identity = '.'.join([str(i) for i in self.global_count_arr])
+            self.internal_id[node.id] = identity
+            return identity
+        return ""
+
+    def nodeEvalIDEnd(self, node, finalarr):
+        if node.type == "clause":
+            self.global_count_arr.pop()
+        elif node.type == "bracket":
+            self.global_count_arr.pop()
+
+    def nodeEvalDef(self, node, finalarr):
+        if node.type == "definition":
+            name = ""
+            definition = ""
+            for c in node.children:
+                if c.type == "name":
+                    name = c.text.decode("utf8")
+                elif c.type == "definition_specific":
+                    definition = c.text.decode("utf8")
+            self.definitions[name] = definition
+            return True
+        return False
 
 
     def nodeAutoSuggestion(self, node, finalarr):
@@ -324,36 +366,33 @@ class Handler:
             finalarr.append(f'<span class="popup" style="color:{"grey"}" onclick="popupFunction(\'{hashed}\')">...<span class="popuptext" id="{hashed}">{self.mapper[key]}</span></span>')
 
     
-    def exploreNodes(self, cursor, finalarr, checkid, reached):
+    def exploreNodes(self, cursor, finalarr, reached):
 
         node = cursor.node
 
         flag = True
-        
-        if str(node.id) in checkid:
-            reached = 0
 
-        # Checks if it is in chosen range
-        if reached:
-            # if 1 <= cursor.depth <= 2:
-            #     finalarr.append(f'<span style="color: #{hex(2-cursor.depth)[2:]*3}" onclick="nodeFold(\'{node.id}\')">-</span>')
-                
-            self.nodeAddText(node, finalarr)
-        # else:
-        #     if 1 <= cursor.depth <= 2:
-        #         finalarr.append(f'<span style="color: #{hex(2-cursor.depth)[2:]*3}" onclick="nodeFold(\'{node.id}\')">+</span>')
+        self.nodeAddText(node, finalarr)
+
+        identity = self.nodeEvalIDStart(node, finalarr)
+
+        self.nodeEvalDef(node, finalarr)
+
+        # Checks if IDs should be displayed
+        if reached and identity != "":
+            finalarr[-1] += "(" + identity + ") "
 
         if cursor.goto_first_child():
             while flag:
-                self.exploreNodes(cursor, finalarr, checkid, reached)
+                self.exploreNodes(cursor, finalarr, reached)
                 flag = cursor.goto_next_sibling()
             cursor.goto_parent()
 
-        if reached:
-            
-            self.nodeAddTextEnd(node, finalarr)
+        self.nodeEvalIDEnd(node, finalarr)
 
-            self.nodeAutoSuggestion(node, finalarr)
+        self.nodeAddTextEnd(node, finalarr)
+
+        self.nodeAutoSuggestion(node, finalarr)
         
         return cursor
 
@@ -363,7 +402,7 @@ class Handler:
         Main function for evaluation / reevaluation of our input text.
         """
         if self.parse_tree:
-            if string != self.prevString:
+            if string != "" and string != self.prevString:
                 edit_offsets = self.calculate_edit_offsets(string)
                 self.parse_tree.edit(
                     start_byte=edit_offsets[0],
@@ -374,6 +413,10 @@ class Handler:
                     new_end_point=edit_offsets[5]
                 )
                 self.parse_tree = self.parser.parse(bytes(string, "utf8"), self.parse_tree)
+
+                # For IDs of Conditions
+                self.id_switch = 0
+                self.definition_switch = 0
         else:
             self.parse_tree = self.parser.parse(bytes(string, "utf8"))
 
@@ -381,27 +424,45 @@ class Handler:
 
         finalarr = []
 
-        # self.exploreNodes(cursor, finalarr, "", 1)
-        self.exploreNodes(cursor, finalarr, self.checkid, 1)
+        self.global_count_arr = [0]
+        self.internal_id = {}
+
+        self.definitions = {}
+
+        self.exploreNodes(cursor, finalarr, self.id_switch % 2)
 
         self.prevString = string
 
         # This prevents it from adding an extra space for the span, which messes with the desired output.
-        return ''.join([((i + ' ') if i and i[-1] != '>' else i) for i in finalarr])
+        contractStr = ''.join([((i + ' ') if i and i[-1] != '>' else i) for i in finalarr])
+
+        if self.definition_switch % 2:
+                contractStr = self.replaceDefinitions(contractStr)
+
+        return contractStr
 
 
-    def bnfSubStructure(self, nodeID=""):
+    # For displaying the IDs of the conditions - Found in self.internal_id
+    def bnfIDStructure(self):
         if self.parse_tree:
-            cursor = self.parse_tree.walk()
-            finalarr = []
-            if nodeID == "":
-                self.checkid = set()
-            self.exploreNodes(cursor, finalarr, self.checkid, 1)
-            return ''.join([((i + ' ') if i and i[-1] != '>' else i) for i in finalarr])
-        else:
-            return ''
+            self.id_switch += 1
+        return self.bnfStructure()
+        
+    def bnfDefinitionStructure(self):
+        if self.parse_tree:
+            self.definition_switch += 1
+        return self.bnfStructure()
+            
 
-    
+    def replaceDefinitions(self, contractStr):
+        # Replaces the word if verbatim with definition.
+        for symbol, replacement in self.definitions.items():
+            pattern = f"{symbol}(?!\w)"
+            replace_str = f"{replacement}"
+            contractStr = re.sub(pattern, replace_str, contractStr)
+        return contractStr
+
+
 
 
     ###############

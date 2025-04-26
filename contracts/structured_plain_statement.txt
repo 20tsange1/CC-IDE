@@ -1,0 +1,7 @@
+ W is Wales.
+E is England.
+I is Ireland.
+
+Member has 7% discount and $5 off if [they are in E before 6th-May-2024; and they are a member after the 5th-May-2024 and before the 6th-May-2024;].
+
+Nonmember has 3% discount.

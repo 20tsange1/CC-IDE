@@ -63,6 +63,10 @@
           "named": true
         },
         {
+          "type": "semicolon",
+          "named": true
+        },
+        {
           "type": "string",
           "named": true
         },
@@ -158,6 +162,10 @@
         {
           "type": "clause",
           "named": true
+        },
+        {
+          "type": "definition",
+          "named": true
         }
       ]
     }
@@ -166,6 +174,40 @@
     "type": "day",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "definition",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "definition_specific",
+          "named": true
+        },
+        {
+          "type": "name",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "definition_specific",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "string",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "discount",
@@ -216,6 +258,11 @@
     "fields": {}
   },
   {
+    "type": "or_expression",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "statement",
     "named": true,
     "fields": {},
@@ -254,19 +301,64 @@
     }
   },
   {
+    "type": "time_after",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "time_and",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "time_before",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "time_holder",
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
           "type": "time",
           "named": true
+        },
+        {
+          "type": "time_after",
+          "named": true
+        },
+        {
+          "type": "time_and",
+          "named": true
+        },
+        {
+          "type": "time_before",
+          "named": true
+        },
+        {
+          "type": "time_on",
+          "named": true
+        },
+        {
+          "type": "time_or",
+          "named": true
         }
       ]
     }
+  },
+  {
+    "type": "time_on",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "time_or",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "user",
@@ -477,7 +569,15 @@
     "named": false
   },
   {
+    "type": "after",
+    "named": false
+  },
+  {
     "type": "and",
+    "named": false
+  },
+  {
+    "type": "before",
     "named": false
   },
   {
@@ -533,7 +633,11 @@
     "named": false
   },
   {
-    "type": "or_expression",
+    "type": "or",
+    "named": false
+  },
+  {
+    "type": "semicolon",
     "named": true
   },
   {

@@ -38,3 +38,7 @@
 .flagFalse {
     background-color: rgb(255, 165, 158);
 }
+
+.flagNeutral {
+    background-color: rgb(134, 148, 197)
+}

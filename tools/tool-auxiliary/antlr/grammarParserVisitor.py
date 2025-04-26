@@ -247,6 +247,16 @@ class grammarParserVisitor(ParseTreeVisitor):
             "A": "and_expression",
             "O": "or_expression",
         }
+
+        otter_map_time_replace = {
+            "TTH": "time_holder",
+            "TT": "time",
+            "TTCA": "time_and",
+            "TTCO": "time_or",
+            "TTB": "time_before",
+            "TTA": "time_and",
+            "TTO": "time_on",
+        }
         
         
         if text in otter_map_num:
@@ -255,6 +265,9 @@ class grammarParserVisitor(ParseTreeVisitor):
             return f"{otter_map_num[text]}("
         elif text in otter_map_replace:
             self.node_replace.append((node_type, otter_map_replace[text]))
+            return ""
+        elif text in otter_map_time_replace:
+            self.node_replace.append((node_type, otter_map_time_replace[text]))
             return ""
         else:
             return ""

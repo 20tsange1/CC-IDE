@@ -5,14 +5,27 @@
     "contract": {
       "type": "REPEAT1",
       "content": {
-        "type": "ALIAS",
-        "content": {
-          "type": "SYMBOL",
-          "name": "start"
-        },
-        "named": true,
-        "value": "clause"
+        "type": "SYMBOL",
+        "name": "_choice"
       }
+    },
+    "_choice": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "start"
+          },
+          "named": true,
+          "value": "clause"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "definition"
+        }
+      ]
     },
     "start": {
       "type": "SEQ",
@@ -43,6 +56,34 @@
           "value": "."
         }
       ]
+    },
+    "definition": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "name"
+        },
+        {
+          "type": "STRING",
+          "value": "is"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "definition_specific"
+        },
+        {
+          "type": "STRING",
+          "value": "."
+        }
+      ]
+    },
+    "definition_specific": {
+      "type": "REPEAT1",
+      "content": {
+        "type": "SYMBOL",
+        "name": "string"
+      }
     },
     "user": {
       "type": "PREC",
@@ -115,52 +156,65 @@
           }
         },
         {
-          "type": "STRING",
-          "value": "if"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "conditional"
-        },
-        {
           "type": "CHOICE",
           "members": [
             {
               "type": "SEQ",
               "members": [
                 {
+                  "type": "STRING",
+                  "value": "if"
+                },
+                {
                   "type": "SYMBOL",
-                  "name": "else"
+                  "name": "conditional"
                 },
                 {
-                  "type": "ALIAS",
-                  "content": {
-                    "type": "SYMBOL",
-                    "name": "discount_specific"
-                  },
-                  "named": true,
-                  "value": "statement"
-                },
-                {
-                  "type": "REPEAT",
-                  "content": {
-                    "type": "SEQ",
-                    "members": [
-                      {
-                        "type": "STRING",
-                        "value": "and"
-                      },
-                      {
-                        "type": "ALIAS",
-                        "content": {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SEQ",
+                      "members": [
+                        {
                           "type": "SYMBOL",
-                          "name": "discount_specific"
+                          "name": "else"
                         },
-                        "named": true,
-                        "value": "statement"
-                      }
-                    ]
-                  }
+                        {
+                          "type": "ALIAS",
+                          "content": {
+                            "type": "SYMBOL",
+                            "name": "discount_specific"
+                          },
+                          "named": true,
+                          "value": "statement"
+                        },
+                        {
+                          "type": "REPEAT",
+                          "content": {
+                            "type": "SEQ",
+                            "members": [
+                              {
+                                "type": "STRING",
+                                "value": "and"
+                              },
+                              {
+                                "type": "ALIAS",
+                                "content": {
+                                  "type": "SYMBOL",
+                                  "name": "discount_specific"
+                                },
+                                "named": true,
+                                "value": "statement"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
                 }
               ]
             },
@@ -464,15 +518,67 @@
               "type": "BLANK"
             }
           ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "semicolon"
         }
       ]
     },
     "time_holder": {
-      "type": "SEQ",
+      "type": "CHOICE",
       "members": [
         {
           "type": "SYMBOL",
           "name": "_pre_time"
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_pre_time"
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "time_and"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "time_or"
+                }
+              ]
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_pre_time"
+            }
+          ]
+        }
+      ]
+    },
+    "_pre_time": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "time_before"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "time_after"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "time_on"
+            }
+          ]
         },
         {
           "type": "SYMBOL",
@@ -480,7 +586,57 @@
         }
       ]
     },
-    "_pre_time": {
+    "time_and": {
+      "type": "STRING",
+      "value": "and"
+    },
+    "time_or": {
+      "type": "STRING",
+      "value": "or"
+    },
+    "time_before": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "before"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "the"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "time_after": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "after"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "the"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "time_on": {
       "type": "SEQ",
       "members": [
         {
@@ -796,6 +952,10 @@
     "_numSingle": {
       "type": "PATTERN",
       "value": "[0-9]"
+    },
+    "semicolon": {
+      "type": "STRING",
+      "value": ";"
     },
     "comment": {
       "type": "TOKEN",

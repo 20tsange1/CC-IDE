@@ -1,1 +1,1 @@
- Member has 7% discount if [they are in london and they are a member] or [they are in wales and they are a member].
+Member has 7% discount if [they are in london; and they are a member;] or [they are in wales; and they are a member;].

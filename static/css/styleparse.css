@@ -26,6 +26,10 @@ textarea {
     resize: vertical;
 }
 
+#filenameSelect {
+    max-width: 150px;
+}
+
 #saveBtn {
     background-color:#2196F3;
 }
@@ -42,8 +46,8 @@ textarea {
     background-color:#2196F3;
 }
 
-#resetBtn {
-    background-color:#f32121;
+#idBtn {
+    background-color:#4CAF50;
 }
 
 /* POPUP CONTAINER CODE */

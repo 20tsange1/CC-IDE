@@ -18,26 +18,13 @@
     This page is designed for the evaluation of contracts given that the grammar is written with respect to the pre-defined syntax.
   </p>
 
-  <h1>Event Simulation (WIP)</h1>
+  <div class="subheader">
+    <a class="" href="#" onclick="loadContent('condition', this)">Condition Sim</a>
+    <a class="" href="#" onclick="loadContent('event', this)">Event Sim</a>
+  </div>
 
-  <div class="clause-container">
-
-    <div class="column">
-
-      <h2 class="columntitle">Conditions</h2>
-      
-      <ul class="eval_block" id="conditions"></ul>
-
-    </div>
-
-    <div class="column">
-
-      <h2 class="columntitle">States</h2>
-
-      <ul class="eval_block" id="states"></ul>
-      
-    </div>
-
+  <div id="content-container">
+    <!-- Dynamic content will be injected here -->
   </div>
 
   <script type="text/javascript" src="{{ url_for('static', filename='javascript/static_analysis.js') }}"></script>

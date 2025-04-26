@@ -224,16 +224,33 @@ document.addEventListener('click', () => {
 // ------------
 
 // Show or hide a popup
-function nodeFold(elementID) {
-    parseNodeText(elementID);
+function nodeIDs(elementID) {
+    parseDisplayIDs(elementID);
+}
+
+function nodeDefs() {
+    parseDisplayDefs();
 }
 
 // Function to parse text and update the parsed display
-function parseNodeText(nodeID) {
-    fetch('/parse-node', {
+function parseDisplayIDs(nodeID) {
+    fetch('/display-id', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nodeID: nodeID })
+    })
+        .then(response => response.json())
+        .then(data => {
+            parsedText.innerHTML = data.parsed_text; // Update parsed text
+        })
+        .catch(error => console.error('Error parsing text:', error));
+}
+
+// Function to parse text and update the parsed display
+function parseDisplayDefs() {
+    fetch('/display-def', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
     })
         .then(response => response.json())
         .then(data => {

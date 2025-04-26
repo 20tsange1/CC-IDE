@@ -68,7 +68,7 @@ class TimeOverride(TimeBase):
         if day in day_dict:
             return day_dict[day]
         else:
-            if 0 < int(month) <= 31:
+            if 0 < int(day) <= 31:
                 return str(int(day))
             else:
                 raise ValueError(f"Unrecognised day format: {day}")

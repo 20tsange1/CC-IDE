@@ -1,8 +1,13 @@
 .contract {   }
 .clause {  display: block; margin: 2rem; }
+.definition { color: #16641f; font-weight: bold; display: block; margin: 2rem; }
+.definition_specific {   }
 .user { color: #208497; font-weight: bold;  }
+.name {   }
 .negation { color: #d67171; font-weight: bold;  }
 .discount { color: #384cad; font-weight: bold;  }
+.statement {   }
+.else {   }
 .bracket {  display: block; margin: 2rem; }
 .bracketopen {  display: none; }
 .bracketclose {  display: none; }
@@ -12,15 +17,19 @@
 .conditional_or { color: #919d53; font-weight: bold;  }
 .or_expression {   }
 .condition { color: #050505; font-weight: bold; display: block; margin: 1rem; }
+.time_holder {   }
+._pre_time {   }
+.time_and {   }
+.time_or {   }
+.time_before {   }
+.time_after {   }
+.time_on {   }
+.time { color: #7a5279; font-weight: bold;  }
+.day {   }
+.month {   }
+.year {   }
 .string {   }
 .num {   }
-.name {  }
-.statement {  }
-.else {  }
-.time_holder {  }
-._pre_time {  }
-.time {  }
-.day {  }
-.month {  }
-.year {  }
-._numSingle {  }
+._numSingle {   }
+._choice {   }
+.semicolon {  display: none; }

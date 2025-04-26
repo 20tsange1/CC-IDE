@@ -1,6 +1,6 @@
 <contract> 
 ::= <component>
- | <component> C-AND <contract>
+ | <component> "C-AND" <contract>
  ;
 
 <component> 
@@ -12,12 +12,12 @@
 
 <definition> 
 ::= <simple-definition>
- | <simple-definition> AND <definition>
+ | <simple-definition> "AND" <definition>
  ;
 
 <simple-definition> 
-::= <ID> <subject> IS <subject>
- | <ID> <subject> EQUALS <numerical-expression>
+::= <ID> <subject> "IS" <subject>
+ | <ID> <subject> "EQUALS" <numerical-expression>
  ;
 
 <numerical-expression> 

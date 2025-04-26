@@ -4,7 +4,7 @@ C-AND
 
 IF [2] it is the case that Landlord delivered OTHEROBJECT demandOfTenantPayment to Tenant on the 2 April 2023
 
-AND
+and
 
 [3] it is not the case that Tenant paid AMOUNT AmountA to Landlord before 5 April 2023
 
@@ -14,11 +14,11 @@ C-AND
 
 IF [5] it is the case that Landlord delivered OTHEROBJECT demandOfTenantPayment to Tenant on the 2 April 2023
 
-AND
+and
 
 [6] it is not the case that Tenant paid AMOUNT AmountA to Landlord before 10 April 2023
 
-AND
+and
 
 [7] it is the case that Landlord delivered OTHEROBJECT demandOfGuarantorPayment to Tenant on the 6 April 2023
 
@@ -34,7 +34,7 @@ C-AND
 
 IF [11] it is the case that HousingBenefitScheme paid AMOUNT AmountC to Tenant on the 1 January 2024
 
-AND
+and
 
 [12] it is the case that LocalAuthority delivered OTHEROBJECT overpaymentClaim to Tenant on the 7 January 2024
 

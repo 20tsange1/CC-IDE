@@ -16,7 +16,12 @@ module.exports = grammar({
 	],
 
   rules: {
-contract: $ => (repeat1(alias($.start, $.clause))
+contract: $ => (repeat1($._choice)
+),
+
+_choice: $ => choice(
+	alias($.start, $.clause)
+	,$.definition
 ),
 
 start: $ => ((seq(choice(
@@ -24,6 +29,12 @@ start: $ => ((seq(choice(
 	,$.name
 ), 'has', $.discount, '.')
 )
+),
+
+definition: $ => (seq($.name, 'is', $.definition_specific, '.')
+),
+
+definition_specific: $ => (repeat1($.string)
 ),
 
 user: $ => prec(7,($.string
@@ -37,7 +48,8 @@ negation: $ => ((seq('it', 'is', 'not', 'true', 'that')
 ),
 
 discount: $ => (seq(alias($.discount_specific, $.statement), repeat((seq("and", alias($.discount_specific, $.statement))
-)), 'if', $.conditional, optional((seq($.else, alias($.discount_specific, $.statement), repeat((seq("and", alias($.discount_specific, $.statement))
+)), optional((seq('if', $.conditional, optional((seq($.else, alias($.discount_specific, $.statement), repeat((seq("and", alias($.discount_specific, $.statement))
+)))
 )))
 )))
 ),
@@ -96,13 +108,37 @@ or_connect: $ => ('or'
 ),
 
 condition_n: $ => (seq(optional($.negation), repeat1(($.string
-)), optional($.time_holder))
+)), optional($.time_holder), $.semicolon)
 ),
 
-time_holder: $ => (seq($._pre_time, $.time)
+time_holder: $ => choice(
+	$._pre_time
+	,seq($._pre_time, choice(
+	$.time_and
+	,$.time_or
+), $._pre_time)
 ),
 
-_pre_time: $ => (seq("on", optional("the"))
+_pre_time: $ => (seq(choice(
+	$.time_before
+	,$.time_after
+	,$.time_on
+), $.time)
+),
+
+time_and: $ => ("and"
+),
+
+time_or: $ => ("or"
+),
+
+time_before: $ => (seq("before", optional("the"))
+),
+
+time_after: $ => (seq("after", optional("the"))
+),
+
+time_on: $ => (seq("on", optional("the"))
 ),
 
 time: $ => choice(
@@ -171,6 +207,9 @@ num: $ => (/[0-9]+/
 ),
 
 _numSingle: $ => (/[0-9]/
+),
+
+semicolon: $ => (";"
 ),
 
     comment: (_$) =>

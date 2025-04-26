@@ -3,6 +3,8 @@ try:
 except ImportError:
     from time_base import TimeOverride
 
+from datetime import datetime
+
 
 class Condition:
     def __init__(self, identifier, sentence, negation, time_cond=None):
@@ -59,6 +61,8 @@ class EventSim:
         self.conditions = {}
         # Global dictionary of statements and definitions
         self.state_def = {}
+        # Array of Past Events - Not necessarily chronologically in the past
+        self.past_events = []
 
         # Mapping for functions, based on node types
         self.mapper = {
@@ -71,7 +75,7 @@ class EventSim:
             "and_expression": self.a_function,
             "or_expression": self.o_function,
             "negation": self.n_function,
-            "time": self.t_function,
+            "time_holder": self.t_function,
         }
 
         self.and_or = True
@@ -83,6 +87,12 @@ class EventSim:
 
         # For unique identifier
         self.global_count = 1
+
+        # For unique identifier
+        self.global_count_arr = [0]
+
+    def eval_count(self):
+        return '.'.join([str(i) for i in self.global_count_arr])
 
     def find_clauses(self, tree, clause_arr):
         # cursor = tree.walk()
@@ -99,9 +109,16 @@ class EventSim:
                 clause_arr.append([[], []])
                 # Default is AND, then flips if necessary
                 self.and_or = True
+
+                # Increment count
+                self.global_count_arr[0] += 1
+
+                self.global_count_arr.append(0)
+
                 # Completely recursive.
                 self.explore(c, clause_arr)
 
+                self.global_count_arr.pop()
 
                 # Have to the ands and ors at the clause level because it's not nested within the statement
 
@@ -131,35 +148,60 @@ class EventSim:
         # Storing previous level operator
         old_and_or = self.and_or
 
+        # Increment count
+        self.global_count_arr[-1] += 1
+        self.global_count_arr.append(0)
+
         clause_arr.append([[], []])
         self.explore(c, clause_arr)
         state = Statement(
             str(c.id),
-            # self.global_count,
             c.text.decode("utf8"),
             if_else=False,
             and_or=self.and_or,
         )
-        # self.global_count += 1
         state.conditions = clause_arr.pop()[0]
         clause_arr[-1][0].append(state)
 
+        # Pop count
+        self.global_count_arr.pop()
+
         # Restoring previous level operator
         self.and_or = old_and_or
+
+
+    # HELPER Function for extracting text without time
+    def extract_text(self, c, arr):
+        if c.type == "time_holder":
+            return
+        else:
+            if len(c.children) > 0:
+                for child in c.children:
+                    self.extract_text(child, arr)
+            else:
+                arr.append(c.text.decode("utf8"))
+
 
     # CONDITION Function
     def c_function(self, c, clause_arr):
         self.negation = False
         self.time = None
+
+        # Increment count
+        self.global_count_arr[-1] += 1
+
         self.explore(c, clause_arr)
+
+        str_arr = []
+        self.extract_text(c, str_arr)
+
         cond = Condition(
-            # str(c.id), 
-            str(self.global_count),
-            c.text.decode("utf8"), 
+            self.eval_count(),
+            # c.text.decode("utf8"),
+            ' '.join(str_arr), 
             self.negation,
             self.time,
             )
-        self.global_count += 1
         # Adding to array of conditions for that clause
         clause_arr[-1][0].append(cond)
         # Adding to dictionary, easier to access
@@ -173,7 +215,6 @@ class EventSim:
         Realistically, you should be using statement as a more general one, and not nest conditions under it. 
         """
         state = Statement(
-            # str(c.id),
             str(self.global_count),
             c.text.decode("utf8"),
             len(clause_arr[-1]) == 3,
@@ -199,7 +240,7 @@ class EventSim:
     For extracting time from condition (Should be made to condition & statement level)
     """
     def t_function(self, c, clause_arr):
-        self.time = self.time_convert.evaluate_time_tree(c)
+        self.time = self.time_convert.time_analyser(c)
 
     # STATEMENT_SPECIFIC Function
     def ss_function(self, c, clause_arr):
@@ -213,9 +254,12 @@ class EventSim:
                 self.explore(c, clause_arr)
 
     def event_simulation(self, parse_tree):
+        # Resetting the simulation
         self.conditions = {}
         self.state_def = {}
+        self.past_events = []
         self.global_count = 1
+        self.global_count_arr = [0]
 
         clause_arr = []
         self.find_clauses(parse_tree, clause_arr)
@@ -227,8 +271,64 @@ class EventSim:
             if len(clause) > 2:
                 for e in clause[2]:
                     self.state_def[e.identifier] = e
+
+    def evaluate_condition(self, identity, time_str):
+
+        time_obj = datetime.now()
+
+        if time_str != "":
+            time_obj = self.time_convert.evaluate_time_str(time_str)
+
+        self.past_events.append((identity, self.time_convert.return_time_str(time_obj), self.conditions[identity].sentence))
+
+        time_comparison = self.evaluate_condition_time(identity, time_obj)
+
+        if time_comparison:
+            self.conditions[identity].flag = True
+        else:
+            self.conditions[identity].flag = False
         
-        # print(self.conditions, self.state_def)
+
+    # Function for evaluating time against the condition time
+    def evaluate_condition_time(self, identity, time_obj):
+        # Getting the time tuple
+        tc = self.conditions[identity].time_cond
+
+        if tc == None:
+            return True
+        else:
+            # Checking if it is before, after, or on the date.
+            
+            if len(tc) == 2:
+                val, op = tc
+
+                if op == "o":
+                    if time_obj == val:
+                        return True
+                elif op == "a":
+                    if time_obj > val:
+                        return True
+                elif op == "b":
+                    if time_obj < val:
+                        return True
+
+            elif len(tc) == 5:
+
+                val1, op1, condition, val2, op2 = tc
+
+                if op1 != op2:
+                    if condition == "and":
+                        # Inclusive
+                        # <A t B>
+                        if min(val1, val2) <= time_obj <= max(val1, val2):
+                            return True
+                    elif condition == "or":
+                        # t A> or <B t
+                        if min(val1, val2) >= time_obj or max(val1, val2) <= time_obj:
+                            return True
+
+        return False
+
 
     def toggle_condition(self, identity):
         self.conditions[identity].flag = not self.conditions[identity].flag
