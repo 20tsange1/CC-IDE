@@ -11,7 +11,7 @@ function loadContent(type, element) {
 
     if (type === 'condition') {
         container.innerHTML = `
-            <h1>Condition Simulation (WIP)</h1>
+            <h1>Condition Simulation</h1>
             <div class="clause-container">
                 <div class="column">
                     <h2 class="columntitle">Conditions</h2>
@@ -26,7 +26,7 @@ function loadContent(type, element) {
         staticAnalysisCondition();
     } else if (type === 'event') {
         container.innerHTML = `
-            <h1>Event Simulation (WIP)</h1>
+            <h1>Event Simulation</h1>
             <div class="clause-downward-container">
                 <div class="column">
                     <h2 class="columntitle">States</h2>

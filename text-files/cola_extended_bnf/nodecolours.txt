@@ -1,7 +1,7 @@
-contract:#2f4a89
+contract:#4b5672
 component:#000000
 definition:#000000
-simple_definition:#328f8e
+simple_definition:#008a87
 numerical_expression:#000000
 operator:#000000
 conditional_definition:#000000

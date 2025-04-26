@@ -15,14 +15,14 @@
 
   <button onclick="hideExplanation()" class="explanation" id="explanation-button">-</button>
   <p class="explanation" id="explanation">
-    This page is designed for the visualisation of contracts in various forms (Tree, File, ___ ...).
+    This page is designed for the visualisation of contracts in various forms (Tree, File, Boolean).
   </p>
 
   <div class="subheader">
-    <a class="" href="#" onclick="loadContent('tree', this);toggleOptionsBoxOpen(false);">Tree Struc</a>
-    <a class="" href="#" onclick="loadContent('file', this);toggleOptionsBoxOpen(false);">File Struc</a>
-    <a class="" href="#" onclick="loadContent('contract', this);toggleOptionsBoxOpen(true);getNodeTypes();">Contract Struc</a>
-    <a class="" href="#" onclick="loadContent('boolean', this);toggleOptionsBoxOpen(false);">Boolean Struc</a>
+    <a class="" href="#" onclick="loadContent('tree', this);toggleOptionsBoxOpen(false);">Tree View</a>
+    <a class="" href="#" onclick="loadContent('file', this);toggleOptionsBoxOpen(false);">Hierarchical View</a>
+    <a class="" href="#" onclick="loadContent('contract', this);toggleOptionsBoxOpen(true);getNodeTypes();">AST View</a>
+    <a class="" href="#" onclick="loadContent('boolean', this);toggleOptionsBoxOpen(false);">Boolean View</a>
   </div>
 
   <div id="content-container" style="overflow-y: scroll; overflow-x: scroll; max-height: 30rem;">
