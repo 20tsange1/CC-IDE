@@ -22,6 +22,9 @@ class MetaData:
         We are storing it within .ini files (info).
         """
         meta = ""
+
+        os.makedirs(os.path.dirname(location), exist_ok=True)
+
         for key, info in data.items():
             meta += f"{key}: {info}\n"
         
@@ -29,6 +32,14 @@ class MetaData:
             file.write(meta)
 
         return True
+
+    def delete_meta(self, directory, filename):
+        """
+        For deleting a metadata file.
+        """
+        metaname = f"{directory}/meta/{filename[:-4]}.ini"
+        if os.path.exists(metaname):
+            os.remove(metaname)
 
 
     def read_meta(self, location):

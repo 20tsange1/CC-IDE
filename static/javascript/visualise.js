@@ -74,9 +74,10 @@ function createOptions() {
         checkButton.name = `${key}Option`;
         checkButton.value = mapping;
         checkButton.classList.add('button');
+        checkButton.classList.add('selected');
 
-        if (selectedKeys.includes(key)) {
-            checkButton.classList.add('selected');
+        if (selectedKeys.includes(mapping)) {
+            checkButton.classList.remove('selected');
         }
 
         checkButton.addEventListener('click', () => {
@@ -98,13 +99,13 @@ function toggleSelection(key, button) {
     if (index === -1) {
         // Add to list if not already selected
         selectedKeys.push(key);
-        button.classList.add('selected');
+        button.classList.remove('selected');
     } else {
         // Remove from list if already selected
         selectedKeys.splice(index, 1);
-        button.classList.remove('selected');
+        button.classList.add('selected');
     }
-    alert(selectedKeys);
+    // alert(selectedKeys);
 }
 
 optionsSaveButton.addEventListener('click', () => {

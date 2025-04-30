@@ -16,171 +16,137 @@ module.exports = grammar({
 	],
 
   rules: {
-contract: $ => (repeat1($._choice)
+contract: $ => choice(
+	$.component
+	,seq($.component, 'C-AND', $.contract)
 ),
 
-
-
-_choice: $ => choice(
-	alias($.start, $.clause)
-	,$.definition
+component: $ => choice(
+	$.definition
+	,$.conditional_definition
+	,$.statement
+	,$.conditional_statement
 ),
 
-start: $ => ((seq(choice(
-	$.user
-	,$.name
-), 'has', $.discount, '.')
-)
+definition: $ => choice(
+	$.simple_definition
+	,seq($.simple_definition, 'AND', $.definition)
 ),
 
-definition: $ => (seq($.name, 'is', $.definition_specific, '.')
+simple_definition: $ => choice(
+	seq($.identity, $.subject, 'IS', $.subject)
+	,seq($.identity, $.subject, 'EQUALS', $.numerical_expression)
 ),
 
-definition_specific: $ => (repeat1($.string)
+numerical_expression: $ => choice(
+	$.num
+	,$.numerical_object
+	,seq($.numerical_object, $.operator, $.numerical_expression)
 ),
 
-user: $ => prec(7,($.string
-)),
-
-name: $ => ($.string
+operator: $ => choice(
+	'PLUS'
+	,'MINUS'
+	,'TIMES'
+	,'DIVIDE'
 ),
 
-negation: $ => ((seq('it', 'is', 'not', 'true', 'that')
-)
+conditional_definition: $ => choice(
+	seq($.definition, 'IF', $.condition)
+	,seq('IF', $.condition, 'THEN', $.definition)
 ),
 
-discount: $ => (seq(alias($.discount_specific, $.statement), repeat((seq("and", alias($.discount_specific, $.statement))
-)), optional((seq('if', $.conditional, optional((seq($.else, alias($.discount_specific, $.statement), repeat((seq("and", alias($.discount_specific, $.statement))
-)))
-)))
-)))
+statement: $ => choice(
+	$.simple_statement
+	,seq($.simple_statement, 'OR', $.statement)
+	,seq($.simple_statement, 'AND', $.statement)
 ),
 
-discount_specific: $ => choice(
-	seq($.num, '%', optional(choice(
-	'discount'
-	,'off'
-)))
-	,seq('$', $.num, 'off')
+conditional_statement: $ => choice(
+	seq($.statement, 'IF', $.condition)
+	,seq('IF', $.condition, 'THEN', $.statement)
 ),
 
-else: $ => ("else"
+simple_statement: $ => choice(
+	seq($.identity, optional($.holds), $.subject, $.modal_verb, $.verb, $.object, $.date)
+	,seq($.identity, optional($.holds), $.subject, $.date, $.modal_verb, $.verb, $.object)
+	,seq($.identity, optional($.holds), $.date, $.subject, $.modal_verb, $.verb, $.object)
 ),
 
-conditional_upper: $ => (seq($.bracketopen, $.conditional, $.bracketclose)
+condition: $ => choice(
+	$.simple_condition
+	,seq($.simple_condition, 'OR', $.condition)
+	,seq($.simple_condition, 'AND', $.condition)
 ),
 
-bracketopen: $ => ('['
+simple_condition: $ => choice(
+	seq($.identity, optional($.holds), $.subject, $.verb_status, $.object, $.date)
+	,seq($.identity, optional($.holds), $.subject, $.date, $.verb_status, $.object)
+	,seq($.identity, optional($.holds), $.date, $.subject, $.verb_status, $.object)
+	,seq($.identity, optional($.holds), $.subject, $.modal_verb, $.verb, $.object, $.date)
+	,seq($.identity, optional($.holds), $.boolean_expression)
 ),
 
-bracketclose: $ => (']'
+boolean_expression: $ => (seq($.subject, $.verb_status, $.comparison, $.subject)
 ),
 
-conditional: $ => choice(
-	alias($.conditional_upper, $.bracket)
-	,$.conditional_and
-	,$.conditional_or
-	,alias($.condition_n, $.condition)
+identity: $ => choice(
+	seq("[", $.num, "]")
+	,seq("[", $.num, "(", $.num, ")", "]")
 ),
 
-conditional_and: $ => (seq(choice(
-	alias($.conditional_upper, $.bracket)
-	,alias($.condition_n, $.condition)
-), repeat1((seq(alias($.and_connect, $.and_expression), choice(
-	alias($.conditional_upper, $.bracket)
-	,alias($.condition_n, $.condition)
-))
-)))
+holds: $ => choice(
+	"it is the case that"
+	,"it is not the case that"
 ),
 
-and_connect: $ => ('and'
+subject: $ => ($.string
 ),
 
-conditional_or: $ => (seq(choice(
-	alias($.conditional_upper, $.bracket)
-	,alias($.condition_n, $.condition)
-), repeat1((seq(alias($.or_connect, $.or_expression), choice(
-	alias($.conditional_upper, $.bracket)
-	,alias($.condition_n, $.condition)
-))
-)))
+verb: $ => choice(
+	'DELIVER'
+	,'deliver'
+	,'PAY'
+	,'pay'
+	,'CHARGE'
+	,'charge'
 ),
 
-or_connect: $ => ('or'
+verb_status: $ => choice(
+	'DELIVERED'
+	,'delivered'
+	,'PAID'
+	,'paid'
+	,'CHARGED'
+	,'charged'
 ),
 
-condition_n: $ => (seq(optional($.negation), repeat1(($.string
-)), optional($.time_holder), $.semicolon)
+comparison: $ => choice(
+	seq('LESS', 'THAN')
+	,seq('less', 'than')
+	,seq('EQUAL', 'TO')
+	,'equals'
+	,seq('equal', 'to')
+	,seq('MORE', 'THAN')
+	,seq('more', 'than')
+	,seq('greater', 'than')
 ),
 
-time_holder: $ => choice(
-	$._pre_time
-	,seq($._pre_time, choice(
-	$.time_and
-	,$.time_or
-), $._pre_time)
+modal_verb: $ => choice(
+	'OBLIGATION'
+	,'shall'
+	,'must'
+	,'PERMISSION'
+	,'may'
+	,'PROHIBITION'
+	,seq('is', 'forbidden', 'to')
 ),
 
-_pre_time: $ => (seq(choice(
-	$.time_before
-	,$.time_after
-	,$.time_on
-), $.time)
-),
-
-time_and: $ => ("and"
-),
-
-time_or: $ => ("or"
-),
-
-time_before: $ => (seq("before", optional("the"))
-),
-
-time_after: $ => (seq("after", optional("the"))
-),
-
-time_on: $ => (seq("on", optional("the"))
-),
-
-time: $ => choice(
-	seq($.day, "-", $.month, "-", $.year)
-	,seq($.year, "-", $.month, "-", $.day)
-),
-
-day: $ => choice(
-	"1st"
-	,"2nd"
-	,"3rd"
-	,"4th"
-	,"5th"
-	,"6th"
-	,"7th"
-	,"8th"
-	,"9th"
-	,"10th"
-	,"11th"
-	,"12th"
-	,"13th"
-	,"14th"
-	,"15th"
-	,"16th"
-	,"17th"
-	,"18th"
-	,"19th"
-	,"20th"
-	,"21st"
-	,"22nd"
-	,"23rd"
-	,"24th"
-	,"25th"
-	,"26th"
-	,"27th"
-	,"28th"
-	,"29th"
-	,"30th"
-	,"31st"
-	,seq($._numSingle, $._numSingle)
+date: $ => choice(
+	seq("on the", $.num, $.month, $.num)
+	,seq("on", 'ANYDATE')
+	,seq("on", 'ADATE')
+	,seq("on", 'THEDATE')
 ),
 
 month: $ => choice(
@@ -196,22 +162,45 @@ month: $ => choice(
 	,"October"
 	,"November"
 	,"December"
-	,seq($._numSingle, $._numSingle)
 ),
 
-year: $ => (seq($._numSingle, $._numSingle, $._numSingle, $._numSingle)
+object: $ => choice(
+	$.numerical_object
+	,$.nonnumerical_object
 ),
 
-string: $ => (/[a-zA-Z]+/
+numerical_object: $ => choice(
+	seq(choice(
+	'POUNDS'
+	,'GBP'
+	,'pounds'
+	,'quid'
+), $.num)
+	,seq(choice(
+	'DOLLARS'
+	,'USD'
+	,'dollars'
+	,'bucks'
+), $.num)
+	,seq(choice(
+	'EUROS'
+	,'EUR'
+	,'euros'
+), $.num)
+	,seq('AMOUNT', $.subject)
+),
+
+nonnumerical_object: $ => choice(
+	seq('SOMECURRENCY', $.string)
+	,seq('REPORT', $.string)
+	,seq('NAMEDOBJECT', $.string)
+	,seq('OTHEROBJECT', $.string)
+),
+
+string: $ => (/[a-zA-Z\-.]+/
 ),
 
 num: $ => (/[0-9]+/
-),
-
-_numSingle: $ => (/[0-9]/
-),
-
-semicolon: $ => (";"
 ),
 
     comment: (_$) =>

@@ -8,7 +8,7 @@ class DrawContract:
         # print(store_arr)
         if node.children:
 
-            if node.type in show:
+            if node.type not in show:
                 store_arr.append([])
             
             # retstr = "\t" * depth + node.type + "\n"
@@ -16,7 +16,7 @@ class DrawContract:
                 # retstr += self.exploreNodes(c, depth + 1, show, store_arr)
                 self.exploreNodes(c, show, store_arr)
             
-            if node.type in show:
+            if node.type not in show:
                 check = store_arr.pop()
                 retstr = "\t" * len(store_arr) + node.type + "\n"
                 if len(check) > 0:
@@ -25,7 +25,7 @@ class DrawContract:
                     retstr += "\t" * (len(store_arr) + 1) + '<b style="color:#01422f;">' + node.text.decode("utf-8") + "</b>" + "\n"
                 store_arr[-1].append(retstr)
         else:
-            if node.type in show:
+            if node.type not in show:
                 store_arr[-1].append("\t" * len(store_arr) + '<b style="color:#01422f;">' + node.text.decode('utf-8') + "</b>" + "\n") 
 
     def buildFileStructure(self, tree):

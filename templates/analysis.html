@@ -15,7 +15,11 @@
 
   <button onclick="hideExplanation()" class="explanation" id="explanation-button">-</button>
   <p class="explanation" id="explanation">
-    This page is designed for the evaluation of contracts given that the grammar is written with respect to the pre-defined syntax.
+    This page is designed for the simulation of contracts provided that the grammar follows the GAS semantics. In particular, the set of features provided in this page focus on the relationship between statements and their associated conditions. <b>Green = True & Red = False</b>
+    <br>
+    <b>Condition Sim:</b> Conditions are simulated through boolean flags. Clicking the Conditions (LEFT) will revaluate the Statements (RIGHT). 
+    <br>
+    <b>Event Sim:</b> Conditions are simulated by dynamic events. In the Event Builder (BOTTOM), pick a condition and write the time on the right (according to the Grammar rules). This will then be processed as an event and Statements (TOP) will be evaluated with respect to time.
   </p>
 
   <div class="subheader">

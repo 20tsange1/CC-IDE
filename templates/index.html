@@ -21,9 +21,7 @@
             <ul id="files"></ul>
             <div id="containerSmall">
                 <div>
-                    <select id="filenameSelect">
-                        <option value="">Select a file...</option>
-                    </select>
+                    <input type="hidden" id="contractNameHolder" value="" />
                     <button class="button-style" id="saveBtn">Save</button>
                     <button class="button-style" id="deleteBtn">Delete</button>
                 </div>
@@ -42,7 +40,7 @@
             <h2>Parsed Output</h2>
             <div id="containerSmall">
                 <div>
-                    <button class="button-style" id="idBtn" onclick="nodeIDs('')">Display IDs</button>
+                    <button class="button-style" id="idBtn" onclick="nodeIDs('')">Display Condition IDs</button>
                     <button class="button-style" id="idBtn" onclick="nodeDefs('')">Display Definitions</button>
                 </div>
             </div>

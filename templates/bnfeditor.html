@@ -15,7 +15,15 @@
 
     <button onclick="hideExplanation()" class="explanation" id="explanation-button">-</button>
     <p class="explanation" id="explanation">
-        This page is designed for development of grammars along with it's formatting. Now includes the ability to upload code to override translation functionality.
+        This page is designed for development of CC-languages.
+        <br>
+        <b>BNF Editor:</b> An editor for the grammars of CC-languages. Utilises grammars in a Backus Naur Form along with Symbol Prefixes.
+        <br>
+        <b>Highlight Options:</b> The configurator for Syntax Highlighting. Choose the colour of a syntactic component.
+        <br>
+        <b>Formatting Options:</b> The configurator for general contract formatting. Formatting is done using CSS rules, which should be entered into one of the three corresponding text boxes. Prefix (Prepended to the text). Suffix (Appended to the text). Inline (Direct styling).
+        <br>
+        <b>Time Override:</b> The upload box for a Python TimeOverride class, used to denote translations from the CC-language to Python datetime objects.
     </p>
 
     <h1 id="center">BNF Editor</h1>
@@ -25,14 +33,12 @@
         <div id="fileList">
             <h2>Available Files</h2>
             <ul id="files"></ul>
-            <select id="filenameSelect">
-                <option value="">Select a file...</option>
-            </select>
+            <input type="hidden" id="grammarNameHolder" value=""/>
         </div>
 
         <!-- Text editor area -->
         <div id="editor">
-            <h2>Edit File</h2>
+            <h2 id="fileName">Edit File</h2>
             <textarea id="fileContent" placeholder="File content will appear here..." rows="20" cols="100"></textarea>
             <div>
                 <button class="saveBtn button" id="saveBtn">Save</button>

@@ -39,10 +39,10 @@ class DrawBoolean:
 
 
     def build_bool(self, conditions, depth):
-        print(conditions)
+        # print(conditions)
         if isinstance(conditions, list):
             retstr = ' '.join([self.build_bool(c, depth + 1) for c in conditions])
-            print(retstr)
+            # print(retstr)
             return f'<div class="condition plain">{retstr}</div>'
         else:
             if conditions == "AND":

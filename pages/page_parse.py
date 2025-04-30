@@ -1,5 +1,6 @@
 from flask import Blueprint, request, current_app, jsonify
 import os
+from pathlib import Path
 
 page_parse = Blueprint("page_parse", __name__)
 
@@ -36,16 +37,21 @@ def parse_display_definitions():
 
 
 def check_if_current_grammar(directory, filename, grammar_name):
-    # print(directory + f"/meta/{filename[::-4]}.ini")
     if directory == "contracts":
         curr_meta = current_app.config["metadata"].read_meta(directory + f"/meta/{filename[:-4]}.ini")
-        # print(curr_meta, grammar_name)
         if "Grammar_Name" in curr_meta:
             return grammar_name == curr_meta["Grammar_Name"]
         else:
             return False
     else:
         return True
+
+def list_file_recursive(files, path='.', ending=""):
+    for f in os.listdir(path):
+        if os.path.isdir(os.path.join(path, f)):
+            list_file_recursive(files, os.path.join(path, f), ending)
+        elif f.endswith(ending) and check_if_current_grammar(path, os.path.join(*path.split("/")[1:], f), current_app.config["handler"].grammar_name):
+            files.append(os.path.join(path, f))
 
 @page_parse.route("/files", methods=["POST"])
 def list_files():
@@ -56,20 +62,17 @@ def list_files():
     contains = data.get("contains")
     files = []
 
-    for f in os.listdir(directory):
-        if f.endswith(ending) and contains in f and check_if_current_grammar(directory, f, current_app.config["handler"].grammar_name):
-            files.append(f)
+    list_file_recursive(files, directory, ending)
 
-    return jsonify(files)
+    return jsonify(sorted(files))
 
 
-@page_parse.route("/load-file/<filename>", methods=["POST"])
-def load_file(filename):
+@page_parse.route("/load-file", methods=["POST"])
+def load_file():
     data = request.get_json()
-    directory = data.get("path")
-    filepath = os.path.join(directory, filename)
-    if os.path.isfile(filepath):
-        with open(filepath, "r") as file:
+    filename = data.get("path")
+    if os.path.isfile(filename):
+        with open(filename, "r") as file:
             content = file.read()
         return jsonify({"content": content})
     return jsonify({"error": "File not found"}), 404
@@ -79,14 +82,14 @@ def load_file(filename):
 def save_file():
     data = request.get_json()
     filename = data.get("filename")
-    directory = data.get("path")
     content = data.get("content")
     if not filename or not content:
         return jsonify({"error": "Invalid input"}), 400
 
-    filepath = os.path.join(directory, filename)
-    with open(filepath, "w") as file:
+    with open(filename, "w") as file:
         file.write(content)
+
+    directory = filename.split("/")[0]
 
     if directory == "contracts":
         current_app.config["metadata"].contract_meta(directory, filename, content)
@@ -97,14 +100,23 @@ def save_file():
 @page_parse.route("/delete-file", methods=["POST"])
 def delete_file():
     data = request.get_json()
-    filename = data.get("filename")
-    directory = data.get("path")
-    if not filename:
+    fn = data.get("filename")
+
+    if not fn:
         return jsonify({"error": "Invalid input"}), 400
 
-    filepath = os.path.join(directory, filename)
-    if os.path.isfile(filepath):
-        os.remove(filepath)
+    split_up = fn.split("/")
+
+    directory = split_up[0]
+    
+    if len(split_up) > 2:
+        filename = os.path.join(*split_up[1:])
+    else:
+        filename = split_up[-1]
+
+    if os.path.isfile(fn):
+        os.remove(fn)
+        current_app.config["metadata"].delete_meta(directory, filename)
     else:
         return jsonify({"error": "Invalid input"}), 400
 
@@ -120,6 +132,8 @@ def create_file():
         return jsonify({"error": "Invalid input"}), 400
 
     filepath = os.path.join(directory, filename) + ".txt"
+
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
     if os.path.isfile(filepath):
         return jsonify({"error": "File already exists"}), 400

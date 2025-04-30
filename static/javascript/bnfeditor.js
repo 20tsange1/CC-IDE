@@ -4,8 +4,9 @@
 
 // Elements for file operations
 const filesList = document.getElementById('files');
-const filenameSelect = document.getElementById('filenameSelect');
+const grammarNameHolder = document.getElementById('grammarNameHolder');
 const fileContent = document.getElementById('fileContent');
+const fileName = document.getElementById('fileName');
 const saveBtn = document.getElementById('saveBtn');
 const applyBtn = document.getElementById('applyBtn');
 const pathname = 'bnfs';
@@ -20,36 +21,107 @@ function loadFileList() {
         .then(response => response.json())
         .then(files => {
             // Populate the dropdown and file list
-            filenameSelect.innerHTML = '<option value="">Select a file...</option>';
             filesList.replaceChildren();
-            files.forEach(file => {
-                const option = document.createElement('option');
-                option.value = file;
-                option.textContent = file;
-                filenameSelect.appendChild(option);
 
-                const li = document.createElement('li');
-                li.textContent = file;
-                filesList.appendChild(li);
-            });
+            const treeData = buildTree(files);
+            const treeElement = renderTree(treeData, "Grammars");
+
+            filesList.appendChild(treeElement);
+
         })
         .catch(error => console.error('Error loading files:', error));
 }
 
-// Load file content when a file is selected
-filenameSelect.addEventListener('change', () => {
-    const filename = filenameSelect.value;
 
+
+// https://www.w3schools.com/howto/howto_js_treeview.asp
+
+// Breaking down the paths into a tree (dictionary based)
+function buildTree(paths) {
+    const root = {};
+
+    for (const path of paths) {
+        const parts = path.split('/');
+        let current = root;
+
+        // alert(parts);
+    
+        for (let i = 0; i < parts.length; i++) {
+          const part = parts[i];
+    
+          if (!current[part]) {
+            current[part] = {};
+          }    
+          current = current[part];
+        }
+        current["_fullPath"] = path
+      }
+
+    console.log(JSON.stringify(root, null, 2));
+    return root;
+  }
+
+
+function build_li_obj(node, nodeName=null) {
+    const li_ret = document.createElement('li');
+    li_ret.classList.add("option");
+    li_ret.textContent = nodeName;
+
+    li_ret.addEventListener("click", () => {load_single_file(node["_fullPath"], "Edit File - " + nodeName)});
+
+    return li_ret;
+}
+
+function build_li_big_obj(node, nodeName=null) {
+    const li_big = document.createElement('li');
+
+    const text_span = document.createElement('span');
+    text_span.textContent = nodeName;
+    text_span.classList.add("caret");
+    text_span.addEventListener("click", function() {
+        this.parentElement.querySelector(".nested").classList.toggle("active");
+        this.classList.toggle("caret-down");
+    });
+
+    const ul = document.createElement('ul');
+    ul.classList.add("nested");
+
+    for (const key in node) {
+        const children = renderTree(node[key], key);
+        ul.appendChild(children);
+    }
+
+    li_big.appendChild(text_span);
+    li_big.appendChild(ul);
+
+    return li_big;
+}
+
+
+// Expanding tree into HTML elements
+function renderTree(node, nodeName = null) {
+    if ("_fullPath" in node) {
+        return build_li_obj(node, nodeName);
+    }
+    else {
+        return build_li_big_obj(node, nodeName);   
+    }
+}
+
+
+function load_single_file(filename, grammarName) {
     if (filename) {
-        fetch(`/load-file/${filename}`, {
+        fetch(`/load-file`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ path: pathname })
+            body: JSON.stringify({ path: filename })
         })
             .then(response => response.json())
             .then(data => {
                 if (data.content) {
+                    grammarNameHolder.value = filename;
                     fileContent.value = data.content; // Update editor content
+                    fileName.textContent = grammarName;
                 } else {
                     alert('Error loading file content');
                 }
@@ -58,11 +130,11 @@ filenameSelect.addEventListener('change', () => {
     } else {
         fileContent.value = ''; // Clear editor if no file is selected
     }
-});
+}
 
 // Save file content to the server
 saveBtn.addEventListener('click', () => {
-    const filename = filenameSelect.value;
+    const filename = grammarNameHolder.value;
     const content = fileContent.value;
 
     if (!filename) {
@@ -84,7 +156,7 @@ saveBtn.addEventListener('click', () => {
 
 // Save and apply file content
 applyBtn.addEventListener('click', () => {
-    const filename = filenameSelect.value;
+    const filename = grammarNameHolder.value;
     const content = fileContent.value;
 
     if (!filename) {
@@ -95,7 +167,7 @@ applyBtn.addEventListener('click', () => {
     fetch('/save-file', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ filename, content, path: pathname })
+        body: JSON.stringify({ filename, content })
     })
     .then(response => response.json())
     .then(data => {
@@ -108,7 +180,7 @@ applyBtn.addEventListener('click', () => {
         return fetch('/parse-bnf', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ filename, path: pathname, ont: 'text-files' })
+            body: JSON.stringify({ filename, path: pathname,  ont: 'text-files' })
         });
     })
     .then(response => response ? response.json() : null)
@@ -132,7 +204,7 @@ applyBtn.addEventListener('click', () => {
 
 // Delete a file from the server
 deleteBtn.addEventListener('click', () => {
-    const filename = filenameSelect.value;
+    const filename = grammarNameHolder.value;
 
     if (!filename) {
         alert('Please select a file to delete');
@@ -142,7 +214,7 @@ deleteBtn.addEventListener('click', () => {
     fetch('/delete-file', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ filename, path: pathname })
+        body: JSON.stringify({ filename })
     })
         .then(response => response.json())
         .then(data => {

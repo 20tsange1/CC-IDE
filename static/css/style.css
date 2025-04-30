@@ -35,13 +35,14 @@ body {
 
 .progress-container {
     width: 100%;
-    background-color: #e0e0e0;  
+    background-color: #e0e0e0;
     border-radius: 5px;
     height: 30px;
 }
 
 .progress-bar {
-    width: 100%; /* Set your static progress here (0% to 100%) */
+    width: 100%;
+    /* Set your static progress here (0% to 100%) */
     height: 100%;
     background-color: #4caf50;
     border-radius: 5px;
@@ -59,8 +60,56 @@ body {
 }
 
 #explanation {
-    width: 25%;
+    width: 90%;
     height: 100%;
     margin-top: 0.5rem;
     padding: 2.5rem;
+}
+
+
+
+
+/* Tree File View */
+
+/* Remove default bullets */
+ul,
+#myUL {
+    list-style-type: none;
+}
+
+/* Remove margins and padding from the parent ul */
+#myUL {
+    margin: 0;
+    padding: 0;
+}
+
+/* Style the caret/arrow */
+.caret {
+    cursor: pointer;
+    user-select: none;
+    /* Prevent text selection */
+    font-weight: bold;
+}
+
+/* Create the caret/arrow with a unicode, and style it */
+.caret::before {
+    content: "\25B6";
+    color: black;
+    display: inline-block;
+    margin-right: 6px;
+}
+
+/* Rotate the caret/arrow icon when clicked on (using JavaScript) */
+.caret-down::before {
+    transform: rotate(90deg);
+}
+
+/* Hide the nested list */
+.nested {
+    display: none;
+}
+
+/* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
+.active {
+    display: block;
 }

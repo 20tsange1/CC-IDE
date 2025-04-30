@@ -11,14 +11,14 @@ simple_statement:#a8a434
 condition:#000000
 simple_condition:#9b49ab
 boolean_expression:#000000
-identity:#000000
+identity:#d75e1d
 holds:#000000
-subject:#000000
+subject:#3a9896
 verb:#000000
 verb_status:#000000
 comparison:#000000
 modal_verb:#000000
-date:#000000
+date:#2c726a
 month:#000000
 object:#000000
 numerical_object:#000000

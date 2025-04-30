@@ -18,8 +18,19 @@ AUXILIARY_FILES_DIR = "tools/tool-auxiliary"
 @page_developer.route("/parse-bnf", methods=["POST"])
 def parse_bnf():
     data = request.get_json()
-    filename = data.get("filename")
-    directory = data.get("path")
+    fn = data.get("filename")
+
+    split_up = fn.split("/")
+
+    directory = split_up[0]
+    bnf_name = split_up[-1]
+
+    if len(split_up) > 2:
+        print(split_up[1:])
+        filename = os.path.join(*split_up[1:])
+    else:
+        filename = split_up[-1]
+
     ontdirectory = data.get("ont")
     if not filename or not directory:
         return jsonify({"error": "Invalid input"}), 400
@@ -27,7 +38,7 @@ def parse_bnf():
     current_app.config["ont"].breakdown(ontdirectory + "/ontologies.txt")
 
     try:
-        current_app.config["handler"].reparseBNF(f"{directory}/{filename}", filename, current_app.config["ont"].ontologies)
+        current_app.config["handler"].reparseBNF(fn, filename, current_app.config["ont"].ontologies)
         current_app.config["metadata"].bnf_meta(directory, filename)
         current_app.config["metadata"].grammar_meta(directory, filename)
         current_app.config["handler"].reset()

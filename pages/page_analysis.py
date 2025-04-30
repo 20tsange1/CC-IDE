@@ -111,6 +111,6 @@ def event_sim_add():
     try:
         event_sim.evaluate_condition(identifier, time)
     except ValueError as e:
-        return jsonify({"error": "Invalid Time"}), 404
+        return jsonify({"error": "Invalid Time, failed to translate"}), 404
 
     return jsonify({"message": "Successful Event"}), 200

@@ -223,9 +223,10 @@ function staticLoadEvent() {
         })
         .then(res => res.json())
         .then(data => {
-            console.log(data.message || data.error);
+            alert(data.message || data.error);
             staticLoadEvent(); // refresh UI
-        });
+        })
+        .catch(error => console.error('Error submitting event:', error));
     }, { once: true }); // use once:true to avoid duplicate listeners
 }
 

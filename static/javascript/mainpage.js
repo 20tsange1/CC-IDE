@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Elements for file management
 const filesList = document.getElementById('files'); // List of files
-const filenameSelect = document.getElementById('filenameSelect'); // Dropdown for file selection
+const contractNameHolder = document.getElementById('contractNameHolder'); // Dropdown for file selection
 const fileContent = document.getElementById('inputText'); // Editor for file content
 const pathname = 'contracts'; // Directory for files
 const title = document.getElementById('titleHolder'); // Editor title display
@@ -52,52 +52,127 @@ function loadFileList() {
     fetch('/files', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path: pathname, ends: '', contains: '' })
+        body: JSON.stringify({ path: pathname, ends: '.txt', contains: '' })
     })
         .then(response => response.json())
         .then(files => {
-            filenameSelect.innerHTML = '<option value="">Select a file...</option>';
-            filesList.replaceChildren(); // Clear the file list
-            files.forEach(file => {
-                const option = document.createElement('option');
-                option.value = file;
-                option.textContent = file;
-                filenameSelect.appendChild(option);
-            });
+            filesList.replaceChildren();
+
+            const treeData = buildTree(files);
+            const treeElement = renderTree(treeData, "Contracts");
+
+            filesList.appendChild(treeElement);
+
         })
         .catch(error => console.error('Error loading file list:', error));
 }
 
-// Load file content when a file is selected
-filenameSelect.addEventListener('change', () => {
-    const filename = filenameSelect.value;
+
+// https://www.w3schools.com/howto/howto_js_treeview.asp
+
+// Breaking down the paths into a tree (dictionary based)
+function buildTree(paths) {
+    const root = {};
+
+    for (const path of paths) {
+        const parts = path.split('/');
+        let current = root;
+
+        // alert(parts);
+    
+        for (let i = 0; i < parts.length; i++) {
+          const part = parts[i];
+    
+          if (!current[part]) {
+            current[part] = {};
+          }    
+          current = current[part];
+        }
+        current["_fullPath"] = path
+      }
+
+    console.log(JSON.stringify(root, null, 2));
+    return root;
+  }
+
+
+function build_li_obj(node, nodeName=null) {
+    const li_ret = document.createElement('li');
+    li_ret.classList.add("option");
+    li_ret.textContent = nodeName;
+
+    li_ret.addEventListener("click", () => {load_single_file(node["_fullPath"], nodeName)});
+
+    return li_ret;
+}
+
+function build_li_big_obj(node, nodeName=null) {
+    const li_big = document.createElement('li');
+
+    const text_span = document.createElement('span');
+    text_span.textContent = nodeName;
+    text_span.classList.add("caret");
+    text_span.addEventListener("click", function() {
+        this.parentElement.querySelector(".nested").classList.toggle("active");
+        this.classList.toggle("caret-down");
+    });
+
+    const ul = document.createElement('ul');
+    ul.classList.add("nested");
+
+    for (const key in node) {
+        const children = renderTree(node[key], key);
+        ul.appendChild(children);
+    }
+
+    li_big.appendChild(text_span);
+    li_big.appendChild(ul);
+
+    return li_big;
+}
+
+
+// Expanding tree into HTML elements
+function renderTree(node, nodeName = null) {
+    if ("_fullPath" in node) {
+        return build_li_obj(node, nodeName);
+    }
+    else {
+        return build_li_big_obj(node, nodeName);   
+    }
+}
+
+
+function load_single_file(filename, contractName) {
     if (filename) {
-        fetch(`/load-file/${filename}`, {
+        fetch(`/load-file`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ path: pathname })
+            body: JSON.stringify({ path: filename })
         })
             .then(response => response.json())
             .then(data => {
                 if (data.content) {
-                    fileContent.value = data.content; // Load file content into editor
-                    title.textContent = `Edit Text - ${filename}`; // Update title
-                    full_process(); // Trigger parsing and analysis
+                    contractNameHolder.value = filename;
+                    fileContent.value = data.content; // Update editor content
+                    title.textContent = `Edit Text - ${contractName}`;
+                    full_process();
                 } else {
                     alert('Error loading file content');
                 }
             })
             .catch(error => console.error('Error loading file content:', error));
     } else {
+        contractNameHolder.value = "";
         fileContent.value = ''; // Clear editor if no file is selected
         title.textContent = 'Edit Text';
         full_process(); // Needs to be repeated in both, otherwise it just doesn't work. i.e can't be outside if statement.
     }
-});
+}
 
 // Save file content to the server
 saveBtn.addEventListener('click', () => {
-    const filename = filenameSelect.value;
+    const filename = contractNameHolder.value;
     const content = fileContent.value;
 
     if (!filename) {
@@ -108,7 +183,7 @@ saveBtn.addEventListener('click', () => {
     fetch('/save-file', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ filename, content, path: pathname })
+        body: JSON.stringify({ filename, content })
     })
         .then(response => response.json())
         .then(data => {
@@ -119,7 +194,7 @@ saveBtn.addEventListener('click', () => {
 
 // Delete file from the server
 deleteBtn.addEventListener('click', () => {
-    const filename = filenameSelect.value;
+    const filename = contractNameHolder.value;
 
     if (!filename) {
         alert('Please select a file to delete');
@@ -129,7 +204,7 @@ deleteBtn.addEventListener('click', () => {
     fetch('/delete-file', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ filename, path: pathname })
+        body: JSON.stringify({ filename })
     })
         .then(response => response.json())
         .then(data => {
