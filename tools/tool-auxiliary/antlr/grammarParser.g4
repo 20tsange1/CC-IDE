@@ -4,7 +4,13 @@ gram: component+
     ;
     
 component: symbol otter expansion SEMICOLON
+    | comment
     ;
+    
+comment:  ('#' | '//') WORD*
+    | '/*' WORD* '*/'
+    ;
+    
     
 expansion: arg (SPLITTER arg)*
     ;

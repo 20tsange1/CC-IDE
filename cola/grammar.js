@@ -19,6 +19,8 @@ module.exports = grammar({
 contract: $ => (repeat1($._choice)
 ),
 
+
+
 _choice: $ => choice(
 	alias($.start, $.clause)
 	,$.definition

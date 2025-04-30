@@ -59,6 +59,9 @@ class grammarParserVisitor(ParseTreeVisitor):
         """
         symbol = ""
 
+        if isinstance(ctx.getChild(0), grammarParserParser.CommentContext):
+            return ""
+
         if isinstance(ctx.getChild(0), grammarParserParser.SymbolContext):
             symbol = ctx.getChild(0).getChild(1).getText().replace("-", "_")
             
@@ -84,6 +87,14 @@ class grammarParserVisitor(ParseTreeVisitor):
             return f"{symbol}: $ => {otter_type}{arg_choice_string}),"
         else:
             return f"{symbol}: $ => {arg_choice_string},"
+
+    def visitComment(self, ctx:grammarParserParser.CommentContext):
+        """
+        comment:  ('#' | '//') WORD*
+            | '/*' WORD* '*/'
+            ;
+        """
+        return None
 
     # Visit a parse tree produced by grammarParserParser#expansion.
     def visitExpansion(self, ctx:grammarParserParser.ExpansionContext):
@@ -246,6 +257,7 @@ class grammarParserVisitor(ParseTreeVisitor):
             "B": "bracket",
             "A": "and_expression",
             "O": "or_expression",
+            "E": "else"
         }
 
         otter_map_time_replace = {

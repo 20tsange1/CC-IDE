@@ -1,5 +1,5 @@
 name,,start,has,
-name,,ERROR,has,is,
+name,,ERROR,is,has,
 has,name,start,discount,
 has,name,ERROR,discount,
 discount,has,start,.,

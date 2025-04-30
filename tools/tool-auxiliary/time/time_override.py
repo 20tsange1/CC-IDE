@@ -1,6 +1,5 @@
 from datetime import datetime
 
-# This isn't right but it should be added somehow
 from time_base import TimeBase
 
 class TimeOverride(TimeBase):

@@ -1,6 +1,8 @@
 <contract> ::= <_choice>+
 ;
 
+// comments
+
 <_choice> ::= <start>
 | <definition>
 ;
