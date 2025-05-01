@@ -18,6 +18,8 @@
 
 - **development-playground**
     | For testing purposes.
+    - **stuff-for-docker-WIP**
+        | Storing docker files (WIP)
 
 - **guides**
     | For storing guidance on how to use the IDE. (WIP)
@@ -38,9 +40,6 @@
     - **parsing-formatting**
         | Storing parsing css files.
 
-- **stuff-for-docker-WIP**
-    | Storing docker files (WIP)
-
 - **templates**
     | Storing HTML files for the IDE pages.
     - **output-templates**
@@ -51,13 +50,12 @@
     - **{grammar name}**
         | For storing node colours, node formats and additional information. 
 
-- **tool-analysis**
-    | For storing analysis classes.
-    
-- **tool-auxiliary**
-    | For storing files with auxiliary classes.
-    - **antlr**
-        | For storing antlr related data and 
-        
-- **tool-visualisations**
-    | For storing visualisation classes.
+- **tools**
+    - **tool-analysis**
+        | For storing analysis classes.
+    - **tool-auxiliary**
+        | For storing files with auxiliary classes.
+        - **antlr**
+            | For storing antlr related data and 
+    - **tool-visualisations**
+        | For storing visualisation classes.

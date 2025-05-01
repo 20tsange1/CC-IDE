@@ -3,972 +3,685 @@
   "name": "cola",
   "rules": {
     "contract": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "component"
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "component"
-            },
-            {
-              "type": "STRING",
-              "value": "C-AND"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "contract"
-            }
-          ]
-        }
-      ]
+      "type": "REPEAT1",
+      "content": {
+        "type": "SYMBOL",
+        "name": "_choice"
+      }
     },
-    "component": {
+    "_choice": {
       "type": "CHOICE",
       "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "start"
+          },
+          "named": true,
+          "value": "clause"
+        },
         {
           "type": "SYMBOL",
           "name": "definition"
+        }
+      ]
+    },
+    "start": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "user"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "name"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": "has"
         },
         {
           "type": "SYMBOL",
-          "name": "conditional_definition"
+          "name": "discount"
         },
         {
-          "type": "SYMBOL",
-          "name": "statement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "conditional_statement"
+          "type": "STRING",
+          "value": "."
         }
       ]
     },
     "definition": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "simple_definition"
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "simple_definition"
-            },
-            {
-              "type": "STRING",
-              "value": "AND"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "definition"
-            }
-          ]
-        }
-      ]
-    },
-    "simple_definition": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "identity"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            },
-            {
-              "type": "STRING",
-              "value": "IS"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "identity"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            },
-            {
-              "type": "STRING",
-              "value": "EQUALS"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "numerical_expression"
-            }
-          ]
-        }
-      ]
-    },
-    "numerical_expression": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "num"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "numerical_object"
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "numerical_object"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "operator"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "numerical_expression"
-            }
-          ]
-        }
-      ]
-    },
-    "operator": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "PLUS"
-        },
-        {
-          "type": "STRING",
-          "value": "MINUS"
-        },
-        {
-          "type": "STRING",
-          "value": "TIMES"
-        },
-        {
-          "type": "STRING",
-          "value": "DIVIDE"
-        }
-      ]
-    },
-    "conditional_definition": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "definition"
-            },
-            {
-              "type": "STRING",
-              "value": "IF"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "condition"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "IF"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "condition"
-            },
-            {
-              "type": "STRING",
-              "value": "THEN"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "definition"
-            }
-          ]
-        }
-      ]
-    },
-    "statement": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "simple_statement"
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "simple_statement"
-            },
-            {
-              "type": "STRING",
-              "value": "OR"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "statement"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "simple_statement"
-            },
-            {
-              "type": "STRING",
-              "value": "AND"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "statement"
-            }
-          ]
-        }
-      ]
-    },
-    "conditional_statement": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "statement"
-            },
-            {
-              "type": "STRING",
-              "value": "IF"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "condition"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "IF"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "condition"
-            },
-            {
-              "type": "STRING",
-              "value": "THEN"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "statement"
-            }
-          ]
-        }
-      ]
-    },
-    "simple_statement": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "identity"
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "holds"
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "modal_verb"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "verb"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "object"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "date"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "identity"
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "holds"
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "date"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "modal_verb"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "verb"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "object"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "identity"
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "holds"
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            },
-            {
-              "type": "SYMBOL",
-              "name": "date"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "modal_verb"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "verb"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "object"
-            }
-          ]
-        }
-      ]
-    },
-    "condition": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "simple_condition"
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "simple_condition"
-            },
-            {
-              "type": "STRING",
-              "value": "OR"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "condition"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "simple_condition"
-            },
-            {
-              "type": "STRING",
-              "value": "AND"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "condition"
-            }
-          ]
-        }
-      ]
-    },
-    "simple_condition": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "identity"
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "holds"
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "verb_status"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "object"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "date"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "identity"
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "holds"
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "date"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "verb_status"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "object"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "identity"
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "holds"
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            },
-            {
-              "type": "SYMBOL",
-              "name": "date"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "verb_status"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "object"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "identity"
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "holds"
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "modal_verb"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "verb"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "object"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "date"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "identity"
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "holds"
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            },
-            {
-              "type": "SYMBOL",
-              "name": "boolean_expression"
-            }
-          ]
-        }
-      ]
-    },
-    "boolean_expression": {
       "type": "SEQ",
       "members": [
         {
           "type": "SYMBOL",
-          "name": "subject"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "verb_status"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "comparison"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "subject"
-        }
-      ]
-    },
-    "identity": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "["
-            },
-            {
-              "type": "SYMBOL",
-              "name": "num"
-            },
-            {
-              "type": "STRING",
-              "value": "]"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "["
-            },
-            {
-              "type": "SYMBOL",
-              "name": "num"
-            },
-            {
-              "type": "STRING",
-              "value": "("
-            },
-            {
-              "type": "SYMBOL",
-              "name": "num"
-            },
-            {
-              "type": "STRING",
-              "value": ")"
-            },
-            {
-              "type": "STRING",
-              "value": "]"
-            }
-          ]
-        }
-      ]
-    },
-    "holds": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "it is the case that"
+          "name": "name"
         },
         {
           "type": "STRING",
-          "value": "it is not the case that"
+          "value": "is"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "definition_specific"
+        },
+        {
+          "type": "STRING",
+          "value": "."
         }
       ]
     },
-    "subject": {
+    "definition_specific": {
+      "type": "REPEAT1",
+      "content": {
+        "type": "SYMBOL",
+        "name": "string"
+      }
+    },
+    "user": {
+      "type": "PREC",
+      "value": 7,
+      "content": {
+        "type": "SYMBOL",
+        "name": "string"
+      }
+    },
+    "name": {
       "type": "SYMBOL",
       "name": "string"
     },
-    "verb": {
-      "type": "CHOICE",
+    "negation": {
+      "type": "SEQ",
       "members": [
         {
           "type": "STRING",
-          "value": "DELIVER"
+          "value": "it"
         },
         {
           "type": "STRING",
-          "value": "deliver"
+          "value": "is"
         },
         {
           "type": "STRING",
-          "value": "PAY"
+          "value": "not"
         },
         {
           "type": "STRING",
-          "value": "pay"
+          "value": "true"
         },
         {
           "type": "STRING",
-          "value": "CHARGE"
-        },
-        {
-          "type": "STRING",
-          "value": "charge"
+          "value": "that"
         }
       ]
     },
-    "verb_status": {
-      "type": "CHOICE",
+    "discount": {
+      "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "DELIVERED"
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "discount_specific"
+          },
+          "named": true,
+          "value": "statement"
         },
         {
-          "type": "STRING",
-          "value": "delivered"
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "and"
+              },
+              {
+                "type": "ALIAS",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "discount_specific"
+                },
+                "named": true,
+                "value": "statement"
+              }
+            ]
+          }
         },
         {
-          "type": "STRING",
-          "value": "PAID"
-        },
-        {
-          "type": "STRING",
-          "value": "paid"
-        },
-        {
-          "type": "STRING",
-          "value": "CHARGED"
-        },
-        {
-          "type": "STRING",
-          "value": "charged"
-        }
-      ]
-    },
-    "comparison": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SEQ",
+          "type": "CHOICE",
           "members": [
             {
-              "type": "STRING",
-              "value": "LESS"
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "if"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "conditional"
+                },
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "SYMBOL",
+                          "name": "else"
+                        },
+                        {
+                          "type": "ALIAS",
+                          "content": {
+                            "type": "SYMBOL",
+                            "name": "discount_specific"
+                          },
+                          "named": true,
+                          "value": "statement"
+                        },
+                        {
+                          "type": "REPEAT",
+                          "content": {
+                            "type": "SEQ",
+                            "members": [
+                              {
+                                "type": "STRING",
+                                "value": "and"
+                              },
+                              {
+                                "type": "ALIAS",
+                                "content": {
+                                  "type": "SYMBOL",
+                                  "name": "discount_specific"
+                                },
+                                "named": true,
+                                "value": "statement"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                }
+              ]
             },
             {
-              "type": "STRING",
-              "value": "THAN"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "less"
-            },
-            {
-              "type": "STRING",
-              "value": "than"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "EQUAL"
-            },
-            {
-              "type": "STRING",
-              "value": "TO"
-            }
-          ]
-        },
-        {
-          "type": "STRING",
-          "value": "equals"
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "equal"
-            },
-            {
-              "type": "STRING",
-              "value": "to"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "MORE"
-            },
-            {
-              "type": "STRING",
-              "value": "THAN"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "more"
-            },
-            {
-              "type": "STRING",
-              "value": "than"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "greater"
-            },
-            {
-              "type": "STRING",
-              "value": "than"
+              "type": "BLANK"
             }
           ]
         }
       ]
     },
-    "modal_verb": {
+    "discount_specific": {
       "type": "CHOICE",
       "members": [
-        {
-          "type": "STRING",
-          "value": "OBLIGATION"
-        },
-        {
-          "type": "STRING",
-          "value": "shall"
-        },
-        {
-          "type": "STRING",
-          "value": "must"
-        },
-        {
-          "type": "STRING",
-          "value": "PERMISSION"
-        },
-        {
-          "type": "STRING",
-          "value": "may"
-        },
-        {
-          "type": "STRING",
-          "value": "PROHIBITION"
-        },
         {
           "type": "SEQ",
           "members": [
             {
-              "type": "STRING",
-              "value": "is"
+              "type": "SYMBOL",
+              "name": "num"
             },
             {
               "type": "STRING",
-              "value": "forbidden"
+              "value": "%"
             },
             {
-              "type": "STRING",
-              "value": "to"
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "STRING",
+                      "value": "discount"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "off"
+                    }
+                  ]
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
             }
           ]
-        }
-      ]
-    },
-    "date": {
-      "type": "CHOICE",
-      "members": [
+        },
         {
           "type": "SEQ",
           "members": [
             {
               "type": "STRING",
-              "value": "on the"
+              "value": "$"
             },
             {
               "type": "SYMBOL",
               "name": "num"
+            },
+            {
+              "type": "STRING",
+              "value": "off"
+            }
+          ]
+        }
+      ]
+    },
+    "else": {
+      "type": "STRING",
+      "value": "else"
+    },
+    "conditional_upper": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "bracketopen"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "conditional"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "bracketclose"
+        }
+      ]
+    },
+    "bracketopen": {
+      "type": "STRING",
+      "value": "["
+    },
+    "bracketclose": {
+      "type": "STRING",
+      "value": "]"
+    },
+    "conditional": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "conditional_upper"
+          },
+          "named": true,
+          "value": "bracket"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "conditional_and"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "conditional_or"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "condition_n"
+          },
+          "named": true,
+          "value": "condition"
+        }
+      ]
+    },
+    "conditional_and": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "conditional_upper"
+              },
+              "named": true,
+              "value": "bracket"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "condition_n"
+              },
+              "named": true,
+              "value": "condition"
+            }
+          ]
+        },
+        {
+          "type": "REPEAT1",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "ALIAS",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "and_connect"
+                },
+                "named": true,
+                "value": "and_expression"
+              },
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "conditional_upper"
+                    },
+                    "named": true,
+                    "value": "bracket"
+                  },
+                  {
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "condition_n"
+                    },
+                    "named": true,
+                    "value": "condition"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "and_connect": {
+      "type": "STRING",
+      "value": "and"
+    },
+    "conditional_or": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "conditional_upper"
+              },
+              "named": true,
+              "value": "bracket"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "condition_n"
+              },
+              "named": true,
+              "value": "condition"
+            }
+          ]
+        },
+        {
+          "type": "REPEAT1",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "ALIAS",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "or_connect"
+                },
+                "named": true,
+                "value": "or_expression"
+              },
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "conditional_upper"
+                    },
+                    "named": true,
+                    "value": "bracket"
+                  },
+                  {
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "condition_n"
+                    },
+                    "named": true,
+                    "value": "condition"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "or_connect": {
+      "type": "STRING",
+      "value": "or"
+    },
+    "condition_n": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "negation"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "REPEAT1",
+          "content": {
+            "type": "SYMBOL",
+            "name": "string"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "time_holder"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "semicolon"
+        }
+      ]
+    },
+    "time_holder": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_pre_time"
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_pre_time"
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "time_and"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "time_or"
+                }
+              ]
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_pre_time"
+            }
+          ]
+        }
+      ]
+    },
+    "_pre_time": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "time_before"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "time_after"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "time_on"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "time"
+        }
+      ]
+    },
+    "time_and": {
+      "type": "STRING",
+      "value": "and"
+    },
+    "time_or": {
+      "type": "STRING",
+      "value": "or"
+    },
+    "time_before": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "before"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "the"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "time_after": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "after"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "the"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "time_on": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "on"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "the"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "time": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "day"
+            },
+            {
+              "type": "STRING",
+              "value": "-"
             },
             {
               "type": "SYMBOL",
               "name": "month"
             },
             {
+              "type": "STRING",
+              "value": "-"
+            },
+            {
               "type": "SYMBOL",
-              "name": "num"
+              "name": "year"
             }
           ]
         },
@@ -976,38 +689,166 @@
           "type": "SEQ",
           "members": [
             {
-              "type": "STRING",
-              "value": "on"
+              "type": "SYMBOL",
+              "name": "year"
             },
             {
               "type": "STRING",
-              "value": "ANYDATE"
+              "value": "-"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "month"
+            },
+            {
+              "type": "STRING",
+              "value": "-"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "day"
             }
           ]
+        }
+      ]
+    },
+    "day": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "1st"
+        },
+        {
+          "type": "STRING",
+          "value": "2nd"
+        },
+        {
+          "type": "STRING",
+          "value": "3rd"
+        },
+        {
+          "type": "STRING",
+          "value": "4th"
+        },
+        {
+          "type": "STRING",
+          "value": "5th"
+        },
+        {
+          "type": "STRING",
+          "value": "6th"
+        },
+        {
+          "type": "STRING",
+          "value": "7th"
+        },
+        {
+          "type": "STRING",
+          "value": "8th"
+        },
+        {
+          "type": "STRING",
+          "value": "9th"
+        },
+        {
+          "type": "STRING",
+          "value": "10th"
+        },
+        {
+          "type": "STRING",
+          "value": "11th"
+        },
+        {
+          "type": "STRING",
+          "value": "12th"
+        },
+        {
+          "type": "STRING",
+          "value": "13th"
+        },
+        {
+          "type": "STRING",
+          "value": "14th"
+        },
+        {
+          "type": "STRING",
+          "value": "15th"
+        },
+        {
+          "type": "STRING",
+          "value": "16th"
+        },
+        {
+          "type": "STRING",
+          "value": "17th"
+        },
+        {
+          "type": "STRING",
+          "value": "18th"
+        },
+        {
+          "type": "STRING",
+          "value": "19th"
+        },
+        {
+          "type": "STRING",
+          "value": "20th"
+        },
+        {
+          "type": "STRING",
+          "value": "21st"
+        },
+        {
+          "type": "STRING",
+          "value": "22nd"
+        },
+        {
+          "type": "STRING",
+          "value": "23rd"
+        },
+        {
+          "type": "STRING",
+          "value": "24th"
+        },
+        {
+          "type": "STRING",
+          "value": "25th"
+        },
+        {
+          "type": "STRING",
+          "value": "26th"
+        },
+        {
+          "type": "STRING",
+          "value": "27th"
+        },
+        {
+          "type": "STRING",
+          "value": "28th"
+        },
+        {
+          "type": "STRING",
+          "value": "29th"
+        },
+        {
+          "type": "STRING",
+          "value": "30th"
+        },
+        {
+          "type": "STRING",
+          "value": "31st"
         },
         {
           "type": "SEQ",
           "members": [
             {
-              "type": "STRING",
-              "value": "on"
+              "type": "SYMBOL",
+              "name": "_numSingle"
             },
             {
-              "type": "STRING",
-              "value": "ADATE"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "on"
-            },
-            {
-              "type": "STRING",
-              "value": "THEDATE"
+              "type": "SYMBOL",
+              "name": "_numSingle"
             }
           ]
         }
@@ -1063,190 +904,58 @@
         {
           "type": "STRING",
           "value": "December"
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_numSingle"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_numSingle"
+            }
+          ]
         }
       ]
     },
-    "object": {
-      "type": "CHOICE",
+    "year": {
+      "type": "SEQ",
       "members": [
         {
           "type": "SYMBOL",
-          "name": "numerical_object"
+          "name": "_numSingle"
         },
         {
           "type": "SYMBOL",
-          "name": "nonnumerical_object"
-        }
-      ]
-    },
-    "numerical_object": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "STRING",
-                  "value": "POUNDS"
-                },
-                {
-                  "type": "STRING",
-                  "value": "GBP"
-                },
-                {
-                  "type": "STRING",
-                  "value": "pounds"
-                },
-                {
-                  "type": "STRING",
-                  "value": "quid"
-                }
-              ]
-            },
-            {
-              "type": "SYMBOL",
-              "name": "num"
-            }
-          ]
+          "name": "_numSingle"
         },
         {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "STRING",
-                  "value": "DOLLARS"
-                },
-                {
-                  "type": "STRING",
-                  "value": "USD"
-                },
-                {
-                  "type": "STRING",
-                  "value": "dollars"
-                },
-                {
-                  "type": "STRING",
-                  "value": "bucks"
-                }
-              ]
-            },
-            {
-              "type": "SYMBOL",
-              "name": "num"
-            }
-          ]
+          "type": "SYMBOL",
+          "name": "_numSingle"
         },
         {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "STRING",
-                  "value": "EUROS"
-                },
-                {
-                  "type": "STRING",
-                  "value": "EUR"
-                },
-                {
-                  "type": "STRING",
-                  "value": "euros"
-                }
-              ]
-            },
-            {
-              "type": "SYMBOL",
-              "name": "num"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "AMOUNT"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "subject"
-            }
-          ]
-        }
-      ]
-    },
-    "nonnumerical_object": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "SOMECURRENCY"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "string"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "REPORT"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "string"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "NAMEDOBJECT"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "string"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "OTHEROBJECT"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "string"
-            }
-          ]
+          "type": "SYMBOL",
+          "name": "_numSingle"
         }
       ]
     },
     "string": {
       "type": "PATTERN",
-      "value": "[a-zA-Z\\-.]+"
+      "value": "[a-zA-Z]+"
     },
     "num": {
       "type": "PATTERN",
       "value": "[0-9]+"
+    },
+    "_numSingle": {
+      "type": "PATTERN",
+      "value": "[0-9]"
+    },
+    "semicolon": {
+      "type": "STRING",
+      "value": ";"
     },
     "comment": {
       "type": "TOKEN",

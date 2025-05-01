@@ -1,27 +1,35 @@
 .contract {   }
-.component {   }
-.definition {   }
-.simple_definition { color: #2ea6a8; font-weight: bold; display: block; margin: 2rem; }
-.numerical_expression {   }
-.operator {   }
-.conditional_definition {   }
+.clause {  display: block; margin: 2rem; }
+.definition { color: #16641f; font-weight: bold; display: block; margin: 2rem; }
+.definition_specific {   }
+.user { color: #208497; font-weight: bold;  }
+.name {   }
+.negation { color: #d67171; font-weight: bold;  }
+.discount { color: #384cad; font-weight: bold;  }
 .statement {   }
-.conditional_statement {   }
-.simple_statement { color: #a8a434; font-weight: bold; display: block; margin: 2rem; }
-.condition {   }
-.simple_condition { color: #9b49ab; font-weight: bold; display: block; margin: 2rem; }
-.boolean_expression {   }
-.identity { color: #d75e1d; font-weight: bold;  }
-.holds {   }
-.subject { color: #3a9896; font-weight: bold;  }
-.verb {   }
-.verb_status {   }
-.comparison {   }
-.modal_verb {   }
-.date { color: #2c726a; font-weight: bold;  }
+.else {   }
+.bracket {  display: block; margin: 2rem; }
+.bracketopen {  display: none; }
+.bracketclose {  display: none; }
+.conditional {   }
+.conditional_and { color: #187b1a; font-weight: bold;  }
+.and_expression {   }
+.conditional_or { color: #919d53; font-weight: bold;  }
+.or_expression {   }
+.condition { color: #050505; font-weight: bold; display: block; margin: 1rem; }
+.time_holder {   }
+._pre_time {   }
+.time_and {   }
+.time_or {   }
+.time_before {   }
+.time_after {   }
+.time_on {   }
+.time { color: #7a5279; font-weight: bold;  }
+.day {   }
 .month {   }
-.object {   }
-.numerical_object {   }
-.nonnumerical_object {   }
+.year {   }
 .string {   }
 .num {   }
+._numSingle {   }
+._choice {   }
+.semicolon {  display: none; }

@@ -273,14 +273,17 @@ class EventSim:
                     self.state_def[e.identifier] = e
 
     def evaluate_condition(self, identity, time_str):
-
+        
         time_obj = datetime.now()
 
+        # Evaluating the time of the event
         if time_str != "":
             time_obj = self.time_convert.evaluate_time_str(time_str)
 
+        # Adding it to the list of past events
         self.past_events.append((identity, self.time_convert.return_time_str(time_obj), self.conditions[identity].sentence))
 
+        # Doing a comparison of the time and using it for evaluation
         time_comparison = self.evaluate_condition_time(identity, time_obj)
 
         if time_comparison:
@@ -302,12 +305,17 @@ class EventSim:
             if len(tc) == 2:
                 val, op = tc
 
+                # On a time
                 if op == "o":
                     if time_obj == val:
                         return True
+                        
+                # After a time
                 elif op == "a":
                     if time_obj > val:
                         return True
+
+                # Before a time
                 elif op == "b":
                     if time_obj < val:
                         return True
