@@ -10,6 +10,26 @@ page_parse = Blueprint("page_parse", __name__)
 #
 #   Mainly for parsing and dynamic analysis
 
+# Primitive but working way of includes
+def include_text(text):
+    # Basically breaks down the string, (Could use regex as well)
+    # Then reconstructs it
+    # Whenever an include is seen, then it will swap it out for a valid import, else it will show up as INVALID
+    rewritten_text = []
+    if "INCLUDE" in text:
+        for s in text.split("\n"):
+            check = s.split()
+            if len(check) == 2 and check[0] == "INCLUDE":
+                if os.path.isfile(check[1]):
+                    with open(check[1], "r") as file:
+                        content = file.read()
+                        rewritten_text.append(content)
+                else:
+                    rewritten_text.append("INVALID INCLUDE")
+            else:
+                rewritten_text.append(s)
+    return "\n".join(rewritten_text)
+
 # Define a route for parsing text
 @page_parse.route("/parse", methods=["POST"])
 def parse_text():
@@ -21,7 +41,8 @@ def parse_text():
     # And then, the included file would have to be accessed and appended / prepended onto the text
     # At the point where it appears
 
-    # Basic parsing - you can replace this with custom parsing logic
+    text = include_text(text)
+
     parsed_text = current_app.config["handler"].bnfStructure(text)
     return jsonify({"parsed_text": parsed_text})
 

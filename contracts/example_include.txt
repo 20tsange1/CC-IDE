@@ -1,0 +1,4 @@
+INCLUDE contracts/structuredContract.txt
+
+INCLUDE contracts/structured_contract_v2.txt
+
