@@ -77,44 +77,44 @@ class BNFParser:
 
     def outputTextFiles(self, arr):
         # For the head and the tail, we have a predefined structure, so we are just filling it in.
-            with open(self.head, 'r') as head:
-                text = head.read()
-            with open(self.output, 'w') as file:
-                file.write(text)
-                
-            # print(self.buildGrammar(arr))
+        with open(self.head, 'r') as head:
+            text = head.read()
+        with open(self.output, 'w') as file:
+            file.write(text)
+            
+        # print(self.buildGrammar(arr))
 
-            with open(self.output, 'a') as file:
-                # The grammar 
-                file.write(self.buildGrammar(arr, self.node_replace))
+        with open(self.output, 'a') as file:
+            # The grammar 
+            file.write(self.buildGrammar(arr, self.node_replace))
 
-                # # The additionally rules from the ontology
-                # for ont in self.mapped.values():
-                #     file.write(ont + "\n\n")
+            # # The additionally rules from the ontology
+            # for ont in self.mapped.values():
+            #     file.write(ont + "\n\n")
 
-            with open(self.tail, 'r') as tail:
-                text = tail.read()
-            with open(self.output, 'a') as file:
-                file.write(text)
+        with open(self.tail, 'r') as tail:
+            text = tail.read()
+        with open(self.output, 'a') as file:
+            file.write(text)
 
-            # Writing out the types of the nodes, used for auto-suggestions
-            # Make a new file for that grammar if not already there.
-            path = f"text-files/{self.grammar_name[:-4]}"
-            if not os.path.exists(path):
-                os.makedirs(path)
-                with open(path + "/nodecolours.txt", 'w') as file:
-                    file.write('')
-                with open(path + "/nodeformats.txt", 'w') as file:
-                    file.write('')
-                with open(path + "/nodemappings.txt", 'w') as file:
-                    file.write('')
-                with open(path + "/nodenames.txt", 'w') as file:
-                    file.write('')
+        # Writing out the types of the nodes, used for auto-suggestions
+        # Make a new file for that grammar if not already there.
+        path = f"text-files/{self.grammar_name[:-4]}"
+        if not os.path.exists(path):
+            os.makedirs(path)
+            with open(path + "/nodecolours.txt", 'w') as file:
+                file.write('')
+            with open(path + "/nodeformats.txt", 'w') as file:
+                file.write('')
+            with open(path + "/nodemappings.txt", 'w') as file:
+                file.write('')
+            with open(path + "/nodenames.txt", 'w') as file:
+                file.write('')
 
-            with open(path + '/' + self.nodenames, 'w') as file:
-                for types, mapped in self.node_types.items():
-                    # print(types, mapped)
-                    file.write(f"{types}:{mapped}\n")
+        with open(path + '/' + self.nodenames, 'w') as file:
+            for types, mapped in self.node_types.items():
+                # print(types, mapped)
+                file.write(f"{types}:{mapped}\n")
 
     def buildGrammar(self, rulesArr, replaceArr):
         """
@@ -168,6 +168,8 @@ class BNFParser:
             vinterp = grammarParserVisitor()
             arr = vinterp.visit(tree)
 
+            # Storing the node types in the object
+            # Could be done more elegantly
             self.node_types = {t:t for t in vinterp.node_types}
 
             self.node_children = vinterp.node_children

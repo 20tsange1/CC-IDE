@@ -15,6 +15,12 @@ page_parse = Blueprint("page_parse", __name__)
 def parse_text():
     # Get the text from the request
     text = request.json.get("text")
+
+    # In order to incorporate another file, you would need to enable INCLUDES
+    # To do this, it would either have to be in the grammar, or extracted at this stage
+    # And then, the included file would have to be accessed and appended / prepended onto the text
+    # At the point where it appears
+
     # Basic parsing - you can replace this with custom parsing logic
     parsed_text = current_app.config["handler"].bnfStructure(text)
     return jsonify({"parsed_text": parsed_text})

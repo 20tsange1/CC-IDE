@@ -56,6 +56,21 @@ class Statement:
 
 
 class EventSim:
+    """
+    Event Simulation Class
+
+    Used for building events and subsequently evaluating the consequence to statements and alternatives.
+
+    Currently in a primitive state.
+        Allows for events to be added to the evaluation (If you have the same condition but two different times, the latest one stands)
+        Statements will be flipped to (Green = True, Red = False) if the relevant events are added
+    
+    Next steps:
+        Allow for events to trigger a program or script
+        Have a set of more practical resultant outcomes
+        Merge it into the main contract view (or have some type of contract view, so it is visible alongside the simulation engine)
+    """
+
     def __init__(self):
         # Global dictionary of conditions
         self.conditions = {}

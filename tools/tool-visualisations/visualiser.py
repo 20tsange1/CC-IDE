@@ -5,6 +5,12 @@ from drawContract import DrawContract
 from drawBoolean import DrawBoolean
 
 class Visualiser:
+    """
+    Main idea behind this class is to store and centralise all the visualisation functions
+
+    Each function returns an HTML which is subsequently displayed on the main visualiser
+    """
+
     def __init__(self):
         self.types = ['Tree', 'File']
 

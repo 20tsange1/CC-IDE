@@ -306,6 +306,10 @@ class Handler:
                 finalarr.append('</b>')
     
     def nodeEvalIDStart(self, node, finalarr):
+
+        # Idea is that the deeper you go, the more decimal places on the identifier
+        # And then you increase the counter as well
+
         if node.type == "clause":
             self.global_count_arr[0] += 1
             self.global_count_arr.append(0)
@@ -468,6 +472,8 @@ class Handler:
     ###############
     # Final Output
     ###############
+
+    # Was meant to be used for a PDF style output, but much more difficult due to pagination.
 
     def exploreNodesOutput(self, node, depth, finalarr):
         """

@@ -54,6 +54,16 @@ class Statement:
 
 
 class ConditionSim:
+    """
+    Condition Simulation Class
+
+    Straightforward condition simulation
+    Toggling of conditions and displaying the subsequent output on the statements
+
+    Next Steps:
+        Reflecting these outcomes within the contract (text highlighting?)
+    """
+
     def __init__(self):
         # Global dictionary of conditions
         self.conditions = {}
@@ -241,9 +251,11 @@ class ConditionSim:
         self.find_clauses(parse_tree, clause_arr)
         for clause in clause_arr:
 
+            # Statement
             for s in clause[1]:
                 self.state_def[s.identifier] = s
 
+            # Alternative
             if len(clause) > 2:
                 for e in clause[2]:
                     self.state_def[e.identifier] = e

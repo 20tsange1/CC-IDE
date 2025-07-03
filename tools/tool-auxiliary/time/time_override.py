@@ -2,7 +2,15 @@ from datetime import datetime
 
 from time_base import TimeBase
 
+
+
 class TimeOverride(TimeBase):
+    """
+    Example overridden class
+    
+    This would be carried out for a CC-Language
+    """
+
     def __init__(self):
         return
 
@@ -33,6 +41,7 @@ class TimeOverride(TimeBase):
         raise ValueError(f"Unrecognized date format: {time_str}")
     
     def month_to_val(self, month):
+        # Tedious but needs to be done, although there may be an easier way depending on the way your language is written
         month_dict = {
             "January": 1,
             "February": 2,
